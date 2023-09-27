@@ -1,0 +1,14 @@
+.subscriptionBtn {
+  width: 25% !important;
+  @media screen and (max-width: 762px) {
+    width: 100% !important;
+  }
+}
+
+// General styles
+.custom-class {
+  @media all and (max-width: 480px) {
+    width: 100%;
+    display: block;
+  }
+}

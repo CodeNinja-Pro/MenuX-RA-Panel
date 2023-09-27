@@ -1,0 +1,2 @@
+export const TEST_CLIENT_KEY =
+  "pk_test_51Nj455KxLm29UcZ7cLqVMCgOBZCYAYoxsp4w77RVRVwfYMLSgd28jrf29EmndYUUdTFjqJhkJi9XbTCF0ZJ0hZZO00joiVxcDQ";

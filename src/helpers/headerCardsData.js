@@ -1,0 +1,68 @@
+export const cardRestaurantData = [
+  {
+    card_no: "89,935",
+    card_topIcon: "fa-solid fa-users",
+    card_name: "Top Customers",
+    card_percent: "10.2%",
+    card_text: "+1.01% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "23,283",
+    card_topIcon: "fa-solid fa-cart-shopping",
+    card_name: "Top Orders",
+    card_percent: "3.1%",
+    card_text: "+0.49% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "$46",
+    card_topIcon: "fa-solid fa-circle-check",
+    card_name: "Average Order Size",
+    card_percent: "2.56%",
+    card_text: "-0.91 this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "124,854",
+    card_topIcon: "fa-solid fa-dollar-sign",
+    card_name: "Requests",
+    card_percent: "7.2",
+    card_text: "+1.51% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+];
+export const cardSuperAdminData = [
+  {
+    card_no: "89,935",
+    card_topIcon: "fa-solid fa-users",
+    card_name: "Top Customers",
+    card_percent: "10.2%",
+    card_text: "+1.01% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "459",
+    card_topIcon: "fa-solid fa-cart-shopping",
+    card_name: "Total Merchants",
+    card_percent: "3.1%",
+    card_text: "+0.49% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "50%",
+    card_topIcon: "fa-solid fa-circle-check",
+    card_name: "Churn Rate",
+    card_percent: "2.56%",
+    card_text: "-0.91 this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+  {
+    card_no: "124$",
+    card_topIcon: "fa-solid fa-dollar-sign",
+    card_name: "Life Time Value",
+    card_percent: "7.2",
+    card_text: "+1.51% this Month",
+    cardBottom_icon: "fas fa-arrow-up ",
+  },
+];

@@ -1,0 +1,480 @@
+/*!
+
+=========================================================
+* Argon Dashboard React - v1.2.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+
+// Core
+@import url("https://fonts.googleapis.com/css2?family=Golos+Text:wght@500&family=Poppins:wght@400;500;600;700;800;900&display=swap");
+
+@import "argon-dashboard/custom/functions";
+@import "argon-dashboard/custom/variables";
+@import "argon-dashboard/custom/mixins";
+
+// bootstrap (4.6.0) components
+
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/code";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/input-group";
+@import "~bootstrap/scss/custom-forms";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/jumbotron";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/media";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/print";
+
+// Argon utilities and components
+
+@import "argon-dashboard/custom/reboot";
+@import "argon-dashboard/custom/utilities";
+@import "argon-dashboard/custom/components";
+
+// Vendor (Plugins)
+
+@import "argon-dashboard/custom/vendors";
+
+// Docs components
+
+@import "argon-dashboard/docs/variables";
+@import "argon-dashboard/docs/nav";
+@import "argon-dashboard/docs/clipboard-js";
+@import "argon-dashboard/docs/component-examples";
+@import "argon-dashboard/docs/prism";
+@import "argon-dashboard/docs/content";
+@import "argon-dashboard/docs/sidebar";
+@import "argon-dashboard/docs/footer";
+@import "./Login.scss";
+@import "./Login.scss";
+@import "./Dashboard.scss";
+@import "./MultiRangeSlider.scss";
+// React Differences
+@import "react/react-differences";
+body {
+  font-family: "poppins", sans-serif;
+}
+
+.dateRangerSet {
+  position: absolute;
+  right: 1px;
+  z-index: 1;
+}
+.pointer {
+  cursor: pointer;
+}
+.fs-12 {
+  font-size: 12px !important;
+}
+.fs-14 {
+  font-size: 14px !important;
+}
+.fs-16 {
+  font-size: 16px !important;
+}
+.header-cards {
+  border-radius: 12px !important;
+
+  &__col {
+    display: flex;
+    justify-content: space-between;
+    .divider {
+      border-left: 1px solid #e6edff;
+      margin: 2rem 0px;
+    }
+
+    &:last-child {
+      .divider {
+        display: none;
+      }
+    }
+  }
+}
+.chart-btn {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 8px 4px 12px;
+  gap: 4px;
+  width: 105px;
+  height: 26px;
+  background: #ffffff;
+  border: 1px solid #64748b;
+  box-shadow: 0px 2px 10px rgba(124, 141, 181, 0.12);
+  border-radius: 5px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+.custom-dropdown-menu {
+  width: 360px;
+  border-radius: 6px 6px 0px 0px;
+}
+
+.bg-pink {
+  background-color: #d70365 !important;
+  color: white !important;
+}
+#date-inp::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+// Multi Range Slider Styling
+
+.multiRangerSliderMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  .slider {
+    position: relative;
+    width: 100%;
+  }
+  .slider__track,
+  .slider__range,
+  .slider__left-value,
+  .slider__right-value {
+    position: absolute;
+  }
+  .slider__track,
+  .slider__range {
+    border-radius: 3px;
+    height: 5px;
+  }
+  .slider__track {
+    background-color: #28a745;
+    width: 100%;
+    z-index: 1;
+  }
+  .slider__range {
+    background-color: #28a745;
+    z-index: 2;
+  }
+  .slider__left-value,
+  .slider__right-value {
+    color: black;
+    font-size: 15px;
+    margin-top: 12px;
+  }
+  .slider__left-value {
+    left: -10px;
+  }
+  .slider__right-value {
+    right: -15px;
+  }
+  /* Removing the default appearance */
+  .thumb,
+  .thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .thumb {
+    pointer-events: none;
+    position: absolute;
+    height: 0;
+    width: 100%;
+    outline: none;
+  }
+  .thumb--left {
+    z-index: 3;
+    left: 15px;
+  }
+  .thumb--right {
+    z-index: 4;
+    right: 15px;
+  }
+
+  /* For Chrome browsers */
+  .thumb::-webkit-slider-thumb {
+    background-color: #f1f5f7;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px #ced4da;
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
+    margin-top: 4px;
+    pointer-events: all;
+    position: relative;
+  }
+
+  /* For Firefox browsers */
+  .thumb::-moz-range-thumb {
+    background-color: #f1f5f7;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px #ced4da;
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
+    margin-top: 4px;
+    pointer-events: all;
+    position: relative;
+  }
+}
+
+.orders {
+  &__card-outer {
+    background: #ffffff;
+    border: 1px solid #e6edff;
+    border-radius: 16px;
+    min-height: 100vh;
+  }
+
+  .form-control[readonly] {
+    background-color: #ffffff;
+    color: #64748b;
+  }
+
+  .filters-row {
+    border-bottom: 1px solid #d0d5dd;
+    .filter {
+      cursor: pointer;
+      p {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+    .filter-active {
+      cursor: pointer;
+      border-bottom: 2px solid #d70365;
+      p {
+        color: #d70365;
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+  }
+  &__form_group {
+    position: relative;
+    margin-bottom: 0 !important;
+
+    img {
+      position: absolute;
+      top: 30%;
+      left: 3%;
+    }
+    .form-control {
+      padding-left: 2.3rem !important ;
+      padding-right: 2rem !important ;
+      background: #ffffff;
+      border: 1.3px solid rgba(196, 202, 205, 0.4);
+      border-radius: 8px;
+    }
+  }
+  .orders-table__col {
+    overflow-x: auto;
+    ::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+      background: rgb(246, 243, 243);
+    }
+    ::-webkit-scrollbar-thumb:horizontal {
+      background: #cf327b;
+      border-radius: 10px;
+    }
+  }
+  .orders-table {
+    td {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    &__paid {
+      background: #047857 !important;
+      color: white;
+      border-radius: 4px;
+      padding: 4px 8px !important;
+      &:hover {
+        color: white !important;
+      }
+    }
+    &__pending {
+      background: #5e72e4 !important;
+      color: white;
+      border-radius: 4px;
+      padding: 4px 8px !important;
+      &:hover {
+        color: white !important;
+      }
+    }
+    &__process {
+      background: #d70365 !important;
+      color: white;
+      border-radius: 4px;
+      padding: 4px 8px !important;
+      &:hover {
+        color: white !important;
+      }
+    }
+
+    .status__ready {
+      background: #ecfdf5;
+      border-radius: 4px;
+      color: #064e3b;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+    .status__pending {
+      background: #fef2f2;
+      border-radius: 4px;
+      color: #991b1b;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+    .status__processing {
+      background: #ecf2fd;
+      border-radius: 4px;
+      color: #5e72e4;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+    .status__completed {
+      background: #ecf2fd;
+      border-radius: 4px;
+      color: #125524;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+    .status__refunded {
+      background: #ecf2fd;
+      border-radius: 4px;
+      color: #991b1b;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+  }
+}
+.shadow {
+  .pickup__btn {
+    box-shadow: none;
+    background: rgba(134, 134, 134, 0.1);
+    &__active {
+      background: #d70365;
+      box-shadow: none;
+      color: #ffffff;
+    }
+  }
+}
+.catalog__picker {
+  .form-control[readonly] {
+    background-color: #ffffff;
+    color: #898b93;
+  }
+  .dateRangerSet {
+    position: absolute;
+    right: -35%;
+    z-index: 1;
+  }
+}
+
+.charts {
+  height: fit-content;
+  .card {
+    height: 100%;
+  }
+}
+.line-chart {
+  height: 420px;
+}
+
+.bg-red {
+  background-color: #d2122e;
+  color: white;
+}
+.bg-green {
+  background-color: #17b169;
+  color: white;
+}
+.bg-orange {
+  background-color: #ff4500;
+  color: white;
+}
+.popup-box {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 11px;
+  box-shadow: 0px 9px 24px 0px rgba(0, 0, 0, 0.2);
+  &__close {
+    border-radius: 100%;
+    position: absolute;
+    left: 96%;
+    background: white;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    top: -4%;
+    cursor: pointer;
+  }
+}
+.add_store_timings {
+  @media (max-width: 992px) {
+    margin: 0px !important;
+    margin-top: 0.5rem !important;
+  }
+}
+
+.media__parent_div {
+  .media__cross_icon {
+    position: absolute;
+    background-color: rgb(185, 6, 83);
+    top: -11px;
+    left: 82px;
+    width: 21px;
+    text-align: center;
+    border-radius: 50%;
+    padding: 1px;
+    padding: 3px;
+    color: white;
+  }
+}

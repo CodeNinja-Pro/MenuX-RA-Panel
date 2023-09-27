@@ -1,0 +1,10 @@
+//
+// Dropdown
+//
+
+.dropdown-menu {
+  @media (max-width: 600px) {
+    min-width: 9rem !important;
+  }
+}
+@import "dropdowns/dropdown";
