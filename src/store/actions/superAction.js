@@ -96,6 +96,10 @@ export const updateRestaurant =
           fontFamily: 'Poppins'
         }
       })
+      dispatch({
+        type: 'LOADER',
+        payload: false
+      })
     }
   }
 
@@ -143,6 +147,10 @@ export const sendNotification =
         style: {
           fontFamily: 'Poppins'
         }
+      })
+      dispatch({
+        type: 'LOADER',
+        payload: false
       })
     }
   }

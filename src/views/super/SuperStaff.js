@@ -10,7 +10,6 @@ import {
 } from '@mui/material'
 import OnlyHeader from '../../components/Headers/OnlyHeader'
 import { ThemeMain } from '../../components/common/Theme'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import SuperStaffTable from './common/SuperStaffTable'
 
 export default function SuperStaff () {
@@ -40,28 +39,7 @@ export default function SuperStaff () {
                       Staff
                     </Typography>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'start'}
-                    marginTop={'20px'}
-                  >
-                    <TextField
-                      id='outlined-start-adornment'
-                      placeholder='Search'
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <SearchOutlinedIcon />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} marginTop={2}>
-                    <SuperStaffTable />
-                  </Grid>
+                  <SuperStaffTable />
                 </Grid>
               </Grid>
             </Card>

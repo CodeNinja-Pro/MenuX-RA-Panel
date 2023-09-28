@@ -90,14 +90,18 @@ export default function DashboardStatisticItem (props) {
                 boxShadow: 'none'
               }}
             >
-              <CardMedia
-                component={'img'}
-                image={props.component}
-                sx={{
-                  width: '40px',
-                  height: '40px'
-                }}
-              />
+              {props.revenueComponent ? (
+                props.revenueComponent
+              ) : (
+                <CardMedia
+                  component={'img'}
+                  image={props.component}
+                  sx={{
+                    width: '40px',
+                    height: '40px'
+                  }}
+                />
+              )}
             </Paper>
             {/* </Grid> */}
           </Grid>

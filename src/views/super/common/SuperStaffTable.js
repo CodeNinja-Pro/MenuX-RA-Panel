@@ -29,12 +29,16 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
-  TableSortLabel
+  TableSortLabel,
+  Grid,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -165,6 +169,14 @@ export default function SuperStaffTable () {
 
   const [visibleRows, setVisibleRows] = useState([])
 
+  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [filters, setFilters] = useState({
+    status: null
+  })
+
   useEffect(() => {
     dispatch(getAllStaffs())
   }, [])
@@ -172,6 +184,22 @@ export default function SuperStaffTable () {
   useEffect(() => {
     setVisibleRows(rows)
   }, [rows])
+
+  const [searchValue, setSearchValue] = useState('')
+
+  useEffect(() => {
+    let filteredObject = []
+    rows?.map(item => {
+      if (
+        item.name?.toLocaleLowerCase().includes(searchValue) ||
+        item.email?.toLocaleLowerCase().includes(searchValue) ||
+        item.role?.toLocaleLowerCase().includes(searchValue)
+      ) {
+        filteredObject.push(item)
+      }
+    })
+    setVisibleRows(filteredObject)
+  }, [searchValue])
 
   const handleDelete = () => {
     dispatch(
@@ -183,14 +211,6 @@ export default function SuperStaffTable () {
   }
 
   // MUI table definition
-  const [order, setOrder] = useState('asc')
-  const [orderBy, setOrderBy] = useState('')
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const [filters, setFilters] = useState({
-    status: null
-  })
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
@@ -237,177 +257,203 @@ export default function SuperStaffTable () {
   const id = open ? 'simple-popover' : undefined
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows?.length}
-            />
-            <TableBody>
-              {paginatedTableData?.map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`
+    <>
+      <Grid
+        item
+        xs={12}
+        display={'flex'}
+        justifyContent={'start'}
+        marginTop={'20px'}
+      >
+        <TextField
+          id='outlined-start-adornment'
+          placeholder='Search by Name, Email and Role.'
+          sx={{ width: '400px' }}
+          value={searchValue}
+          onChange={e => setSearchValue(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchOutlinedIcon />
+              </InputAdornment>
+            )
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} marginTop={2}>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <TableContainer>
+            <Table aria-labelledby='tableTitle'>
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={rows?.length}
+              />
+              <TableBody>
+                {paginatedTableData?.map((row, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`
 
-                return (
-                  <TableRow
-                    hover
-                    tabIndex={-1}
-                    key={labelId}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell align='center'>{row.name}</TableCell>
-                    <TableCell align='center'>{row.email}</TableCell>
-                    <TableCell align='center'>{row.role}</TableCell>
-                    <TableCell align='center'>
-                      {row.createdAt.toDate().toDateString()}
-                    </TableCell>
-                    <TableCell align='center' width={'10%'}>
-                      {row.enable === true ? (
-                        <Typography
-                          sx={{
-                            backgroundColor: 'rgba(40, 199, 111, 0.12)',
-                            borderRadius: '10px'
+                  return (
+                    <TableRow
+                      hover
+                      tabIndex={-1}
+                      key={labelId}
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      <TableCell align='center'>{row.name}</TableCell>
+                      <TableCell align='center'>{row.email}</TableCell>
+                      <TableCell align='center'>{row.role}</TableCell>
+                      <TableCell align='center'>
+                        {row.createdAt.toDate().toDateString()}
+                      </TableCell>
+                      <TableCell align='center' width={'10%'}>
+                        {row.enable === true ? (
+                          <Typography
+                            sx={{
+                              backgroundColor: 'rgba(40, 199, 111, 0.12)',
+                              borderRadius: '10px'
+                            }}
+                            color={'rgba(40, 199, 111, 1)'}
+                          >
+                            Enabled
+                          </Typography>
+                        ) : (
+                          <Typography
+                            sx={{
+                              backgroundColor: 'rgba(255, 245, 248, 1)',
+                              borderRadius: '10px'
+                            }}
+                            color={'rgba(241, 65, 108, 1)'}
+                          >
+                            Disabled
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell align='center' width={'10%'}>
+                        <IconButton
+                          aria-describedby={id}
+                          color='inherit'
+                          size='small'
+                          onClick={event => {
+                            handleClick(event)
+                            setSelectedItem(row.id)
                           }}
-                          color={'rgba(40, 199, 111, 1)'}
                         >
-                          Enabled
-                        </Typography>
-                      ) : (
-                        <Typography
-                          sx={{
-                            backgroundColor: 'rgba(255, 245, 248, 1)',
-                            borderRadius: '10px'
-                          }}
-                          color={'rgba(241, 65, 108, 1)'}
-                        >
-                          Disabled
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell align='center' width={'10%'}>
-                      <IconButton
-                        aria-describedby={id}
-                        color='inherit'
-                        size='small'
-                        onClick={event => {
-                          handleClick(event)
-                          setSelectedItem(row.id)
+                          <MoreVertIcon style={{ marginTop: '5px' }} />
+                        </IconButton>
+                      </TableCell>
+                      <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'left'
                         }}
                       >
-                        <MoreVertIcon style={{ marginTop: '5px' }} />
-                      </IconButton>
-                    </TableCell>
-                    <Popover
-                      id={id}
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                      }}
-                    >
-                      <Paper>
-                        <ClickAwayListener onClickAway={handleClose}>
-                          <MenuList id='split-button-menu'>
-                            <MenuItem
-                              onClick={() => {
-                                setInvitationModal(true)
-                              }}
-                              key={'edit'}
-                            >
-                              <NotificationsNoneOutlinedIcon />
-                              Send the Invitation
-                            </MenuItem>
-                            <Divider />
-                            <MenuItem
-                              onClick={() => {
-                                setDeleteModal(true)
-                              }}
-                              key={'status'}
-                            >
-                              <DeleteOutlineOutlinedIcon color='error' />
-                              <Typography color={'error'}>Delete</Typography>
-                            </MenuItem>
-                          </MenuList>
-                        </ClickAwayListener>
-                      </Paper>
-                    </Popover>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          className='margin-none'
-          count={rows?.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList id='split-button-menu'>
+                              <MenuItem
+                                onClick={() => {
+                                  setInvitationModal(true)
+                                }}
+                                key={'edit'}
+                              >
+                                <NotificationsNoneOutlinedIcon />
+                                Send the Invitation
+                              </MenuItem>
+                              <Divider />
+                              <MenuItem
+                                onClick={() => {
+                                  setDeleteModal(true)
+                                }}
+                                key={'status'}
+                              >
+                                <DeleteOutlineOutlinedIcon color='error' />
+                                <Typography color={'error'}>Delete</Typography>
+                              </MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Popover>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component='div'
+            className='margin-none'
+            count={rows?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
 
-        <Dialog
-          open={deleteModal}
-          onClose={() => setDeleteModal(false)}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
-            {'You pay attention here'}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id='alert-dialog-description'>
-              Are you really going to delete this staff information?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
-            <Button
-              onClick={() => {
-                setDeleteModal(false)
-                handleDelete()
-              }}
-              autoFocus
-            >
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <Dialog
+            open={deleteModal}
+            onClose={() => setDeleteModal(false)}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>
+              {'You pay attention here'}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you really going to delete this staff information?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
+              <Button
+                onClick={() => {
+                  setDeleteModal(false)
+                  handleDelete()
+                }}
+                autoFocus
+              >
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-        <Dialog
-          open={invitationModal}
-          onClose={() => setInvitationModal(false)}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
-            {'You pay attention here'}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id='alert-dialog-description'>
-              Are you really going to send the invitation?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setInvitationModal(false)}>Disagree</Button>
-            <Button
-              onClick={() => {
-                setInvitationModal(false)
-              }}
-              autoFocus
-            >
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Paper>
-    </Box>
+          <Dialog
+            open={invitationModal}
+            onClose={() => setInvitationModal(false)}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>
+              {'You pay attention here'}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you really going to send the invitation?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setInvitationModal(false)}>
+                Disagree
+              </Button>
+              <Button
+                onClick={() => {
+                  setInvitationModal(false)
+                }}
+                autoFocus
+              >
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Paper>
+      </Grid>
+    </>
   )
 }

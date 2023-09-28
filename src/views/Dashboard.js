@@ -252,8 +252,14 @@ export default function Dashboard () {
                       color='#0074D9'
                       id={'chart1'}
                       background={'#0074d91f'}
-                      component={
-                        <GroupOutlinedIcon sx={{ color: '#0074D9' }} />
+                      revenueComponent={
+                        <GroupOutlinedIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#0074D9'
+                          }}
+                        />
                       }
                     />
                   </Grid>
@@ -264,8 +270,14 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      component={
-                        <ShoppingCartOutlinedIcon sx={{ color: '#09BD3B' }} />
+                      revenueComponent={
+                        <ShoppingCartOutlinedIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#09BD3B'
+                          }}
+                        />
                       }
                     />
                   </Grid>
@@ -276,8 +288,14 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#FF8A00'
                       id={'chart3'}
-                      component={
-                        <TaskAltOutlinedIcon sx={{ color: '#FF8A00' }} />
+                      revenueComponent={
+                        <TaskAltOutlinedIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#FF8A00'
+                          }}
+                        />
                       }
                     />
                   </Grid>
@@ -288,8 +306,14 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#FF0000'
                       id={'chart4'}
-                      component={
-                        <RefreshOutlinedIcon sx={{ color: '#FF0000' }} />
+                      revenueComponent={
+                        <RefreshOutlinedIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#FF0000'
+                          }}
+                        />
                       }
                     />
                   </Grid>
@@ -300,8 +324,14 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color={'#7534FF'}
                       id={'chart5'}
-                      component={
-                        <EmojiEventsOutlinedIcon sx={{ color: '#7534FF' }} />
+                      revenueComponent={
+                        <EmojiEventsOutlinedIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#7534FF'
+                          }}
+                        />
                       }
                     />
                   </Grid>

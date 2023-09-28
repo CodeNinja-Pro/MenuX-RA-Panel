@@ -33,6 +33,7 @@ import {
 import DashboardStatisticItem from '../common/DashboardStatisticItem'
 import DonutChart from '../common/DonutChart'
 import SidebarDonut from '../common/SidebarDonut'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 
 // Chart load
 import BarChartForm from '../../components/Charts/BarChart'
@@ -278,7 +279,15 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      component={Revenue}
+                      revenueComponent={
+                        <AttachMoneyIcon
+                          sx={{
+                            width: '50px',
+                            height: '50px',
+                            color: '#09BD3B'
+                          }}
+                        />
+                      }
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>

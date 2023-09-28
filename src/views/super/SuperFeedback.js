@@ -10,7 +10,6 @@ import {
 } from '@mui/material'
 import OnlyHeader from '../../components/Headers/OnlyHeader'
 import { ThemeMain } from '../../components/common/Theme'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import SuperFeedbackTable from './common/SuperFeedbackTable'
 
 export default function SuperFeedback () {
@@ -43,28 +42,7 @@ export default function SuperFeedback () {
                       Feedbacks from the merchants
                     </Typography>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'start'}
-                    marginTop={'20px'}
-                  >
-                    <TextField
-                      id='outlined-start-adornment'
-                      placeholder='Search'
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <SearchOutlinedIcon />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} marginTop={2}>
-                    <SuperFeedbackTable />
-                  </Grid>
+                  <SuperFeedbackTable />
                 </Grid>
               </Grid>
             </Card>
