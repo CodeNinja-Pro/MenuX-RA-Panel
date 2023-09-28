@@ -1,5 +1,3 @@
-import './App.css'
-
 import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import AdminLayout from './layouts/Admin.js'
@@ -12,6 +10,7 @@ import { SnackbarProvider } from 'notistack'
 import './assets/plugins/nucleo/css/nucleo.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import './assets/scss/argon-dashboard-react.scss'
+import './App.css'
 
 function App () {
   const dispatch = useDispatch()

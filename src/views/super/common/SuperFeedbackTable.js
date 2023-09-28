@@ -26,30 +26,18 @@ import {
   FormHelperText,
   OutlinedInput,
   DialogTitle,
-  DialogContentText,
-  InputAdornment,
-  Select,
-  Switch,
-  FormControlLabel
+  DialogContentText
 } from '@mui/material'
 
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
-import Visibility from '@mui/icons-material/Visibility'
-import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteFeedback,
-  deleteRestaurant,
   getAllFeedbacks,
-  getAllRestaurants,
-  sendNotification,
-  sendRespond,
-  updateRestaurant
+  sendRespond
 } from '../../../store/actions/superAction'
 
 const applyFilters = (tableItems, filters) => {
@@ -137,8 +125,6 @@ const SuperFeedbackTable = () => {
 
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
-
-  const status = ['Active', 'Deactive']
 
   return (
     <Card sx={{ boxShadow: 'none' }}>

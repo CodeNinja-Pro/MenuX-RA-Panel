@@ -11,11 +11,11 @@ import {
   Paper
 } from '@mui/material'
 import { Container } from 'reactstrap'
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
-import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined'
-import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
+import ActiveMerchant from '../../assets/common/dashboard/super/active_merchant.png'
+import Revenue from '../../assets/common/dashboard/super/revenue.png'
+import CustomerRetention from '../../assets/common/dashboard/super/customer_retention.png'
+import CustomerLifetime from '../../assets/common/dashboard/super/customer_lifetime.png'
+import ChurnRate from '../../assets/common/dashboard/super/churn_rate.png'
 
 import {
   XAxis,
@@ -25,14 +25,12 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  Legend,
   AreaChart,
   Area
 } from 'recharts'
 
 // Image load
 import DashboardStatisticItem from '../common/DashboardStatisticItem'
-import StatisticChart from '../common/StatisticChart'
 import DonutChart from '../common/DonutChart'
 import SidebarDonut from '../common/SidebarDonut'
 
@@ -270,9 +268,7 @@ export default function SuperDashboard () {
                       color='#0074D9'
                       id={'chart1'}
                       background={'#0074d91f'}
-                      component={
-                        <GroupOutlinedIcon sx={{ color: '#0074D9' }} />
-                      }
+                      component={ActiveMerchant}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -282,9 +278,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      component={
-                        <ShoppingCartOutlinedIcon sx={{ color: '#09BD3B' }} />
-                      }
+                      component={Revenue}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -294,9 +288,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF8A00'
                       id={'chart3'}
-                      component={
-                        <TaskAltOutlinedIcon sx={{ color: '#FF8A00' }} />
-                      }
+                      component={CustomerRetention}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -306,9 +298,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF0000'
                       id={'chart4'}
-                      component={
-                        <RefreshOutlinedIcon sx={{ color: '#FF0000' }} />
-                      }
+                      component={CustomerLifetime}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -318,9 +308,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color={'#7534FF'}
                       id={'chart5'}
-                      component={
-                        <EmojiEventsOutlinedIcon sx={{ color: '#7534FF' }} />
-                      }
+                      component={ChurnRate}
                     />
                   </Grid>
                 </Grid>

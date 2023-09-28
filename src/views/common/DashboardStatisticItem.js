@@ -6,7 +6,8 @@ import {
   Paper,
   Typography,
   CardContent,
-  Grid
+  Grid,
+  CardMedia
 } from '@mui/material'
 
 import {
@@ -76,22 +77,29 @@ export default function DashboardStatisticItem (props) {
       <Card sx={{ boxShadow: '1px 1px 15px #EEEEEE' }}>
         <CardContent>
           <Grid container>
-            <Grid item xs={12}>
-              <Paper
+            {/* <Grid item xs={12}> */}
+            <Paper
+              sx={{
+                width: '60px',
+                height: '60px',
+                backgroundColor: `${props.color + '1f'}`,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: 'none'
+              }}
+            >
+              <CardMedia
+                component={'img'}
+                image={props.component}
                 sx={{
                   width: '40px',
-                  height: '40px',
-                  backgroundColor: `${props.color + '1f'}`,
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: 'none'
+                  height: '40px'
                 }}
-              >
-                {props.component}
-              </Paper>
-            </Grid>
+              />
+            </Paper>
+            {/* </Grid> */}
           </Grid>
           <Typography
             marginTop={1}
@@ -109,32 +117,27 @@ export default function DashboardStatisticItem (props) {
             <Typography>{props.title}</Typography>
             <Typography>{props.stat}</Typography>
           </Box>
-          <Grid item xs={12}>
-            <div style={{ width: '100%', height: 150 }}>
-              <ResponsiveContainer>
-                <AreaChart width={250} height={150} data={data}>
-                  <defs>
-                    <linearGradient id={props.id} x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='5%' stopColor={color} stopOpacity={0.8} />
-                      <stop
-                        offset='95%'
-                        stopColor={'#ffffff'}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    type='monotone'
-                    dataKey='uv'
-                    stroke={props.color}
-                    fillOpacity={1}
-                    fill={`url(#${props.id})`}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </Grid>
+          <Grid item xs={12}></Grid>
         </CardContent>
+        <div style={{ width: '100%', height: 150 }}>
+          <ResponsiveContainer>
+            <AreaChart width={250} height={150} data={data}>
+              <defs>
+                <linearGradient id={props.id} x1='0' y1='0' x2='0' y2='1'>
+                  <stop offset='5%' stopColor={color} stopOpacity={0.8} />
+                  <stop offset='95%' stopColor={'#ffffff'} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type='monotone'
+                dataKey='uv'
+                stroke={props.color}
+                fillOpacity={1}
+                fill={`url(#${props.id})`}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </Card>
     </>
   )

@@ -11,7 +11,6 @@ import {
 import OnlyHeader from '../../components/Headers/OnlyHeader'
 import { ThemeMain } from '../../components/common/Theme'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import SuperFeedbackTable from './common/SuperFeedbackTable'
 import SuperStaffTable from './common/SuperStaffTable'
 
 export default function SuperStaff () {

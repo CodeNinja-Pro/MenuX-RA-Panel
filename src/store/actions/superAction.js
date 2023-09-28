@@ -324,6 +324,77 @@ export const deleteFeedback = (uid, onSuccess) => async dispatch => {
   }
 }
 
+export const getAllStaffs = id => async dispatch => {
+  dispatch({
+    type: 'LOADER',
+    payload: true
+  })
+
+  try {
+    let allStaffs = []
+    const snapShot = await firebase.firestore().collection('staffs').get()
+
+    snapShot.forEach(doc => {
+      allStaffs.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    })
+
+    dispatch({
+      type: 'GET_STAFFS',
+      payload: allStaffs
+    })
+
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  } catch (error) {
+    toast.error(error.message, {
+      style: {
+        fontFamily: 'Poppins'
+      }
+    })
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  }
+}
+
+export const deleteStaff = (uid, onSuccess) => async dispatch => {
+  try {
+    await firebase
+      .firestore()
+      .collection('staffs')
+      .doc(uid)
+      .delete()
+      .then(() => {
+        onSuccess()
+        toast.success('You deleted current staff successfully.', {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        })
+        dispatch({
+          type: 'LOADER',
+          payload: false
+        })
+      })
+  } catch (error) {
+    toast.error(error.message, {
+      style: {
+        fontFamily: 'Poppins'
+      }
+    })
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  }
+}
+
 // export const updateStatus =
 //   (userId, id, couponStatus, onSuccess) => async dispatch => {
 //     try {
