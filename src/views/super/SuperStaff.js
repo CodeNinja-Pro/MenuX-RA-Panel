@@ -12,8 +12,9 @@ import OnlyHeader from '../../components/Headers/OnlyHeader'
 import { ThemeMain } from '../../components/common/Theme'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import SuperFeedbackTable from './common/SuperFeedbackTable'
+import SuperStaffTable from './common/SuperStaffTable'
 
-export default function SuperFeedback () {
+export default function SuperStaff () {
   return (
     <>
       <OnlyHeader />
@@ -37,10 +38,7 @@ export default function SuperFeedback () {
                       marginTop={'10px'}
                       fontSize={'25px'}
                     >
-                      Feedbacks
-                    </Typography>
-                    <Typography textAlign={'left'}>
-                      Feedbacks from the merchants
+                      Staff
                     </Typography>
                   </Grid>
                   <Grid
@@ -63,7 +61,7 @@ export default function SuperFeedback () {
                     />
                   </Grid>
                   <Grid item xs={12} marginTop={2}>
-                    <SuperFeedbackTable />
+                    <SuperStaffTable />
                   </Grid>
                 </Grid>
               </Grid>

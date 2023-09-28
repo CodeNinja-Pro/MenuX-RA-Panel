@@ -316,21 +316,20 @@ const KitchenStaff = () => {
     if (customization) {
       permissions.customization = customizationOptions
     }
-    dispatch(
-      updateStaff(id, obj, permissionId, permissions, () => {
-        editToggle()
-        clearData()
-        toast.success('Staff Updated SuccessFully', {
-          style: {
-            fontFamily: 'Poppins'
-          }
-        })
-        clearFormData()
-        setTimeout(() => {
-          dispatch(getAllStaff(uid, searchField, hitsPerPage, currentPage))
-        }, 2000)
-      })
-    )
+    dispatch()
+    // updateStaff(id, obj, permissionId, permissions, () => {
+    //   editToggle()
+    //   clearData()
+    //   toast.success('Staff Updated SuccessFully', {
+    //     style: {
+    //       fontFamily: 'Poppins'
+    //     }
+    //   })
+    //   clearFormData()
+    //   setTimeout(() => {
+    //     dispatch(getAllStaff(uid, searchField, hitsPerPage, currentPage))
+    //   }, 2000)
+    // })
   }
 
   const clearData = () => {
@@ -428,7 +427,7 @@ const KitchenStaff = () => {
     )
   }
   useEffect(() => {
-    dispatch(getAllStaff(uid, searchField, hitsPerPage, currentPage))
+    // dispatch(getAllStaff(uid, searchField, hitsPerPage, currentPage))
   }, [searchField, hitsPerPage, currentPage])
 
   return (

@@ -1,130 +1,313 @@
-import firebase from "../../config/firebase";
-import algoliasearch from "algoliasearch";
-import { createNullCache } from "@algolia/cache-common";
-import { enqueueSnackbar } from "notistack";
+import firebase from '../../config/firebase'
+import algoliasearch from 'algoliasearch'
+import { createNullCache } from '@algolia/cache-common'
+import { enqueueSnackbar } from 'notistack'
+import { toast } from 'react-toastify'
 
-const client = algoliasearch("99PJ9S7CN9", "4dd3b464870ca480ed3bbbe36ef739cd", {
-  responsesCache: createNullCache(),
-});
+const client = algoliasearch('99PJ9S7CN9', '4dd3b464870ca480ed3bbbe36ef739cd', {
+  responsesCache: createNullCache()
+})
 
-export const getAllStaff =
-  (ID, search, hitsPerPage, currentPage) => async (dispatch) => {
-    dispatch(staffLoader(true));
-    let newHits = [];
-    const index = client.initIndex("users");
+export const getStaffs = id => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
 
-    index
-      .search(search, {
-        filters: `isDeleted:false AND (type:kitchen-admin OR type:kitchen-cook) AND restaurantID:${ID}`,
-        hitsPerPage: hitsPerPage,
-        page: currentPage,
-      })
-      .then((response) => {
-        let { hits, ...rest } = response;
-
-        hits.forEach((hit) => {
-          firebase
-            .firestore()
-            .collection("permissions")
-            .where("userID", "==", hit.id)
-            .onSnapshot((querySnapshot) => {
-              let docs = {};
-              querySnapshot.forEach((doc) => {
-                // docs.push({ id: doc.id, ...doc.data() });
-                docs = { id: doc.id, ...doc.data() };
-              });
-              newHits.push({ ...hit, permissions: docs });
-              dispatch({
-                type: "GET_ALL_STAFF",
-                payload: newHits,
-              });
-              dispatch({ type: "STAFF_DETAILS", payload: rest });
-              dispatch(staffLoader(false));
-            });
-        });
-      })
-      .catch((error) => {
-        console.error("Error getting documents: ", error);
-      });
-  };
-
-export const updateStaff =
-  (id, obj, permissionId, permissions, onSuccess) => async (dispatch) => {
-    dispatch(staffLoader(true));
-    firebase
+  try {
+    let allStaffs = []
+    const snapShot = await firebase
       .firestore()
-      .collection("users")
+      .collection('roles')
+      .where('restaurantID', '==', id)
+      .get()
+
+    snapShot.forEach(doc => {
+      allStaffs.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    })
+
+    dispatch({
+      type: 'GET_ALL_STAFF',
+      payload: allStaffs
+    })
+
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
+
+export const addNewRole = (userId, newRole, onSuccess) => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
+  try {
+    const snapShot = await firebase
+      .firestore()
+      .collection('roles')
+      .add({
+        restaurantID: userId,
+        ...newRole,
+        createdAt: firebase.firestore.Timestamp.now()
+      })
+
+    snapShot.get().then(doc => {
+      onSuccess()
+      dispatch({
+        type: 'STAFF_ADDED',
+        payload: doc.data()
+      })
+      dispatch({
+        type: 'STAFF_LOADER',
+        payload: false
+      })
+    })
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
+
+export const deleteStaffRole = id => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
+
+  try {
+    await firebase
+      .firestore()
+      .collection('roles')
       .doc(id)
-      .update(obj)
-      .then(async () => {
-        dispatch(staffLoader(false));
-        await firebase
-          .firestore()
-          .collection("permissions")
-          .doc(permissionId)
-          .set({
-            userID: id,
-            ...permissions,
-          });
+      .delete()
+      .then(() => {
         dispatch({
-          type: "STAFF_UPDATED",
-          payload: {
-            id,
-            obj,
-            // permissions,
-          },
-        });
-        onSuccess();
+          type: 'STAFF_DELETED',
+          payload: id
+        })
+        toast.success('You deleted current role successfully.')
+        dispatch({
+          type: 'STAFF_LOADER',
+          payload: false
+        })
       })
-      .catch((err) => {
-        enqueueSnackbar(err);
-        dispatch(staffLoader(false));
-      });
-  };
+      .catch(err => {
+        toast.error(err.message)
+        dispatch({
+          type: 'STAFF_LOADER',
+          payload: false
+        })
+      })
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
 
-export const deleteStaff =
-  (id, permissionId, onSuccess) => async (dispatch) => {
-    dispatch(staffLoader(true));
-    firebase
+export const sendNewStaffRequest =
+  (id, staffInfo, onSuccess) => async dispatch => {
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: true
+    })
+
+    try {
+      const snapShot = await firebase
+        .firestore()
+        .collection('staffs')
+        .add({
+          restaurantID: id,
+          ...staffInfo,
+          status: false,
+          enable: false,
+          createdAt: firebase.firestore.Timestamp.now()
+        })
+
+      snapShot.get().then(doc => {
+        onSuccess()
+        dispatch({
+          type: 'NEW_STAFF_ADDED',
+          payload: doc.data()
+        })
+        dispatch({
+          type: 'STAFF_LOADER',
+          payload: false
+        })
+      })
+    } catch (error) {
+      toast.error(error.message)
+      dispatch({
+        type: 'STAFF_LOADER',
+        payload: false
+      })
+    }
+  }
+
+export const getAllStaffInfo = id => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
+
+  try {
+    let allStaffInfo = []
+    const snapShot = await firebase
       .firestore()
-      .collection("users")
+      .collection('staffs')
+      .where('restaurantID', '==', id)
+      .get()
+
+    snapShot.forEach(doc => {
+      allStaffInfo.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    })
+
+    dispatch({
+      type: 'GET_STAFFS',
+      payload: allStaffInfo
+    })
+
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
+
+export const deleteStaff = id => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
+
+  try {
+    await firebase
+      .firestore()
+      .collection('staffs')
+      .doc(id)
+      .delete()
+      .then(() => {
+        dispatch({
+          type: 'CURRENT_STAFF_DELETED',
+          payload: id
+        })
+
+        toast.success('You deleted the staff information successfully.')
+
+        dispatch({
+          type: 'STAFF_LOADER',
+          payload: false
+        })
+      })
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
+
+export const updateStaffStatus = (id, newStatus) => async dispatch => {
+  dispatch({
+    type: 'STAFF_LOADER',
+    payload: true
+  })
+
+  try {
+    await firebase
+      .firestore()
+      .collection('staffs')
       .doc(id)
       .update({
-        isDeleted: true,
+        status: !newStatus
       })
-      .then(async () => {
-        await firebase
-          .firestore()
-          .collection("permissions")
-          .doc(permissionId)
-          .delete()
-          // .get()
-          // .then((querySnapshot) => {
-          //   querySnapshot.forEach((doc) => {
-          //     doc.ref.delete();
-          //   });
-          // })
-          .catch((error) => {
-            console.error("Error deleting documents: ", error);
-          });
+      .then(() => {
+        dispatch({
+          type: 'CURRENT_STAFF_UPDATED',
+          payload: {
+            id,
+            status: !newStatus
+          }
+        })
+
+        toast.success('You updated the staff status successfully.')
 
         dispatch({
-          type: "STAFF_DELETED",
-          payload: id,
-        });
-
-        dispatch(staffLoader(false));
-        onSuccess();
+          type: 'STAFF_LOADER',
+          payload: false
+        })
       })
-      .catch((err) => {
-        enqueueSnackbar(err);
-        dispatch(staffLoader(false));
-      });
-  };
+  } catch (error) {
+    toast.error(error.message)
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: false
+    })
+  }
+}
 
-const staffLoader = (data) => async (dispatch) => {
-  dispatch({
-    type: "STAFF_LOADER",
-    payload: data,
-  });
-};
+export const updateStaffInfo =
+  (id, updateData, onSuccess) => async dispatch => {
+    dispatch({
+      type: 'STAFF_LOADER',
+      payload: true
+    })
+
+    try {
+      await firebase
+        .firestore()
+        .collection('staffs')
+        .doc(id)
+        .update({
+          ...updateData
+        })
+        .then(() => {
+          dispatch({
+            type: 'STAFF_UPDATED',
+            payload: {
+              id,
+              updateData
+            }
+          })
+          onSuccess()
+          toast.success('You updated the staff status successfully.')
+
+          dispatch({
+            type: 'STAFF_LOADER',
+            payload: false
+          })
+        })
+    } catch (error) {
+      toast.error(error.message)
+      dispatch({
+        type: 'STAFF_LOADER',
+        payload: false
+      })
+    }
+  }

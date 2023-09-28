@@ -74,6 +74,7 @@ import SuperDashboard from './views/super/SuperDashboard'
 import SuperRestaurant from './views/super/SuperRestaurant'
 import SuperFeedback from './views/super/SuperFeedback'
 import CreateRole from './components/Staff/CreateRole.js'
+import SuperStaff from './views/super/SuperStaff.js'
 
 var routes = [
   {
@@ -416,8 +417,8 @@ var routes = [
   {
     path: '/dashboard',
     name: 'Super Dashboard',
-    icon: request,
-    activeIcon: requestactive,
+    icon: dashboard,
+    activeIcon: dashboardactive,
     component: SuperDashboard,
     type: 'super',
     layout: '/super'
@@ -425,17 +426,26 @@ var routes = [
   {
     path: '/restaurant',
     name: 'Restaurant',
-    icon: request,
-    activeIcon: requestactive,
+    icon: customers,
+    activeIcon: customersactive,
     component: SuperRestaurant,
+    type: 'super',
+    layout: '/super'
+  },
+  {
+    path: '/staff',
+    name: 'Staff',
+    icon: staff,
+    activeIcon: staffactive,
+    component: SuperStaff,
     type: 'super',
     layout: '/super'
   },
   {
     path: '/feedback',
     name: 'Feedback',
-    icon: request,
-    activeIcon: requestactive,
+    icon: customerFeedback,
+    activeIcon: customerFeedbackactive,
     component: SuperFeedback,
     type: 'super',
     layout: '/super'

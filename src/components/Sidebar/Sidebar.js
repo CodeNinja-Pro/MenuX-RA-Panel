@@ -793,25 +793,29 @@ const Sidebar = props => {
             <Box>
               <Nav navbar>{createLinks(routes)}</Nav>
             </Box>
-            <Box>
-              {hide ? (
-                ''
-              ) : (
-                <Button
-                  onClick={() => onPreviewClick}
-                  style={{
-                    marginLeft: '-10px',
-                    backgroundColor: '#2D66EE',
-                    color: `${mainColor}`,
-                    borderWidth: '5px',
-                    borderColor: '#E0EAFF'
-                  }}
-                  className={'nav-link__active'}
-                >
-                  {'Preview Menu'}
-                </Button>
-              )}
-            </Box>
+            {user.type === 'super' ? (
+              ''
+            ) : (
+              <Box>
+                {hide ? (
+                  ''
+                ) : (
+                  <Button
+                    onClick={() => onPreviewClick}
+                    style={{
+                      marginLeft: '-10px',
+                      backgroundColor: '#2D66EE',
+                      color: `${mainColor}`,
+                      borderWidth: '5px',
+                      borderColor: '#E0EAFF'
+                    }}
+                    className={'nav-link__active'}
+                  >
+                    {'Preview Menu'}
+                  </Button>
+                )}
+              </Box>
+            )}
           </Box>
         </Collapse>
       </Container>

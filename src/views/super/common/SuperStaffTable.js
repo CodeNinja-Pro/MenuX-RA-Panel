@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Divider,
@@ -18,33 +18,42 @@ import {
   ClickAwayListener,
   MenuList,
   MenuItem,
-  Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
   FormHelperText,
   OutlinedInput,
+  DialogTitle,
   DialogContentText,
-  Select
+  InputAdornment,
+  Select,
+  Switch,
+  FormControlLabel
 } from '@mui/material'
+
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  deleteStaff,
-  getAllStaffInfo,
-  getStaffs,
-  updateStaffInfo,
-  updateStaffStatus
-} from '../../store/actions/staffAction'
+  deleteFeedback,
+  deleteRestaurant,
+  getAllFeedbacks,
+  getAllRestaurants,
+  sendNotification,
+  sendRespond,
+  updateRestaurant
+} from '../../../store/actions/superAction'
 
 const applyFilters = (tableItems, filters) => {
-  return tableItems.filter(tableItem => {
+  return tableItems?.filter(tableItem => {
     let matches = true
 
     if (filters.status && tableItem.status !== filters.status) {
@@ -59,60 +68,45 @@ const applyPagination = (tableItems, page, limit) => {
   return tableItems && tableItems.slice(page * limit, page * limit + limit)
 }
 
-const StaffTable = () => {
+const SuperStaffTable = () => {
+  // User definition
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.auth)
-  const { staffData, staffs } = useSelector(state => state.staff)
-  const [allStaffInfo, setAllStaffInfo] = useState([])
+  let { allFeedbacks } = useSelector(state => state.super)
+  let { loader } = useSelector(state => state.super)
 
-  const [tableData, setTableData] = useState([])
-
-  useEffect(() => {
-    dispatch(getStaffs(user.id))
-    dispatch(getAllStaffInfo(user.id))
-  }, [])
-  useEffect(() => {
-    setTableData(staffs)
-  }, [staffs])
-
-  useEffect(() => {
-    setAllStaffInfo(staffData)
-  }, [staffData])
-
+  // Variable definition
+  const [allFeedbackInfo, setAllFeedbackInfo] = useState([])
+  const [notificationModal, setNotificationModal] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [respond, setRespond] = useState('')
   const [selectedItem, setSelectedItem] = useState('')
 
-  const [roleName, setRoleName] = useState('')
-  const [staffEmail, setStaffEmail] = useState('')
-  const [staffName, setStaffName] = useState('')
-  const [modalFlag, setModalFlag] = useState(false)
+  useEffect(() => {
+    dispatch(getAllFeedbacks())
+  }, [])
 
-  const editStaffInfo = () => {
-    const updateData = {
-      role: roleName,
-      email: staffEmail,
-      name: staffName
-    }
+  useEffect(() => {
+    setAllFeedbackInfo(allFeedbacks)
+  }, [allFeedbacks])
 
+  const handleNotification = () => {
+    dispatch(sendRespond(selectedItem, respond))
+
+    setRespond('')
+  }
+
+  const handleDelete = () => {
     dispatch(
-      updateStaffInfo(selectedItem, updateData, () => {
-        setRoleName('')
-        setStaffEmail('')
-        setStaffName('')
+      deleteFeedback(selectedItem, () => {
+        const newArray = allFeedbackInfo.filter(obj => obj.id !== selectedItem)
+        setAllFeedbackInfo(newArray)
       })
     )
   }
 
-  const deleteStaffInfo = () => {
-    dispatch(deleteStaff(selectedItem))
-  }
-
-  const handleStatusChange = newStatus => {
-    console.log(newStatus)
-    dispatch(updateStaffStatus(selectedItem, newStatus))
-  }
-
-  // Table definition section
+  // Table setting section
   const [page, setPage] = useState(0)
   const [limit, setLimit] = useState(10)
   const [filters, setFilters] = useState({
@@ -127,7 +121,7 @@ const StaffTable = () => {
     setLimit(parseInt(event.target.value))
   }
 
-  const filteredTableItems = applyFilters(tableData, filters)
+  const filteredTableItems = applyFilters(allFeedbackInfo, filters)
   const paginatedTableData = applyPagination(filteredTableItems, page, limit)
 
   // user definition
@@ -144,6 +138,8 @@ const StaffTable = () => {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
+  const status = ['Active', 'Deactive']
+
   return (
     <Card sx={{ boxShadow: 'none' }}>
       <Divider />
@@ -152,8 +148,11 @@ const StaffTable = () => {
           <TableHead>
             <TableRow>
               <TableCell align='left'>Name</TableCell>
-              <TableCell align='left'>Role</TableCell>
               <TableCell align='left'>Email</TableCell>
+              <TableCell align='center'>Type</TableCell>
+              <TableCell align='left'>Feedback</TableCell>
+              <TableCell align='center'>Score</TableCell>
+              <TableCell align='center'>Date</TableCell>
               <TableCell align='center'>Status</TableCell>
               <TableCell align='center'>Actions</TableCell>
             </TableRow>
@@ -165,32 +164,39 @@ const StaffTable = () => {
                   <>
                     <TableRow hover key={index}>
                       <TableCell align='left'>
-                        <Typography
-                          color='text.primary'
-                          display={'flex'}
-                          justifyContent={'inherit'}
-                          alignItems={'center'}
-                        >
-                          <Avatar
-                            alt='image'
-                            src={tableItem.avatar}
-                            sx={{ marginRight: '20px' }}
-                          />
-                          {tableItem.name}
+                        <Typography color='text.primary'>
+                          {tableItem.restaurantName}
                         </Typography>
                       </TableCell>
                       <TableCell align='left'>
                         <Typography color='text.primary'>
-                          {tableItem.role}
+                          {tableItem.contactEmail}
                         </Typography>
                       </TableCell>
                       <TableCell align='left'>
                         <Typography color='text.primary'>
-                          {tableItem.email}
+                          {tableItem.restaurantType}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography color='text.primary'>
+                          {tableItem.feedback.length > 30
+                            ? tableItem.feedback.slice(0, 30) + '...'
+                            : tableItem.feedback}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='center'>
+                        <Typography color='text.primary'>
+                          {tableItem.score}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='center'>
+                        <Typography color='text.primary'>
+                          {tableItem.createdAt.toDate().toDateString()}
                         </Typography>
                       </TableCell>
                       <TableCell align='center' width={'10%'}>
-                        {tableItem.status === true ? (
+                        {tableItem.respond.length !== 0 ? (
                           <Typography
                             sx={{
                               backgroundColor: 'rgba(40, 199, 111, 0.12)',
@@ -198,7 +204,7 @@ const StaffTable = () => {
                             }}
                             color={'rgba(40, 199, 111, 1)'}
                           >
-                            Active
+                            Responded
                           </Typography>
                         ) : (
                           <Typography
@@ -208,7 +214,7 @@ const StaffTable = () => {
                             }}
                             color={'rgba(241, 65, 108, 1)'}
                           >
-                            Deactive
+                            Unanswered
                           </Typography>
                         )}
                       </TableCell>
@@ -220,9 +226,6 @@ const StaffTable = () => {
                           onClick={event => {
                             handleClick(event)
                             setSelectedItem(tableItem.id)
-                            setRoleName(tableItem.role)
-                            setStaffEmail(tableItem.email)
-                            setStaffName(tableItem.name)
                           }}
                         >
                           <MoreVertIcon style={{ marginTop: '5px' }} />
@@ -243,31 +246,19 @@ const StaffTable = () => {
                             <MenuList id='split-button-menu'>
                               <MenuItem
                                 onClick={() => {
-                                  setModalFlag(true)
+                                  setNotificationModal(true)
                                 }}
                                 key={'edit'}
                               >
-                                <EditOutlinedIcon />
-                                Edit
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => {
-                                  handleStatusChange(tableItem.status)
-                                }}
-                                key={'status'}
-                              >
-                                <ManageAccountsOutlinedIcon color='success' />
-                                <Typography color={'#2e7d32'}>
-                                  {tableItem.status === true && 'Deactive'}
-                                  {tableItem.status === false && 'Active'}
-                                </Typography>
+                                <NotificationsNoneOutlinedIcon />
+                                Send the Respond
                               </MenuItem>
                               <Divider />
                               <MenuItem
                                 onClick={() => {
-                                  deleteStaffInfo()
+                                  setDeleteModal(true)
                                 }}
-                                key={'delete'}
+                                key={'status'}
                               >
                                 <DeleteOutlineOutlinedIcon color='error' />
                                 <Typography color={'error'}>Delete</Typography>
@@ -285,8 +276,8 @@ const StaffTable = () => {
       </TableContainer>
 
       <Dialog
-        open={modalFlag}
-        onClose={() => setModalFlag(false)}
+        open={notificationModal}
+        onClose={() => setNotificationModal(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
@@ -297,7 +288,7 @@ const StaffTable = () => {
             fontWeight: 'bold'
           }}
         >
-          {'Edit Staff Information'}
+          {'Respond'}
         </DialogTitle>
         <Divider />
         <DialogContent>
@@ -305,42 +296,24 @@ const StaffTable = () => {
             id='alert-dialog-description'
             style={{ textAlign: 'center' }}
           >
-            <FormControl fullWidth>
-              <FormHelperText style={{ fontSize: '18px' }}>
-                Role Name
-              </FormHelperText>
-              <Select
-                fullWidth
-                value={roleName}
-                onChange={e => setRoleName(e.target.value)}
+            <FormControl fullWidth sx={{ width: '300px' }} variant='outlined'>
+              <FormHelperText
+                style={{ fontSize: '18px' }}
+                id='outlined-weight-helper-text'
               >
-                {allStaffInfo?.map((staffInfo, index) => (
-                  <MenuItem key={index} value={staffInfo.roleName}>
-                    {staffInfo.roleName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ marginTop: 2 }} fullWidth>
-              <FormHelperText style={{ fontSize: '18px' }}>
-                Email
+                Respond
               </FormHelperText>
               <OutlinedInput
-                type='email'
-                placeholder='menuxdigital@gmail.com'
-                value={staffEmail}
-                onChange={e => setStaffEmail(e.target.value)}
-              />
-            </FormControl>
-            <FormControl sx={{ marginTop: 2 }} fullWidth>
-              <FormHelperText style={{ fontSize: '18px' }}>
-                Full Name
-              </FormHelperText>
-              <OutlinedInput
-                type='email'
-                placeholder='John Doe'
-                value={staffName}
-                onChange={e => setStaffName(e.target.value)}
+                multiline
+                rows={6}
+                id='outlined-adornment-weight'
+                aria-describedby='outlined-weight-helper-text'
+                inputProps={{
+                  'aria-label': 'weight'
+                }}
+                placeholder='Notification Text'
+                value={respond}
+                onChange={e => setRespond(e.target.value)}
               />
             </FormControl>
           </DialogContentText>
@@ -356,23 +329,51 @@ const StaffTable = () => {
             style={{ margin: '20px' }}
             fullWidth
             onClick={() => {
-              setModalFlag(false)
+              setNotificationModal(false)
             }}
           >
             Cancel
           </Button>
           <Button
             fullWidth
-            disabled={!staffEmail || !staffName || !roleName}
+            disabled={loader}
             variant='contained'
             style={{ margin: '20px' }}
             onClick={() => {
-              setModalFlag(false)
-              editStaffInfo()
+              setNotificationModal(false)
+              handleNotification()
             }}
             autoFocus
           >
-            Send Email
+            Send
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>
+          {'You pay attention here'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you really going to delete this feedback information?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
+          <Button
+            onClick={() => {
+              setDeleteModal(false)
+              handleDelete()
+            }}
+            autoFocus
+          >
+            Agree
           </Button>
         </DialogActions>
       </Dialog>
@@ -380,7 +381,7 @@ const StaffTable = () => {
       <Box p={2}>
         <TablePagination
           component='div'
-          count={filteredTableItems.length}
+          count={filteredTableItems?.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -392,12 +393,12 @@ const StaffTable = () => {
   )
 }
 
-StaffTable.propTypes = {
+SuperStaffTable.propTypes = {
   tableItems: PropTypes.array.isRequired
 }
 
-StaffTable.defaultProps = {
+SuperStaffTable.defaultProps = {
   tableItems: []
 }
 
-export default StaffTable
+export default SuperStaffTable

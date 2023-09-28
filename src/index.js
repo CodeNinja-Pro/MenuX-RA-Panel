@@ -17,7 +17,7 @@ import { Provider } from 'react-redux'
 ReactDOM.render(
   <>
     <Provider store={store}>
-      <ToastContainer />
+      <ToastContainer style={{ fontFamily: 'Poppins' }} />
       <App />
     </Provider>
   </>,

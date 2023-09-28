@@ -151,6 +151,7 @@ const SuperFeedbackTable = () => {
               <TableCell align='left'>Email</TableCell>
               <TableCell align='center'>Type</TableCell>
               <TableCell align='left'>Feedback</TableCell>
+              <TableCell align='center'>Score</TableCell>
               <TableCell align='center'>Date</TableCell>
               <TableCell align='center'>Status</TableCell>
               <TableCell align='center'>Actions</TableCell>
@@ -177,9 +178,16 @@ const SuperFeedbackTable = () => {
                           {tableItem.restaurantType}
                         </Typography>
                       </TableCell>
+                      <TableCell align='left'>
+                        <Typography color='text.primary'>
+                          {tableItem.feedback.length > 30
+                            ? tableItem.feedback.slice(0, 30) + '...'
+                            : tableItem.feedback}
+                        </Typography>
+                      </TableCell>
                       <TableCell align='center'>
                         <Typography color='text.primary'>
-                          {tableItem.feedback}
+                          {tableItem.score}
                         </Typography>
                       </TableCell>
                       <TableCell align='center'>
@@ -243,7 +251,7 @@ const SuperFeedbackTable = () => {
                                 key={'edit'}
                               >
                                 <NotificationsNoneOutlinedIcon />
-                                Send Respond
+                                Send the Respond
                               </MenuItem>
                               <Divider />
                               <MenuItem
