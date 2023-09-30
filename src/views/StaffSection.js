@@ -26,7 +26,6 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import { ThemeMain } from '../components/common/Theme'
 import StaffTable from '../components/Staff/StaffTable'
-import { StaffData } from '../components/Staff/StaffData'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {

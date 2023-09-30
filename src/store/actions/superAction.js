@@ -10,11 +10,17 @@ export const getAllRestaurants = () => async dispatch => {
 
   try {
     let allRestaurants = []
-    const snapShot = await firebase.firestore().collection('users').get()
+    const snapShot = await firebase
+      .firestore()
+      .collection('users')
+      .where('type', '==', 'restaurant')
+      .where('active', '==', true)
+      .get()
 
     snapShot.forEach(doc => {
       allRestaurants.push({
         id: doc.id,
+        email: doc.data().email,
         restaurantName: doc.data().restaurantName,
         restaurantLocation: doc.data().restaurantLocation,
         restaurantEmail: doc.data().restaurantEmail,
@@ -23,7 +29,7 @@ export const getAllRestaurants = () => async dispatch => {
         openingYear: doc.data().createdAt.toDate().getFullYear(),
         subscription: 'basic',
         lastActivity: '2 days ago',
-        restaurantStatus: doc.data().restaurantEnable
+        restaurantEnable: doc.data().restaurantEnable
       })
     })
 
@@ -55,6 +61,7 @@ export const updateRestaurant =
       type: 'LOADER',
       payload: true
     })
+
     try {
       await firebase
         .firestore()
@@ -64,7 +71,13 @@ export const updateRestaurant =
           ...updateData
         })
         .then(() => {
-          //   dispatch(getCoupons(userId))
+          dispatch({
+            type: 'UPDATE_RESTAURANTS',
+            payload: {
+              id: id,
+              updateData: updateData
+            }
+          })
           onSuccess()
           toast.success(
             'You updated the restaurant information successfully.',
@@ -157,23 +170,31 @@ export const sendNotification =
 
 export const deleteRestaurant = uid => async dispatch => {
   try {
-    console.log(uid)
-    await firebase
-      .auth()
-      .deleteUser(uid)
-      .then(() => {
-        console.log('success')
-      })
+    const updateData = {
+      active: false,
+      restaurantEmail: '',
+      restaurantName: '',
+      restaurantLocation: '',
+      restaurantPassword: '',
+      restaurantType: '',
+      restaurantEnable: false
+    }
     await firebase
       .firestore()
       .collection('users')
       .doc(uid)
-      .delete()
+      .update({
+        ...updateData
+      })
       .then(() => {
-        toast.success('You sent new notification successfully.', {
+        toast.success('You deleted the restaurant information successfully.', {
           style: {
             fontFamily: 'Poppins'
           }
+        })
+        dispatch({
+          type: 'DELETE_RESTAURANTS',
+          payload: uid
         })
         dispatch({
           type: 'LOADER',

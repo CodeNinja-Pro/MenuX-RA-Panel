@@ -1,9 +1,7 @@
 import firebase from '../../config/firebase'
 import { toast } from 'react-toastify'
-import { v4 as uuidv4 } from 'uuid'
 import algoliasearch from 'algoliasearch'
 import { createNullCache } from '@algolia/cache-common'
-import { enqueueSnackbar } from 'notistack'
 import {
   sortCategoryByView,
   sortItemByView,
@@ -11,11 +9,22 @@ import {
 } from '../../Statistical/generalStatistics'
 import { reviews } from '../../Statistical/reviewData'
 
-// const tinyPNG = new TinyPNG('8PNWK2Rs0wbmgyRd0yQ10dN5Vsj92hHl')
-
 const client = algoliasearch('99PJ9S7CN9', '4dd3b464870ca480ed3bbbe36ef739cd', {
   responsesCache: createNullCache()
 })
+
+export const getActiveMerchants = () => async dispatch => {
+  try {
+    let allUsers = []
+    const snapShot = await firebase.firestore().collection('users').get()
+
+    snapShot.forEach(doc => {
+      allUsers.push(doc.data())
+    })
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
 
 export const getClickSortItems = restaurantID => async dispatch => {
   try {

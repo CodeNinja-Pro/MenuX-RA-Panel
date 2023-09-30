@@ -24,5 +24,9 @@
         "firebase-debug.*.log"
       ]
     }
-  ]
+  ],
+  "extensions": {
+    "make-payment": "google-pay/make-payment@0.1.3",
+    "make-payment-ajow": "google-pay/make-payment@0.1.3"
+  }
 }

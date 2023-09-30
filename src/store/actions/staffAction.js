@@ -144,7 +144,10 @@ export const sendNewStaffRequest =
         onSuccess()
         dispatch({
           type: 'NEW_STAFF_ADDED',
-          payload: doc.data()
+          payload: {
+            id: doc.id,
+            ...doc.data()
+          }
         })
         dispatch({
           type: 'STAFF_LOADER',
@@ -240,19 +243,19 @@ export const updateStaffStatus = (id, newStatus) => async dispatch => {
   })
 
   try {
-    await firebase
+    const snapShot = await firebase
       .firestore()
       .collection('staffs')
       .doc(id)
       .update({
-        status: !newStatus
+        status: newStatus
       })
       .then(() => {
         dispatch({
           type: 'CURRENT_STAFF_UPDATED',
           payload: {
             id,
-            status: !newStatus
+            status: newStatus
           }
         })
 

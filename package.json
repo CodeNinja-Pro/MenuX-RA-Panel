@@ -71,6 +71,7 @@
     "react-switch": "^7.0.0",
     "react-time-range": "^1.0.4",
     "react-toastify": "8.0.0",
+    "reactfire": "^4.2.3",
     "reactstrap": "8.9.0",
     "recharts": "^2.8.0",
     "redux": "^4.1.2",

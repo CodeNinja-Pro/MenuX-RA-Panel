@@ -15,7 +15,7 @@
 // let stripePromise = loadStripe(TEST_CLIENT_KEY)
 // const SignUp = () => {
 //   const history = useHistory()
-//   let stripePromise = loadStripe('pk_test_7wzXL7byFHbRdehCSS5eC04Q00zUcStdHz')
+//   let stripePromise = loadsignupInformationStripe('pk_test_7wzXL7byFHbRdehCSS5eC04Q00zUcStdHz')
 //   const [email, setEmail] = useState('')
 //   const [location, setLocation] = useState('')
 //   const [password, setPassword] = useState('')
@@ -448,7 +448,7 @@ export default function SignUp () {
           dispatch(
             signupInformation(
               data.user?.uid,
-              data.user?.displayName,
+              fullName,
               data.user?.email,
               () => {
                 history.push('/auth/create-restaurant')

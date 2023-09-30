@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "menu-x-353fd"
+  },
+  "targets": {},
+  "etags": {
+    "menu-x-353fd": {
+      "extensionInstances": {
+        "make-payment-ajow": "11460162d7f6a0df1edadf822315ee8f88d0966129db884261bcc9717361ed9b",
+        "make-payment": "5a4a704843ae15d80fb10d9216e09ea2960b006b5ab27df301b8a6012dfffa38"
+      }
+    }
   }
 }

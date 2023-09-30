@@ -107,9 +107,17 @@ const StaffTable = () => {
     dispatch(deleteStaff(selectedItem))
   }
 
-  const handleStatusChange = newStatus => {
-    console.log(newStatus)
-    dispatch(updateStaffStatus(selectedItem, newStatus))
+  const handleStatusChange = () => {
+    let newState = false
+    const filterdItem = tableData.filter(data => data.id === selectedItem)
+    console.log(filterdItem)
+    if (filterdItem.status) {
+      newState = true
+    } else {
+      newState = false
+    }
+    console.log(newState)
+    dispatch(updateStaffStatus(selectedItem, newState))
   }
 
   // Table definition section
@@ -148,7 +156,7 @@ const StaffTable = () => {
     <Card sx={{ boxShadow: 'none' }}>
       <Divider />
       <TableContainer>
-        <Table>
+        <Table aria-labelledby='tableTitle'>
           <TableHead>
             <TableRow>
               <TableCell align='left'>Name</TableCell>
@@ -252,14 +260,13 @@ const StaffTable = () => {
                               </MenuItem>
                               <MenuItem
                                 onClick={() => {
-                                  handleStatusChange(tableItem.status)
+                                  handleStatusChange()
                                 }}
                                 key={'status'}
                               >
                                 <ManageAccountsOutlinedIcon color='success' />
                                 <Typography color={'#2e7d32'}>
-                                  {tableItem.status === true && 'Deactive'}
-                                  {tableItem.status === false && 'Active'}
+                                  <Typography>Revert Status</Typography>
                                 </Typography>
                               </MenuItem>
                               <Divider />

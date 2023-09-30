@@ -416,6 +416,7 @@ export const setupRestaurant =
         .update({
           ...restaurantInfo,
           restaurantEnable: true,
+          subscription: false,
           createdAt: firebase.firestore.Timestamp.now()
         })
         .then(() => {

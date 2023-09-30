@@ -309,6 +309,7 @@ export default function AccountSetting () {
                 variant='contained'
                 sx={{ m: 1, height: '40px' }}
                 fullWidth
+                disabled={!name || !phone}
                 onClick={handlePersonalInfo}
               >
                 Save

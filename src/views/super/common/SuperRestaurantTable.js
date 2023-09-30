@@ -50,7 +50,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -90,9 +89,14 @@ const headCells = [
     label: 'Name'
   },
   {
-    id: 'restaurantEmail',
+    id: 'email',
     numeric: false,
     label: 'Email'
+  },
+  {
+    id: 'restaurantEmail',
+    numeric: false,
+    label: 'Restaurant Email'
   },
   {
     id: 'restaurantLocation',
@@ -120,7 +124,7 @@ const headCells = [
     label: 'Last activity'
   },
   {
-    id: 'restaurantStatus',
+    id: 'restaurantEnable',
     numeric: false,
     label: 'Status'
   }
@@ -234,6 +238,15 @@ export default function SuperRestaurantTable () {
     setVisibleRows(filteredObject)
   }, [searchValue])
 
+  const handleStatusChange = () => {
+    console.log(newStatus)
+    if (newStatus) {
+      setNewStatus(false)
+    } else {
+      setNewStatus(true)
+    }
+  }
+
   const handleEditRestaurant = () => {
     const data = {
       restaurantEmail: newEmail,
@@ -242,19 +255,6 @@ export default function SuperRestaurantTable () {
     }
     dispatch(
       updateRestaurant(selectedItem, data, () => {
-        setVisibleRows(prevObjects => {
-          return prevObjects.map(obj => {
-            if (obj.id === selectedItem) {
-              return {
-                ...obj,
-                restaurantEmail: data.restaurantEmail,
-                restaurantPassword: data.restaurantPassword,
-                restaurantEnable: data.restaurantEnable
-              }
-            }
-            return obj
-          })
-        })
         dispatch({
           type: 'LOADER',
           payload: false
@@ -397,6 +397,11 @@ export default function SuperRestaurantTable () {
                         </TableCell>
                         <TableCell align='center'>
                           <Typography color='text.primary'>
+                            {tableItem.email}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align='center'>
+                          <Typography color='text.primary'>
                             {tableItem.restaurantEmail}
                           </Typography>
                         </TableCell>
@@ -426,7 +431,7 @@ export default function SuperRestaurantTable () {
                           </Typography>
                         </TableCell>
                         <TableCell align='center' width={'10%'}>
-                          {tableItem.restaurantStatus == true ? (
+                          {tableItem.restaurantEnable === true && (
                             <Typography
                               sx={{
                                 backgroundColor: 'rgba(40, 199, 111, 0.12)',
@@ -436,7 +441,8 @@ export default function SuperRestaurantTable () {
                             >
                               Active
                             </Typography>
-                          ) : (
+                          )}
+                          {tableItem.restaurantEnable === false && (
                             <Typography
                               sx={{
                                 backgroundColor: 'rgba(255, 245, 248, 1)',
@@ -603,7 +609,7 @@ export default function SuperRestaurantTable () {
                     control={
                       <Switch
                         checked={newStatus}
-                        onChange={() => setNewStatus(!newStatus)}
+                        onChange={handleStatusChange}
                       />
                     }
                     label='Status'

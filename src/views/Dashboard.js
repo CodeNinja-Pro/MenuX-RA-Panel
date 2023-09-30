@@ -150,7 +150,7 @@ export default function Dashboard () {
             {
               from: 0,
               to: 100000000,
-              color: '#FF0000' // Blue shade
+              color: '#0074D9' // Blue shade
             }
           ],
           backgroundBarColors: [],

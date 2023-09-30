@@ -30,7 +30,7 @@ export default function DashboardStatisticItem (props) {
     },
     {
       name: 'Page B',
-      uv: 3000,
+      uv: 6000,
       pv: 1398,
       amt: 2210
     },
