@@ -21,7 +21,6 @@ import {
 import { logout } from '../../store/actions/authActions'
 import bullets from '../../assets/img/icons/bullets.svg'
 import bell from '../../assets/common/sidebar/bell_black.png'
-import Notfications from './Notfications'
 import { getUnreadNotfications } from '../../store/actions/RequestActions'
 import { useEffect } from 'react'
 import { ThemeProvider, styled } from '@mui/material/styles'
@@ -49,6 +48,7 @@ import { Link } from 'react-router-dom'
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined'
 import SoundSettingModal from './common/SoundSettingModal'
 import { ThemeMain } from '../common/Theme'
+import { getUnreadNotifications } from '../../store/actions/notificationAction'
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -88,18 +88,22 @@ const AdminNavbar = props => {
   // console.log("user data", user);
   const [addModal, setAddModal] = useState(false)
   // const [hide, setHide] = useState(false);
-  const { unreadNotifications } = useSelector(state => state.requests)
+  const { unreadNotifications } = useSelector(state => state.notification)
   const [changeLanguageDialog, setChangeLanguageDialog] = useState(false)
   const [feedbackModal, setFeedbackModal] = useState(false)
   const [notificationShowModal, setNotificationShowModal] = useState(false)
-
-  const addToggle = () => {
-    setAddModal(!addModal)
-  }
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
+  }
+
+  useEffect(() => {
+    dispatch(getUnreadNotifications(user.id))
+  }, [isDropdownOpen])
+
+  const addToggle = () => {
+    setAddModal(!addModal)
   }
 
   const [soundSettingModal, setSoundSettingModal] = useState(false)
@@ -246,14 +250,15 @@ const AdminNavbar = props => {
                     <StyledBadge
                       overlap='circular'
                       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                      variant='dot'
+                      variant={`${
+                        unreadNotifications?.length > 0 ? 'dot' : ''
+                      }`}
                     >
                       <Avatar
                         alt='Remy Sharp'
                         sx={{ width: '65px' }}
                         src={bell}
                       />
-                      {/* <NotificationsNoneOutlinedIcon size={'lg'} /> */}
                     </StyledBadge>
                   </DropdownToggle>
                   <DropdownMenu
@@ -268,13 +273,45 @@ const AdminNavbar = props => {
                       <h4 className='mb-0 text-white'>
                         Notifications ({unreadNotifications?.length})
                       </h4>
-                      <button className='btn btn-sm text-white' type='button'>
+                      {/* <button className='btn btn-sm text-white' type='button'>
                         Clear All
-                      </button>
+                      </button> */}
                     </div>
                     {/* Add your notification menu items here */}
-                    <Notfications data={unreadNotifications} />
-                    <DropdownItem onClick={notificationShowModal}>
+                    {/* <Notfications data={unreadNotifications} /> */}
+                    {unreadNotifications?.map((item, index) => (
+                      <DropdownItem onClick={notificationShowModal}>
+                        <Row className='d-flex'>
+                          <Col md={2}>
+                            <span>
+                              <Avatar
+                                sx={{ bgcolor: '#0074D9' }}
+                                alt='Remy Sharp'
+                                src='/broken-image.jpg'
+                              >
+                                SA
+                              </Avatar>
+                            </span>
+                          </Col>
+
+                          <Col>
+                            <span className='text-wrap mb-2 fs-14'>
+                              <b>Super Admin</b>
+                              <br /> {item.text}
+                            </span>
+                            <div className='d-flex justify-content-between fs-12 mt-2'>
+                              <small>
+                                {item.createdAt.toDate().toLocaleString()}
+                              </small>
+                              {/* <small className='text-primary'>
+                                Mark as Read
+                              </small> */}
+                            </div>
+                          </Col>
+                        </Row>
+                      </DropdownItem>
+                    ))}
+                    {/* <DropdownItem>
                       <Row className='d-flex'>
                         <Col md={2}>
                           <span>
@@ -297,37 +334,18 @@ const AdminNavbar = props => {
                           </div>
                         </Col>
                       </Row>
-                    </DropdownItem>{' '}
-                    <DropdownItem>
-                      <Row className='d-flex'>
-                        <Col md={2}>
-                          <span>
-                            <img
-                              className='avatar avatar-sm rounded-circle mt-1'
-                              height='42px'
-                              width='42px'
-                            />
-                          </span>
-                        </Col>
-
-                        <Col>
-                          <span className='text-wrap mb-2 fs-14'>
-                            <b>Andrea James</b> Lorem Ipsum is simply dummy text
-                            of the printing
-                          </span>
-                          <div className='d-flex justify-content-between fs-12 mt-2'>
-                            <small>Mar 02 4:17pm</small>
-                            <small className='text-primary'>Mark as Read</small>
-                          </div>
-                        </Col>
-                      </Row>
-                    </DropdownItem>
+                    </DropdownItem> */}
                     <hr className='my-2' />
                     <div
                       className='dropdown-footer d-flex align-items-center justify-content-center'
                       style={{ cursor: 'pointer' }}
                     >
-                      <h4 onClick={() => history.push('/admin/notifications')}>
+                      <h4
+                        onClick={() => {
+                          setIsDropdownOpen(false)
+                          history.push('/admin/notifications')
+                        }}
+                      >
                         View All
                       </h4>
                     </div>
@@ -370,18 +388,18 @@ const AdminNavbar = props => {
                     </Media>
                   </DropdownItem>
                   <DropdownItem divider />
-                  {
+                  {user?.type === 'restaurant' && (
                     <Link to='/admin/settings'>
                       <DropdownItem>
                         <PermIdentityOutlinedIcon />
                         <span>Account Settings</span>
                       </DropdownItem>
                     </Link>
-                  }
+                  )}
                   {user?.type === 'restaurant' && (
                     <DropdownItem
                       onClick={() => {
-                        addToggle()
+                        history.push('/admin/notifications')
                       }}
                     >
                       <NotificationsNoneOutlinedIcon />

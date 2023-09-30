@@ -85,7 +85,7 @@ const headCells = [
     label: 'Staff Role'
   },
   {
-    id: 'date',
+    id: 'createdAt',
     numeric: true,
     label: 'Assign Date'
   },

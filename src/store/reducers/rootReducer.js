@@ -15,23 +15,25 @@ import customizationReducer from './customizationReducer'
 import statisticReducer from './statisticReducer'
 import paymentReducer from './paymentReducer'
 import superReducer from './superReducer'
+import notificationReducer from './notificationReducer'
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  menu: MenuManage,
+  staff: staffReducer,
+  customization: customizationReducer,
+  statistic: statisticReducer,
+  super: superReducer,
+  notification: notificationReducer,
   payment: paymentReducer,
   catalog: catalogReducer,
   setting: settingReducer,
-  menu: MenuManage,
   restaurant: restaurantReducer,
   admin: subAdminReducer,
-  staff: staffReducer,
   requests: requestReducer,
   stats: statsReducer,
   checkoutQuestion: checkoutQuestionReducer,
   customer: customerReducer,
-  orders: orderReducer,
-  customization: customizationReducer,
-  statistic: statisticReducer,
-  super: superReducer
+  orders: orderReducer
 })
 export default rootReducer
