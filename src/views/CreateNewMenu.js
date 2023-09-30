@@ -112,8 +112,6 @@ function CreateNewMenu () {
 
   const [toDeleteParent, setToDeleteParent] = useState({})
 
-  const [availabilityCondition, setAvailabilityCondition] = useState('')
-
   const [dateState, setDateState] = useState([
     {
       startDate: new Date(),
@@ -141,14 +139,33 @@ function CreateNewMenu () {
 
   const [allDayCheck, setAllDayCheck] = useState(true)
 
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-
   const changeAllDayCheck = () => {
     setAllDayCheck(!allDayCheck)
   }
 
   const labeltoggle = () => {
     setLabelModal(!labelModal)
+  }
+
+  // Availablity setting section
+  const [availabilityCondition, setAvailabilityCondition] = useState('')
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+  const [periodic, setPeriodic] = useState({
+    Mon: [],
+    Tue: [],
+    Wed: [],
+    Thu: [],
+    Fri: [],
+    Sat: [],
+    Sun: []
+  })
+
+  const handlePeriodic = (date, timeRange) => {
+    setPeriodic({
+      [date]: timeRange
+    })
+    console.log(periodic)
   }
 
   let menuCreationOption = [
@@ -744,92 +761,6 @@ function CreateNewMenu () {
                                                         The menu will always be
                                                         shown
                                                       </Typography>
-                                                      {/* <FormControlLabel
-                                                        value='Specific'
-                                                        control={<Radio />}
-                                                        label='Specific Dats & Times'
-                                                      />
-                                                      <Typography
-                                                        marginBottom={1}
-                                                        marginLeft={4}
-                                                      >
-                                                        The menu will be visible
-                                                        between specific dates.
-                                                      </Typography>
-                                                      <Typography
-                                                        sx={{
-                                                          textDecoration:
-                                                            'underline'
-                                                        }}
-                                                        marginBottom={1}
-                                                        marginLeft={4}
-                                                      >
-                                                        Current Time:{' '}
-                                                        {Date().toLocaleString()}
-                                                      </Typography>
-                                                      <Box
-                                                        marginLeft={4}
-                                                        disabled={
-                                                          availabilityCondition ===
-                                                          'Specific'
-                                                            ? false
-                                                            : true
-                                                        }
-                                                      >
-                                                        <PickDateRange
-                                                          disabled={
-                                                            availabilityCondition ===
-                                                            'Specific'
-                                                              ? false
-                                                              : true
-                                                          }
-                                                          setDateState={
-                                                            handleDateChange
-                                                          }
-                                                          datestate={dateState}
-                                                          minDate={new Date()}
-                                                        />
-                                                      </Box>
-                                                      <FormControlLabel
-                                                        disabled={
-                                                          availabilityCondition ===
-                                                          'Specific'
-                                                            ? false
-                                                            : true
-                                                        }
-                                                        sx={{ marginLeft: 4 }}
-                                                        control={
-                                                          <Checkbox
-                                                            checked={
-                                                              allDayCheck
-                                                            }
-                                                            onChange={() => {
-                                                              changeAllDayCheck()
-                                                            }}
-                                                          />
-                                                        }
-                                                        label='All Day'
-                                                      />
-                                                      {allDayCheck === true ? (
-                                                        ''
-                                                      ) : (
-                                                        <Box marginLeft={4}>
-                                                          <TimeRange
-                                                            onStartTimeChange={
-                                                              returnFunctionStart
-                                                            }
-                                                            onEndTimeChange={
-                                                              returnFunctionEnd
-                                                            }
-                                                            startMoment={
-                                                              timeState.startTime
-                                                            }
-                                                            endMoment={
-                                                              timeState.endTime
-                                                            }
-                                                          />
-                                                        </Box>
-                                                      )} */}
                                                       <FormControlLabel
                                                         value='Periodic'
                                                         control={<Radio />}
@@ -849,8 +780,12 @@ function CreateNewMenu () {
                                                                 ? false
                                                                 : true
                                                             }
+                                                            handlePeriodic={
+                                                              handlePeriodic
+                                                            }
                                                             key={day}
                                                             title={day}
+                                                            periodic={periodic}
                                                           />
                                                         ))}
                                                       </Grid>
@@ -1102,9 +1037,6 @@ function CreateNewMenu () {
           <ModalFooter>
             <input
               type='file'
-              // onChange={(e) => {
-              //   setFile(e.target.files[0]);
-              // }}
               onChange={handleImport}
               ref={fileRef}
               hidden

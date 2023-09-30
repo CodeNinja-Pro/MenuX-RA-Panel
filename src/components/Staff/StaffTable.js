@@ -66,6 +66,8 @@ const StaffTable = () => {
   const { staffData, staffs } = useSelector(state => state.staff)
   const [allStaffInfo, setAllStaffInfo] = useState([])
 
+  const [deleteModal, setDeleteModal] = useState(false)
+
   const [tableData, setTableData] = useState([])
 
   useEffect(() => {
@@ -86,6 +88,7 @@ const StaffTable = () => {
   const [staffEmail, setStaffEmail] = useState('')
   const [staffName, setStaffName] = useState('')
   const [modalFlag, setModalFlag] = useState(false)
+  const [currentState, setCurrentState] = useState(false)
 
   const editStaffInfo = () => {
     const updateData = {
@@ -108,16 +111,7 @@ const StaffTable = () => {
   }
 
   const handleStatusChange = () => {
-    let newState = false
-    const filterdItem = tableData.filter(data => data.id === selectedItem)
-    console.log(filterdItem)
-    if (filterdItem.status) {
-      newState = true
-    } else {
-      newState = false
-    }
-    console.log(newState)
-    dispatch(updateStaffStatus(selectedItem, newState))
+    dispatch(updateStaffStatus(selectedItem, !currentState))
   }
 
   // Table definition section
@@ -227,6 +221,7 @@ const StaffTable = () => {
                           size='small'
                           onClick={event => {
                             handleClick(event)
+                            setCurrentState(tableItem.status)
                             setSelectedItem(tableItem.id)
                             setRoleName(tableItem.role)
                             setStaffEmail(tableItem.email)
@@ -272,7 +267,7 @@ const StaffTable = () => {
                               <Divider />
                               <MenuItem
                                 onClick={() => {
-                                  deleteStaffInfo()
+                                  setDeleteModal(true)
                                 }}
                                 key={'delete'}
                               >
@@ -290,6 +285,34 @@ const StaffTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>
+          {'You pay attention here'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you really going to delete this staff information?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
+          <Button
+            onClick={() => {
+              setDeleteModal(false)
+              deleteStaffInfo()
+            }}
+            autoFocus
+          >
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         open={modalFlag}
@@ -383,7 +406,6 @@ const StaffTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Box p={2}>
         <TablePagination
           component='div'

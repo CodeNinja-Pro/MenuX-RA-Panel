@@ -28,13 +28,16 @@ export default function ScheduleForm (props) {
             disabled={props.disabled}
             control={<Checkbox defaultChecked />}
             label={props.title}
+            // onChange={handleDateChange}
           />
           <Box width={190}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <SingleInputTimeRangeField
                 disabled={props.disabled}
-                value={value}
-                onChange={newValue => setValue(newValue)}
+                value={props.periodic[props.title]}
+                onChange={newValue =>
+                  props.handlePeriodic(props.title, newValue)
+                }
               />
             </LocalizationProvider>
           </Box>

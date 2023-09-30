@@ -241,9 +241,9 @@ export const updateStaffStatus = (id, newStatus) => async dispatch => {
     type: 'STAFF_LOADER',
     payload: true
   })
-
+  console.log(newStatus)
   try {
-    const snapShot = await firebase
+    await firebase
       .firestore()
       .collection('staffs')
       .doc(id)
@@ -254,7 +254,7 @@ export const updateStaffStatus = (id, newStatus) => async dispatch => {
         dispatch({
           type: 'CURRENT_STAFF_UPDATED',
           payload: {
-            id,
+            id: id,
             status: newStatus
           }
         })
