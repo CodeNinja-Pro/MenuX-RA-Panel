@@ -6,6 +6,7 @@ admin.initializeApp()
 
 //Import Routes
 const payment = require('./routes/payment')
+const email = require('./routes/email')
 
 //Express app
 const app = express()
@@ -25,5 +26,6 @@ app.get('/test', async (req, res) => {
 })
 
 app.use('/payment', payment)
+app.use('/email', email)
 
 exports.app = functions.https.onRequest(app)

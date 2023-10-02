@@ -43,10 +43,10 @@ export default function Popup () {
                       marginTop={'10px'}
                       fontSize={'25px'}
                     >
-                      Pop ups
+                      Marketing Banner
                     </Typography>
                     <Link to='/admin/create-popup'>
-                      <Button variant='contained'>Add Pop up</Button>
+                      <Button variant='contained'>Add Marketing Banner</Button>
                     </Link>
                   </Grid>
                   <Grid

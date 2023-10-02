@@ -16,7 +16,56 @@ import {
   Avatar
 } from '@mui/material'
 
+// Label item icon load
+import Vegetarian from '../../assets/common/LabelIcons/vegetarian.png'
+import Vegetarian_None from '../../assets/common/LabelIcons/vegetarian_none.png'
+import Vegan from '../../assets/common/LabelIcons/vegan.png'
+import Vegan_None from '../../assets/common/LabelIcons/vegan_none.png'
+import Halal from '../../assets/common/LabelIcons/halal.png'
+import Halal_None from '../../assets/common/LabelIcons/halal_none.png'
+import Customizable from '../../assets/common/LabelIcons/customizable.png'
+import Customizable_None from '../../assets/common/LabelIcons/customizable_none.png'
+import Kosher from '../../assets/common/LabelIcons/kosher.png'
+import Kosher_None from '../../assets/common/LabelIcons/kosher_none.png'
+import Keto from '../../assets/common/LabelIcons/keto.png'
+import Keto_None from '../../assets/common/LabelIcons/keto_none.png'
+import Spicy from '../../assets/common/LabelIcons/spicy.png'
+import Spciy_None from '../../assets/common/LabelIcons/spicy_none.png'
+import Molluscs from '../../assets/common/LabelIcons/molluscs.png'
+import Molluscs_None from '../../assets/common/LabelIcons/molluscs_none.png'
+import Organic from '../../assets/common/LabelIcons/organic.png'
+import Organic_None from '../../assets/common/LabelIcons/organic_none.png'
+import Gmo from '../../assets/common/LabelIcons/gmo.png'
+import Gmo_None from '../../assets/common/LabelIcons/gmo_none.png'
+import Dairy from '../../assets/common/LabelIcons/dairy.png'
+import Dairy_None from '../../assets/common/LabelIcons/dairy_none.png'
+
 import { useDispatch } from 'react-redux'
+
+const labelIcons = {
+  Vegetarian,
+  Vegetarian_None,
+  Vegan,
+  Vegan_None,
+  Halal,
+  Halal_None,
+  Customizable,
+  Customizable_None,
+  Kosher,
+  Kosher_None,
+  Keto,
+  Keto_None,
+  Spicy,
+  Spciy_None,
+  Molluscs,
+  Molluscs_None,
+  Organic,
+  Organic_None,
+  Gmo,
+  Gmo_None,
+  Dairy,
+  Dairy_None
+}
 
 const applyFilters = (tableItems, filters) => {
   return tableItems.filter(tableItem => {
@@ -79,7 +128,16 @@ function LabelDataTable (props) {
                       <Typography>{labelData.labelName}</Typography>
                     </TableCell>
                     <TableCell align='center'>
-                      <Typography>{labelData.labelIcon}</Typography>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        <Avatar
+                          sx={{ width: '70px', height: '70px' }}
+                          src={
+                            labelIcons[labelData.labelName] !== undefined
+                              ? labelIcons[labelData.labelName]
+                              : labelData.labelIcon
+                          }
+                        />
+                      </Box>
                     </TableCell>
                     <TableCell align='center'>
                       <Button

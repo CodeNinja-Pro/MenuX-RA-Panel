@@ -444,23 +444,57 @@ export default function SignUp () {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then(data => {
-          console.log(data)
-          dispatch(
-            signupInformation(
-              data.user?.uid,
-              fullName,
-              data.user?.email,
-              () => {
-                history.push('/auth/create-restaurant')
-                dispatch({
-                  type: 'REGISTER_REQUEST',
-                  payload: {
-                    id: data.user?.uid
-                  }
-                })
-              }
+          const email = data.user.email
+          const snapShot = firebase
+            .firestore()
+            .collection('staffs')
+            .where('email', '==', email)
+            .get()
+
+          let staffFlag = false
+          snapShot.forEach(doc => {
+            if (doc.data().enable === true) {
+              staffFlag = true
+            }
+          })
+          console.log('first')
+          if (staffFlag) {
+            dispatch(
+              signupInformation(
+                data.user?.uid,
+                fullName,
+                data.user?.email,
+                'staff',
+                () => {
+                  dispatch({
+                    type: 'REGISTER_REQUEST',
+                    payload: {
+                      id: data.user?.uid
+                    }
+                  })
+                }
+              )
             )
-          )
+          } else {
+            dispatch(
+              signupInformation(
+                data.user?.uid,
+                fullName,
+                data.user?.email,
+                'admin',
+                () => {
+                  history.push('/auth/create-restaurant')
+
+                  dispatch({
+                    type: 'REGISTER_REQUEST',
+                    payload: {
+                      id: data.user?.uid
+                    }
+                  })
+                }
+              )
+            )
+          }
         })
         .catch(error => {
           toast.error(error.message)
@@ -476,23 +510,57 @@ export default function SignUp () {
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then(data => {
-          dispatch(
-            signupInformation(
-              data.user?.uid,
-              data.user?.displayName,
-              data.user?.email,
-              () => {
-                history.push('/auth/create-restaurant')
+          if (data.user?.email) {
+            const snapShot = firebase
+              .firestore()
+              .collection('staffs')
+              .where('email', '==', data.user?.email)
+              .get()
 
-                dispatch({
-                  type: 'REGISTER_REQUEST',
-                  payload: {
-                    id: data.user?.uid
-                  }
-                })
+            let staffFlag = false
+            snapShot.forEach(doc => {
+              if (doc.data().enable === true) {
+                staffFlag = true
               }
-            )
-          )
+            })
+            if (staffFlag) {
+              dispatch(
+                signupInformation(
+                  data.user?.uid,
+                  data.user?.displayName,
+                  data.user?.email,
+                  'staff',
+                  () => {
+                    dispatch({
+                      type: 'REGISTER_REQUEST',
+                      payload: {
+                        id: data.user?.uid
+                      }
+                    })
+                  }
+                )
+              )
+            } else {
+              dispatch(
+                signupInformation(
+                  data.user?.uid,
+                  data.user?.displayName,
+                  data.user?.email,
+                  'admin',
+                  () => {
+                    history.push('/auth/create-restaurant')
+
+                    dispatch({
+                      type: 'REGISTER_REQUEST',
+                      payload: {
+                        id: data.user?.uid
+                      }
+                    })
+                  }
+                )
+              )
+            }
+          }
         })
     } catch (error) {
       toast.error(error.message)

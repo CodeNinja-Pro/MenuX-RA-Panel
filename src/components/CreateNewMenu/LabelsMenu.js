@@ -20,7 +20,7 @@ import {
   DialogContentText,
   Grid,
   Avatar,
-  Stack
+  IconButton
 } from '@mui/material'
 
 // Label item icon load
@@ -48,6 +48,8 @@ import Dairy from '../../assets/common/LabelIcons/dairy.png'
 import Dairy_None from '../../assets/common/LabelIcons/dairy_none.png'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
+import CachedIcon from '@mui/icons-material/Cached'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { addlabel } from '../../store/actions/MenuManagmentActions'
@@ -71,100 +73,8 @@ const LabelsMenu = () => {
 
   const [selectedIcon, setSelectedIcon] = useState('')
 
-  const handleIconClick = selected => {
-    setSelectedIcon(selected)
-  }
-
-  const labelIcons = [
-    {
-      name: 'Vegetarian',
-      icon: Vegetarian
-    },
-    {
-      name: 'Vegetarian_None',
-      icon: Vegetarian_None
-    },
-    {
-      name: 'Vegan',
-      icon: Vegan
-    },
-    {
-      name: 'Vegan_None',
-      icon: Vegan_None
-    },
-    {
-      name: 'Halal',
-      icon: Halal
-    },
-    {
-      name: 'Halal_None',
-      icon: Halal_None
-    },
-    {
-      name: 'Customizable',
-      icon: Customizable
-    },
-    {
-      name: 'Customizable_None',
-      icon: Customizable_None
-    },
-    {
-      name: 'Kosher',
-      icon: Kosher
-    },
-    {
-      name: 'Kosher_None',
-      icon: Kosher_None
-    },
-    {
-      name: 'Keto',
-      icon: Keto
-    },
-    {
-      name: 'Keto_None',
-      icon: Keto_None
-    },
-    {
-      name: 'Spicy',
-      icon: Spicy
-    },
-    {
-      name: 'Spciy_None',
-      icon: Spciy_None
-    },
-    {
-      name: 'Molluscs',
-      icon: Molluscs
-    },
-    {
-      name: 'Molluscs_None',
-      icon: Molluscs_None
-    },
-    {
-      name: 'Organic',
-      icon: Organic
-    },
-    {
-      name: 'Organic_None',
-      icon: Organic_None
-    },
-    {
-      name: 'Gmo',
-      icon: Gmo
-    },
-    {
-      name: 'Gmo_None',
-      icon: Gmo_None
-    },
-    {
-      name: 'Dairy',
-      icon: Dairy
-    },
-    {
-      name: 'Dairy_None',
-      icon: Dairy_None
-    }
-  ]
+  const [labelImage, setLabelImage] = useState('')
+  const [labelImageFile, setLabelImageFile] = useState([])
 
   const labelPermissions = userPermissions?.labels
 
@@ -193,6 +103,7 @@ const LabelsMenu = () => {
             labelIcon: selectedIcon,
             restaurantID: user?.restaurantID
           },
+          labelImageFile,
           () => {
             setlabelName('')
             setSelectedIcon('')
@@ -214,10 +125,10 @@ const LabelsMenu = () => {
 
     if (labelName) {
       dispatch(
-        editlabel(labelID, labelName, selectedIcon, () => {
+        editlabel(labelID, labelName, labelImageFile, () => {
           setlabelName('')
           setlabelID('')
-          setSelectedIcon('')
+          setLabelImageFile([])
           setEditModal(false)
         })
       )
@@ -226,10 +137,75 @@ const LabelsMenu = () => {
     }
   }
 
+  // File Upload
+  const onBannerButtonClick = () => {
+    logoRef.current.click()
+  }
+
+  const bannerImageHandleChange = file => {
+    // const file = e.target.files[0]
+    console.log(file)
+    if (file.size > 3000000) {
+      toast.error('Error: Image size is too big', {
+        style: {
+          fontFamily: 'Poppins'
+        }
+      })
+      return
+    }
+    const validFormats = ['image/jpeg', 'image/jpg', 'image/png']
+
+    if (!validFormats.includes(file.type)) {
+      toast.error(
+        `Error: Invalid file format. Please select a .jpg, .jpeg, or .png image.`,
+        {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        }
+      )
+      return
+    }
+
+    setLabelImage(URL.createObjectURL(file))
+    setLabelImageFile(file)
+  }
+
+  const [dragActive, setDragActive] = React.useState(false)
+  // ref
+  const logoRef = React.useRef(null)
+
+  // handle drag events
+  const handleDrag = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true)
+    } else if (e.type === 'dragleave') {
+      setDragActive(false)
+    }
+  }
+
+  // triggers when file is dropped
+  const handleLogoDrop = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      bannerImageHandleChange(e.dataTransfer.files[0])
+    }
+  }
+
+  // triggers when file is selected with click
+  const handleLogoChange = function (e) {
+    e.preventDefault()
+    if (e.target.files && e.target.files[0]) {
+      bannerImageHandleChange(e.target.files[0])
+    }
+  }
+
   return (
     <>
-      {/* <OnlyHeader /> */}
-      {/* <Container className="mt--7" fluid> */}
       <Row className='mt-2 '>
         <div className='col px-0'>
           <Card className='shadow '>
@@ -252,7 +228,7 @@ const LabelsMenu = () => {
                     onClick={addtoggle}
                     sx={{ marginBottom: '15px', marginRight: '20px' }}
                   >
-                    Add Label
+                    Create a new label
                   </Button>
                   <TextField
                     value={searchField}
@@ -291,7 +267,6 @@ const LabelsMenu = () => {
           </Card>
         </div>
       </Row>
-      {/* Modal for add restaurant */}
       <Dialog
         open={addModal}
         onClose={() => setAddModal(false)}
@@ -305,7 +280,7 @@ const LabelsMenu = () => {
             fontWeight: 'bold'
           }}
         >
-          {'Add Label Details'}
+          {'Add New Label'}
         </DialogTitle>
         <Divider />
         <DialogContent>
@@ -331,31 +306,78 @@ const LabelsMenu = () => {
                 onChange={e => setlabelName(e.target.value)}
               />
             </FormControl>
-            <Typography textAlign={'center'} margin={2}>
-              Label Items
-            </Typography>
-            <Box>
-              <Grid container spacing={2}>
-                {labelIcons.map(item => (
-                  <Grid item xs={2}>
-                    <Avatar
-                      onClick={() => handleIconClick(item.name)}
-                      alt='Remy Sharp'
-                      sx={{
-                        width: '80px',
-                        height: '80px',
-                        cursor: 'pointer',
-                        boxShadow: `${
-                          selectedIcon === item.name
-                            ? '10px 10px 10px 0px #DDDDDD'
-                            : ''
-                        }`
-                      }}
-                      src={item.icon}
+            <Box
+              marginTop={2}
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              flexDirection={'column'}
+            >
+              <Box>
+                <form
+                  id='form-file-upload'
+                  onDragEnter={handleDrag}
+                  onSubmit={e => e.preventDefault()}
+                >
+                  <input
+                    ref={logoRef}
+                    type='file'
+                    id='input-file-upload'
+                    multiple={true}
+                    onChange={handleLogoChange}
+                  />
+                  {labelImage === '' ? (
+                    <>
+                      <label
+                        id='label-file-upload'
+                        htmlFor='input-file-upload'
+                        style={{ width: '230px', height: '230px' }}
+                        className={dragActive ? 'drag-active' : ''}
+                      >
+                        <div>
+                          <p>Only *.JPG, *.JPEG, *.PNG and less then 2MB</p>
+                          <FileUploadOutlinedIcon fontSize='large' />
+                          <button
+                            className='upload-button'
+                            onClick={onBannerButtonClick}
+                            style={{
+                              height: '100px',
+                              width: '100%'
+                            }}
+                          >
+                            <Typography>Upload a file</Typography>
+                          </button>
+                        </div>
+                      </label>
+                      {dragActive && (
+                        <div
+                          id='drag-file-element'
+                          onDragEnter={handleDrag}
+                          onDragLeave={handleDrag}
+                          onDragOver={handleDrag}
+                          onDrop={handleLogoDrop}
+                        ></div>
+                      )}
+                    </>
+                  ) : (
+                    <img
+                      id='label-file-upload'
+                      htmlFor='input-file-upload'
+                      style={{ width: '100%', height: '230px' }}
+                      src={labelImage}
                     />
-                  </Grid>
-                ))}
-              </Grid>
+                  )}
+                </form>
+              </Box>
+              <IconButton
+                onClick={() => {
+                  setLabelImage('')
+                  setLabelImageFile({})
+                }}
+                style={{ marginTop: '-20px' }}
+              >
+                <CachedIcon />
+              </IconButton>
             </Box>
           </DialogContentText>
         </DialogContent>
@@ -377,6 +399,7 @@ const LabelsMenu = () => {
           </Button>
           <Button
             fullWidth
+            disabled={!labelName}
             variant='contained'
             style={{ margin: '20px' }}
             onClick={addLabel}
@@ -400,7 +423,7 @@ const LabelsMenu = () => {
             fontWeight: 'bold'
           }}
         >
-          {'Edit Label Details'}
+          {'Edit the Label'}
         </DialogTitle>
         <Divider />
         <DialogContent>
@@ -416,38 +439,88 @@ const LabelsMenu = () => {
                 Label Name
               </FormHelperText>
               <OutlinedInput
-                value={labelName}
-                required
-                onChange={e => setlabelName(e.target.value)}
                 id='outlined-adornment-weight'
                 aria-describedby='outlined-weight-helper-text'
                 inputProps={{
                   'aria-label': 'weight'
                 }}
+                required
+                value={labelName}
+                onChange={e => setlabelName(e.target.value)}
               />
             </FormControl>
-            <Box>
-              <Grid container spacing={2}>
-                {labelIcons.map(item => (
-                  <Grid item xs={2}>
-                    <Avatar
-                      onClick={() => handleIconClick(item.name)}
-                      alt='Remy Sharp'
-                      sx={{
-                        width: '80px',
-                        height: '80px',
-                        cursor: 'pointer',
-                        boxShadow: `${
-                          selectedIcon === item.name
-                            ? '10px 10px 10px 0px #DDDDDD'
-                            : ''
-                        }`
-                      }}
-                      src={item.icon}
+            <Box
+              marginTop={2}
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              flexDirection={'column'}
+            >
+              <Box>
+                <form
+                  id='form-file-upload'
+                  onDragEnter={handleDrag}
+                  onSubmit={e => e.preventDefault()}
+                >
+                  <input
+                    ref={logoRef}
+                    type='file'
+                    id='input-file-upload'
+                    multiple={true}
+                    onChange={handleLogoChange}
+                  />
+                  {labelImage === '' ? (
+                    <>
+                      <label
+                        id='label-file-upload'
+                        htmlFor='input-file-upload'
+                        style={{ width: '230px', height: '230px' }}
+                        className={dragActive ? 'drag-active' : ''}
+                      >
+                        <div>
+                          <p>Only *.JPG, *.JPEG, *.PNG and less then 2MB</p>
+                          <FileUploadOutlinedIcon fontSize='large' />
+                          <button
+                            className='upload-button'
+                            onClick={onBannerButtonClick}
+                            style={{
+                              height: '100px',
+                              width: '100%'
+                            }}
+                          >
+                            <Typography>Upload a file</Typography>
+                          </button>
+                        </div>
+                      </label>
+                      {dragActive && (
+                        <div
+                          id='drag-file-element'
+                          onDragEnter={handleDrag}
+                          onDragLeave={handleDrag}
+                          onDragOver={handleDrag}
+                          onDrop={handleLogoDrop}
+                        ></div>
+                      )}
+                    </>
+                  ) : (
+                    <img
+                      id='label-file-upload'
+                      htmlFor='input-file-upload'
+                      style={{ width: '100%', height: '230px' }}
+                      src={labelImage}
                     />
-                  </Grid>
-                ))}
-              </Grid>
+                  )}
+                </form>
+              </Box>
+              <IconButton
+                onClick={() => {
+                  setLabelImage('')
+                  setLabelImageFile({})
+                }}
+                style={{ marginTop: '-20px' }}
+              >
+                <CachedIcon />
+              </IconButton>
             </Box>
           </DialogContentText>
         </DialogContent>
@@ -469,12 +542,13 @@ const LabelsMenu = () => {
           </Button>
           <Button
             fullWidth
+            disabled={!labelName}
             variant='contained'
             style={{ margin: '20px' }}
             onClick={editLabel}
             autoFocus
           >
-            {editLabelLoader ? <Spinner size='md' /> : 'Update'}
+            {editLabelLoader ? <Spinner size='md' /> : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>

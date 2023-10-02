@@ -529,7 +529,7 @@ function CreateNewMenu () {
                         fontWeight={'bold'}
                         color={selectedTab === 'Pop up' ? '#0074D9' : ''}
                       >
-                        Pop up{' '}
+                        Marketing Banner{' '}
                       </Typography>
                     </NavItem>
                   </Nav>

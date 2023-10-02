@@ -127,33 +127,53 @@ export const sendNewStaffRequest =
       type: 'STAFF_LOADER',
       payload: true
     })
-
     try {
-      const snapShot = await firebase
+      const findStaff = await firebase
         .firestore()
         .collection('staffs')
-        .add({
+        .where('restaurantID', '==', id)
+        .get()
+
+      let flag = false
+      findStaff.forEach(doc => {
+        if (doc.data().email === staffInfo.email) {
+          flag = true
+        }
+      })
+
+      if (flag) {
+        toast.error('This email address is already exist.')
+        dispatch({
+          type: 'STAFF_LOADER',
+          payload: false
+        })
+      } else {
+        const addData = {
           restaurantID: id,
           ...staffInfo,
           status: false,
           enable: false,
           createdAt: firebase.firestore.Timestamp.now()
-        })
-
-      snapShot.get().then(doc => {
-        onSuccess()
-        dispatch({
-          type: 'NEW_STAFF_ADDED',
-          payload: {
-            id: doc.id,
-            ...doc.data()
-          }
-        })
-        dispatch({
-          type: 'STAFF_LOADER',
-          payload: false
-        })
-      })
+        }
+        const snapShot = firebase
+          .firestore()
+          .collection('staffs')
+          .add({ ...addData })
+          .then(doc => {
+            onSuccess()
+            dispatch({
+              type: 'NEW_STAFF_ADDED',
+              payload: {
+                id: doc.id,
+                ...addData
+              }
+            })
+            dispatch({
+              type: 'STAFF_LOADER',
+              payload: false
+            })
+          })
+      }
     } catch (error) {
       toast.error(error.message)
       dispatch({

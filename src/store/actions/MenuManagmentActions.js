@@ -22,7 +22,7 @@ export const addNewCoupon = (id, coupon, onSuccess) => async dispatch => {
       .collection('coupons')
       .add({
         ...coupon,
-        status: false,
+        status: true,
         uses: 0,
         discountSharp: '',
         restaurantID: id,
@@ -1243,18 +1243,25 @@ export const getLabels = id => async dispatch => {
 }
 
 export const addlabel =
-  (payload, onSuccess = () => {}) =>
+  (payload, image, onSuccess = () => {}) =>
   async dispatch => {
     dispatch({
       type: 'ADD_LABEL_LOADER',
       payload: true
     })
 
+    const storageRef = firebase.storage().ref()
+
+    const imageFile = storageRef.child('popup_images/' + image.name)
+    const snapShot = await imageFile.put(image)
+    const downloadURL = await snapShot.ref.getDownloadURL()
+
     await firebase
       .firestore()
       .collection('labels')
       .add({
         ...payload,
+        labelIcon: downloadURL,
         createdAt: firebase.firestore.Timestamp.now()
       })
       .then(doc => {
@@ -1281,18 +1288,24 @@ export const addlabel =
   }
 
 export const editlabel =
-  (id, name, icon, onSuccess = () => {}) =>
+  (id, name, image, onSuccess = () => {}) =>
   async dispatch => {
     dispatch({
       type: 'EDIT_LABEL_LOADER',
       payload: true
     })
 
+    const storageRef = firebase.storage().ref()
+
+    const imageFile = storageRef.child('popup_images/' + image.name)
+    const snapShot = await imageFile.put(image)
+    const downloadURL = await snapShot.ref.getDownloadURL()
+
     try {
       const labelRef = firebase.firestore().collection('labels').doc(id)
       await labelRef.update({
         labelName: name,
-        labelIcon: icon
+        labelIcon: downloadURL
       })
       onSuccess()
       toast.success('Label updated Successfully', {
@@ -1305,7 +1318,7 @@ export const editlabel =
         payload: {
           id: labelRef.id, // Use labelRef.id to get the ID of the updated document
           labelName: name,
-          labelIcon: icon
+          labelIcon: downloadURL
         }
       })
     } catch (error) {

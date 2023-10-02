@@ -360,24 +360,36 @@ const forgetLoader = data => async dispatch => {
 // }
 
 export const signupInformation =
-  (id, name, email, onSuccess) => async dispatch => {
+  (id, name, email, type, onSuccess) => async dispatch => {
     dispatch({
       type: 'LOGIN_REQUEST'
     })
 
-    const personalInfo = {
-      restaurantID: id,
-      name: name,
-      email: email
-    }
+    console.log('Signup Information')
 
+    let personalInfo
+
+    if (type === 'staff') {
+      personalInfo = {
+        restaurantID: id,
+        name: name,
+        email: email,
+        active: true
+      }
+    } else {
+      personalInfo = {
+        restaurantID: id,
+        name: name,
+        email: email,
+        active: false
+      }
+    }
     firebase
       .firestore()
       .collection('users')
       .doc(id)
       .set({
         ...personalInfo,
-        active: false,
         type: 'restaurant',
         createdAt: firebase.firestore.Timestamp.now()
       })
@@ -406,7 +418,30 @@ export const setupRestaurant =
     dispatch({
       type: 'LOGIN_REQUEST'
     })
-    const defaultLabel = ['Recommend', 'Popular', 'Famous']
+    const defaultLabel = [
+      'Vegetarian',
+      'Vegetarian_None',
+      'Vegan',
+      'Vegan_None',
+      'Halal',
+      'Halal_None',
+      'Customizable',
+      'Customizable_None',
+      'Kosher',
+      'Kosher_None',
+      'Keto',
+      'Keto_None',
+      'Spicy',
+      'Spciy_None',
+      'Molluscs',
+      'Molluscs_None',
+      'Organic',
+      'Organic_None',
+      'Gmo',
+      'Gmo_None',
+      'Dairy',
+      'Dairy_None'
+    ]
 
     try {
       await firebase
@@ -436,6 +471,7 @@ export const setupRestaurant =
       defaultLabel.map(label => {
         firebase.firestore().collection('labels').add({
           labelName: label,
+          labelIcon: label,
           restaurantID: id
         })
       })

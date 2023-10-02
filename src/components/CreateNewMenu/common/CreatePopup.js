@@ -150,7 +150,7 @@ export default function CreatePopup () {
               <ArrowBackIosNewIcon sx={{ marginRight: '3px' }} />
             </IconButton>
             <Typography marginLeft={3} fontWeight={'bold'} fontSize={'24px'}>
-              Add Pop up
+              Add Marketing Banner
             </Typography>
           </Box>
           <Container fluid>

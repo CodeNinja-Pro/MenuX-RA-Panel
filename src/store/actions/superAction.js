@@ -436,15 +436,15 @@ export const sendInvitation = (uid, email) => async dispatch => {
     enable: true
   }
 
-  const buttonStyles = {
-    display: 'inline-block',
-    padding: '10px 20px',
-    backgroundColor: '#3f51b5',
-    color: '#fff',
-    borderRadius: '3px',
-    textDecoration: 'none',
-    fontWeight: 'bold'
-  }
+  // const buttonStyles = {
+  //   display: 'inline-block',
+  //   padding: '10px 20px',
+  //   backgroundColor: '#3f51b5',
+  //   color: '#fff',
+  //   borderRadius: '3px',
+  //   textDecoration: 'none',
+  //   fontWeight: 'bold'
+  // }
 
   try {
     await firebase
@@ -455,7 +455,9 @@ export const sendInvitation = (uid, email) => async dispatch => {
         enable: true
       })
       .then(() => {
-        // Staff.sendEmailInvitation(email)
+        Staff.sendEmailInvitation({
+          email: email
+        })
 
         dispatch({
           type: 'UPDATE_STAFFS',
@@ -465,20 +467,8 @@ export const sendInvitation = (uid, email) => async dispatch => {
           }
         })
 
-        // send the email for success through Gmail
-        firebase
-          .firestore()
-          .collection('mail')
-          .add({
-            to: ['benjaminsmile10162@gmail.com'],
-            message: {
-              subject: 'MenuX invitation',
-              text: 'I am Brian'
-              // html: `<a href='#' style={${buttonStyles}}>Stay Connected</a>`
-            }
-          })
-
         toast.success(`You sent the invitation to ${email} for staff role.`)
+
         dispatch({
           type: 'LOADER',
           payload: false

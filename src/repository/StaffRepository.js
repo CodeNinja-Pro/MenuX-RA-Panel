@@ -1,5 +1,5 @@
 import Repository from './repository'
-const sendEmailInvitation = '/send-email-invitation'
+const sendEmailInvitation = '/email/send-email'
 
 export default {
   sendEmailInvitation (payload) {
