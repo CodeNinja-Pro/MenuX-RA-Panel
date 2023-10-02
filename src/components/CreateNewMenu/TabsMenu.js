@@ -97,7 +97,7 @@ const TabsMenu = () => {
                 alignItems={'center'}
               >
                 <Typography fontWeight={'bold'} fontSize={'22px'}>
-                  Tabs
+                  Tags
                 </Typography>
                 <Box
                   display={'flex'}
@@ -109,7 +109,7 @@ const TabsMenu = () => {
                     onClick={addtoggle}
                     sx={{ marginBottom: '15px', marginRight: '20px' }}
                   >
-                    Add Tab
+                    Add Tag
                   </Button>
                   <TextField
                     value={searchField}
@@ -162,7 +162,7 @@ const TabsMenu = () => {
             fontWeight: 'bold'
           }}
         >
-          {'Add New Tab'}
+          {'Add New Tag'}
         </DialogTitle>
         <Divider />
         <DialogContent>
@@ -175,7 +175,7 @@ const TabsMenu = () => {
                 style={{ fontSize: '15px' }}
                 id='outlined-weight-helper-text'
               >
-                Tab Name
+                Tag Name
               </FormHelperText>
               <OutlinedInput
                 id='outlined-adornment-weight'

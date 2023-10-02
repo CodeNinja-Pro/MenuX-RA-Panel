@@ -31,6 +31,7 @@ import {
   TableSortLabel,
   Grid
 } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -257,11 +258,36 @@ export default function OrderTable () {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
+  const columns = [
+    { field: 'tableId', headerName: 'Table ID', width: 150 },
+    { field: 'orderId', headerName: 'Order ID', width: 150 },
+    { field: 'name', headerName: 'Customer Name', width: 150 },
+    { field: 'order', headerName: 'Order', width: 350 },
+    { field: 'comments', headerName: 'Comments', width: 350 },
+    { field: 'payment', headerName: 'Payments', width: 150 },
+    { field: 'amount', headerName: 'Amount', type: 'number', width: 200 },
+    { field: 'actions', headerName: 'Actions', width: 150 }
+  ]
+
   return (
     <>
       <Grid item xs={12} marginTop={2}>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <TableContainer>
+          <Grid container xs={12}>
+            <DataGrid
+              rows={paginatedTableData}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 }
+                }
+              }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+            />
+          </Grid>
+
+          {/* <TableContainer>
             <Table aria-labelledby='tableTitle'>
               <EnhancedTableHead
                 order={order}
@@ -363,7 +389,7 @@ export default function OrderTable () {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          /> */}
 
           <Dialog
             open={deleteModal}

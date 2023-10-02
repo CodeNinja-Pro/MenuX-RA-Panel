@@ -60,7 +60,7 @@ function LabelDataTable (props) {
           <TableHead>
             <TableRow>
               <TableCell align='center'>No</TableCell>
-              <TableCell align='center'>Tab Name</TableCell>
+              <TableCell align='center'>Tag Name</TableCell>
               <TableCell align='center'>Actions</TableCell>
             </TableRow>
           </TableHead>

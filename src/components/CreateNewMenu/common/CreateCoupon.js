@@ -11,7 +11,9 @@ import {
   OutlinedInput,
   IconButton,
   Box,
-  Button
+  Button,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 import { ThemeMain } from '../../common/Theme'
 import { Container } from 'reactstrap'
@@ -44,7 +46,7 @@ export default function CreateCoupon () {
   useEffect(() => {
     const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 10)
     const random = nanoid()
-    setCouponName(random)
+    // setCouponName(random)
   }, [])
 
   const handleNewCoupon = () => {
@@ -139,16 +141,19 @@ export default function CreateCoupon () {
                           percent.
                         </Typography>
                       </FormHelperText>
-                      <OutlinedInput
-                        id='outlined-adornment-weight'
-                        aria-describedby='outlined-weight-helper-text'
+                      <TextField
+                        id='outlined-start-adornment'
                         type='number'
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
-                        placeholder='30%'
+                        placeholder='30'
                         value={discountPercentage}
                         onChange={e => setDiscountPercentage(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <Typography>%</Typography>
+                            </InputAdornment>
+                          )
+                        }}
                       />
                     </FormControl>
                     <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
@@ -158,16 +163,19 @@ export default function CreateCoupon () {
                       >
                         Maximum Discount
                       </FormHelperText>
-                      <OutlinedInput
-                        id='outlined-adornment-weight'
-                        aria-describedby='outlined-weight-helper-text'
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
+                      <TextField
+                        id='outlined-start-adornment'
                         type='number'
                         placeholder='500'
                         value={maximumDiscount}
                         onChange={e => setMaximumDiscount(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <Typography>$</Typography>
+                            </InputAdornment>
+                          )
+                        }}
                       />
                     </FormControl>
                     <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
