@@ -6,8 +6,8 @@ import OnlyHeader from '../components/Headers/OnlyHeader.js'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { Card, Grid, ThemeProvider, Typography } from '@mui/material'
-import CustomerTable from '../components/Customer/CustomerTable.js'
 import { ThemeMain } from '../components/common/Theme.js'
+import CustomerFeedbackTable from '../components/CustomerFeedback/CustomerFeedbackTable.js'
 
 const Customers = () => {
   const dispatch = useDispatch()
@@ -36,10 +36,10 @@ const Customers = () => {
                       marginTop={'10px'}
                       fontSize={'25px'}
                     >
-                      Customers
+                      Customer Feedback
                     </Typography>
                   </Grid>
-                  <CustomerTable />
+                  <CustomerFeedbackTable />
                 </Grid>
               </Grid>
             </Card>

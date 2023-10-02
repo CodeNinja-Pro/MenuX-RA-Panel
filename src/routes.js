@@ -9,6 +9,7 @@ import Restaurants from './views/Restaurants'
 import Menus from './views/Menus'
 import KitchenStaff from './views/KitchenStaff'
 import Customers from './views/Customers'
+import CustomerFeedback from './views/CustomerFeedback'
 import Orders from './views/Orders'
 import ForgetPassword from './views/auth/ForgetPassword'
 // import Statistics from './views/Statistics'
@@ -164,7 +165,7 @@ var routes = [
     name: 'Customer Feedback',
     icon: customerFeedback,
     activeIcon: customerFeedbackactive,
-    component: Requests,
+    component: CustomerFeedback,
     type: 'restaurant',
     layout: '/admin'
   },

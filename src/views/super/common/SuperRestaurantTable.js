@@ -454,7 +454,7 @@ export default function SuperRestaurantTable () {
                             </Typography>
                           )}
                         </TableCell>
-                        <TableCell align='center' width={'10%'}>
+                        <TableCell align='center'>
                           <IconButton
                             aria-describedby={id}
                             color='inherit'

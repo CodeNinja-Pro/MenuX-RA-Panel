@@ -306,7 +306,7 @@ export default function SuperStaffTable () {
         marginTop={'20px'}
       >
         <TextField
-          sx={{ width: '400px' }}
+          sx={{ width: '500px' }}
           id='outlined-start-adornment'
           placeholder='Search by Name, Email, Type, Score and Feedback.'
           value={searchValue}
@@ -376,7 +376,7 @@ export default function SuperStaffTable () {
                       </TableCell>
                       <TableCell align='center'>
                         <Typography color='text.primary'>
-                          {row.createdAt.toDate().toDateString()}
+                          {row.createdAt.toDate().toLocaleString()}
                         </Typography>
                       </TableCell>
                       <TableCell align='center' width={'10%'}>

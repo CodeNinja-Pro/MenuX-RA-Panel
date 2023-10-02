@@ -1,5 +1,7 @@
 import firebase from '../../config/firebase'
 import { toast } from 'react-toastify'
+import { RepositoryFactory } from '../../repository/RepositoryFactory'
+let Staff = RepositoryFactory.get('staff')
 
 // Get all restaurant informations
 export const getAllRestaurants = () => async dispatch => {
@@ -417,6 +419,73 @@ export const deleteStaff = (uid, onSuccess) => async dispatch => {
         fontFamily: 'Poppins'
       }
     })
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  }
+}
+
+export const sendInvitation = (uid, email) => async dispatch => {
+  dispatch({
+    type: 'LOADER',
+    payload: true
+  })
+
+  const updateData = {
+    enable: true
+  }
+
+  const buttonStyles = {
+    display: 'inline-block',
+    padding: '10px 20px',
+    backgroundColor: '#3f51b5',
+    color: '#fff',
+    borderRadius: '3px',
+    textDecoration: 'none',
+    fontWeight: 'bold'
+  }
+
+  try {
+    await firebase
+      .firestore()
+      .collection('staffs')
+      .doc(uid)
+      .update({
+        enable: true
+      })
+      .then(() => {
+        // Staff.sendEmailInvitation(email)
+
+        dispatch({
+          type: 'UPDATE_STAFFS',
+          payload: {
+            id: uid,
+            updateData
+          }
+        })
+
+        // send the email for success through Gmail
+        firebase
+          .firestore()
+          .collection('mail')
+          .add({
+            to: ['benjaminsmile10162@gmail.com'],
+            message: {
+              subject: 'MenuX invitation',
+              text: 'I am Brian'
+              // html: `<a href='#' style={${buttonStyles}}>Stay Connected</a>`
+            }
+          })
+
+        toast.success(`You sent the invitation to ${email} for staff role.`)
+        dispatch({
+          type: 'LOADER',
+          payload: false
+        })
+      })
+  } catch (error) {
+    toast.error(error.message)
     dispatch({
       type: 'LOADER',
       payload: false

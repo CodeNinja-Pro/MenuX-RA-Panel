@@ -21,6 +21,16 @@ const superReducer = (state = initState, action) => {
         ...state,
         allStaffs: action.payload
       }
+    case 'UPDATE_STAFFS':
+      return {
+        ...state,
+        allStaffs: state.allStaffs.map(staff => {
+          if (staff.id === action.payload.id) {
+            return { ...staff, ...action.payload.updateData }
+          }
+          return staff
+        })
+      }
     case 'UPDATE_RESTAURANTS':
       return {
         ...state,

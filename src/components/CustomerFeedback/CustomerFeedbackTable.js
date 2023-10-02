@@ -2,11 +2,6 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { visuallyHidden } from '@mui/utils'
 import { useEffect } from 'react'
-import {
-  deleteStaff,
-  getAllStaffs,
-  sendInvitation
-} from '../../../store/actions/superAction'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -27,12 +22,6 @@ import {
   ClickAwayListener,
   MenuList,
   MenuItem,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
   TableSortLabel,
   Grid,
   TextField,
@@ -76,27 +65,27 @@ const headCells = [
   {
     id: 'name',
     numeric: false,
-    label: 'Staff Name'
+    label: 'Customer Name'
   },
   {
     id: 'email',
     numeric: false,
-    label: 'Staff Email'
+    label: 'Customer Email'
   },
   {
-    id: 'role',
+    id: 'title',
     numeric: false,
-    label: 'Staff Role'
+    label: 'Title'
+  },
+  {
+    id: 'feedback',
+    numeric: false,
+    label: 'Feedback'
   },
   {
     id: 'createdAt',
     numeric: true,
-    label: 'Assign Date'
-  },
-  {
-    id: 'enable',
-    numeric: false,
-    label: 'Enabled'
+    label: 'Created Date'
   }
 ]
 
@@ -161,16 +150,14 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired
 }
 
-export default function SuperStaffTable () {
+export default function CustomerFeedbackTable () {
   //User definition
   const dispatch = useDispatch()
   let rows = useSelector(state => state.super.allStaffs)
 
-  // Variable definition
-  const [deleteModal, setDeleteModal] = useState(false)
-  const [invitationModal, setInvitationModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState('')
 
+  // Variable definition
   const [visibleRows, setVisibleRows] = useState([])
 
   const [order, setOrder] = useState('asc')
@@ -180,12 +167,6 @@ export default function SuperStaffTable () {
   const [filters, setFilters] = useState({
     status: null
   })
-
-  const [emailForInvite, setEmailForInvite] = useState('')
-
-  useEffect(() => {
-    dispatch(getAllStaffs())
-  }, [])
 
   useEffect(() => {
     setVisibleRows(rows)
@@ -206,19 +187,6 @@ export default function SuperStaffTable () {
     })
     setVisibleRows(filteredObject)
   }, [searchValue])
-
-  const handleDelete = () => {
-    dispatch(
-      deleteStaff(selectedItem, () => {
-        const newArray = visibleRows.filter(obj => obj.id !== selectedItem)
-        setVisibleRows(newArray)
-      })
-    )
-  }
-
-  const handleInvitation = () => {
-    dispatch(sendInvitation(selectedItem, emailForInvite))
-  }
 
   // MUI table definition
   const handleRequestSort = (event, property) => {
@@ -277,8 +245,8 @@ export default function SuperStaffTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email and Role.'
-          sx={{ width: '400px' }}
+          placeholder='Search by Name, Email, Title and Feedback.'
+          sx={{ width: '450px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{
@@ -313,12 +281,13 @@ export default function SuperStaffTable () {
                     >
                       <TableCell align='center'>{row.name}</TableCell>
                       <TableCell align='center'>{row.email}</TableCell>
-                      <TableCell align='center'>{row.role}</TableCell>
+                      <TableCell align='center'>{row.title}</TableCell>
+                      <TableCell align='center'>{row.feedback}</TableCell>
                       <TableCell align='center'>
                         {row.createdAt.toDate().toLocaleString()}
                       </TableCell>
                       <TableCell align='center' width={'10%'}>
-                        {row.enable === true ? (
+                        {row.status === true ? (
                           <Typography
                             sx={{
                               backgroundColor: 'rgba(40, 199, 111, 0.12)',
@@ -326,7 +295,7 @@ export default function SuperStaffTable () {
                             }}
                             color={'rgba(40, 199, 111, 1)'}
                           >
-                            Enabled
+                            Active
                           </Typography>
                         ) : (
                           <Typography
@@ -336,7 +305,7 @@ export default function SuperStaffTable () {
                             }}
                             color={'rgba(241, 65, 108, 1)'}
                           >
-                            Disabled
+                            Inactive
                           </Typography>
                         )}
                       </TableCell>
@@ -347,7 +316,6 @@ export default function SuperStaffTable () {
                           size='small'
                           onClick={event => {
                             handleClick(event)
-                            setEmailForInvite(row.email)
                             setSelectedItem(row.id)
                           }}
                         >
@@ -367,22 +335,12 @@ export default function SuperStaffTable () {
                         <Paper>
                           <ClickAwayListener onClickAway={handleClose}>
                             <MenuList id='split-button-menu'>
-                              <MenuItem
-                                onClick={() => {
-                                  setInvitationModal(true)
-                                }}
-                                key={'edit'}
-                              >
+                              {/* <MenuItem onClick={() => {}} key={'edit'}>
                                 <NotificationsNoneOutlinedIcon />
-                                Send the Invitation
-                              </MenuItem>
+                                Revert Status
+                              </MenuItem> */}
                               <Divider />
-                              <MenuItem
-                                onClick={() => {
-                                  setDeleteModal(true)
-                                }}
-                                key={'status'}
-                              >
+                              <MenuItem onClick={() => {}} key={'status'}>
                                 <DeleteOutlineOutlinedIcon color='error' />
                                 <Typography color={'error'}>Delete</Typography>
                               </MenuItem>
@@ -406,64 +364,6 @@ export default function SuperStaffTable () {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-
-          <Dialog
-            open={deleteModal}
-            onClose={() => setDeleteModal(false)}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>
-              {'You pay attention here'}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                Are you really going to delete this staff information?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
-              <Button
-                onClick={() => {
-                  setDeleteModal(false)
-                  handleDelete()
-                }}
-                autoFocus
-              >
-                Agree
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          <Dialog
-            open={invitationModal}
-            onClose={() => setInvitationModal(false)}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>
-              {'You pay attention here'}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                Are you really going to send the invitation?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setInvitationModal(false)}>
-                Disagree
-              </Button>
-              <Button
-                onClick={() => {
-                  setInvitationModal(false)
-                  handleInvitation()
-                }}
-                autoFocus
-              >
-                Agree
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Paper>
       </Grid>
     </>

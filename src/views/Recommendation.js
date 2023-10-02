@@ -2,20 +2,85 @@ import OnlyHeader from '../components/Headers/OnlyHeader'
 import React from 'react'
 import { useState } from 'react'
 
-import { Card, Button, Typography, ThemeProvider } from '@mui/material'
+import { Card, Button, ThemeProvider } from '@mui/material'
 import { addDays } from 'date-fns'
-
-import RecommendTableData from '../components/Recommendation/RecommendTableData'
 
 import { Container, Row, Col } from 'reactstrap'
 import { ThemeMain } from '../components/common/Theme'
 import PickDateRange from '../views/auth/PickDateRange'
+import RecommendTable from '../components/Recommendation/RecommendTable'
+import { useSelector } from 'react-redux'
+import exportFromJSON from 'export-from-json'
+
+const data = [
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  },
+  {
+    subject: 'Cheese Sandwich',
+    Image: '',
+    title: 'Review product details',
+    date: '9/7/2023',
+    explanation:
+      'The product is attractive in the menu, but customers are not ordering it. Please review your product photos, name and description, as the advertisement does not seem well aligned with the product.'
+  }
+]
 
 function Recommendation () {
-  // const dispatch = useDispatch()
-  // const { user, uid } = useSelector(state => state.auth)
-
-  // const { restaurantMedia } = useSelector(state => state.restaurant)
+  const { user } = useSelector(state => state.auth)
 
   const [dateState, setDateState] = useState([
     {
@@ -29,6 +94,27 @@ function Recommendation () {
     setDateState(ranges)
   }
 
+  const handleExportData = () => {
+    const recommendData = []
+
+    data.forEach(item => {
+      recommendData.push({
+        subject: item.subject,
+        title: item.title,
+        createdAt: item.date,
+        explanation: item.explanation
+      })
+    })
+
+    const fileName = `Recommendation_${user.id}`
+    const exportType = exportFromJSON.types.csv
+    exportFromJSON({
+      data: recommendData,
+      fileName,
+      exportType
+    })
+  }
+
   return (
     <>
       <OnlyHeader />
@@ -38,14 +124,14 @@ function Recommendation () {
           <Container fluid>
             <Row>
               <Col>
-                <Card sx={{ height: '400px' }}>
+                <Card sx={{ height: '450px', boxShadow: 'none' }}>
                   <div>
                     <iframe
                       src={process.env.PUBLIC_URL + '/Animation.html'}
                       title={'Animation'}
                       style={{
-                        width: '3000px',
-                        height: '800px'
+                        width: '1700px',
+                        height: '470px'
                       }}
                     ></iframe>
                   </div>
@@ -53,41 +139,20 @@ function Recommendation () {
               </Col>
             </Row>
             <Row style={{ marginTop: '20px' }}>
-              <Col xs={12} md={9}>
-                {/* <Typography
-                  textAlign={'left'}
-                  sx={{
-                    border: 'dashed',
-                    borderRadius: '10px',
-                    borderWidth: '1px',
-                    borderColor: '#0074D9',
-                    backgroundColor: '#cfebff'
-                  }}
-                >
-                  <Row>
-                    <Col>
-                      <Typography
-                        padding={'10px'}
-                        sx={{
-                          borderRadius: '20px,'
-                        }}
-                      >
-                        Every day/week (depending on your plan) your smart
-                        recommendations are updated. You will be notified to
-                        apply new changes to your items. Smart recommendations
-                        are added to your custom recommendations. Once you apply
-                        new ones, previous ones are still kept on your list.
-                      </Typography>
-                    </Col>
-                  </Row>
-                </Typography> */}
-              </Col>
+              <Col xs={12} md={9}></Col>
               <Col
                 xs={12}
                 md={1}
                 style={{ display: 'flex', alignItems: 'flex-end' }}
               >
-                <Button variant='contained'>Export</Button>
+                <Button
+                  variant='contained'
+                  onClick={() => {
+                    handleExportData()
+                  }}
+                >
+                  Export
+                </Button>
               </Col>
               <Col
                 xs={12}
@@ -106,7 +171,7 @@ function Recommendation () {
             </Row>
             <Row style={{ marginTop: '20px' }}>
               <Col>
-                <RecommendTableData />
+                <RecommendTable tableItems={data ?? []} />
               </Col>
             </Row>
           </Container>
