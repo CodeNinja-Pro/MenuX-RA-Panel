@@ -444,57 +444,63 @@ export default function SignUp () {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then(data => {
-          const email = data.user.email
+          const email = data.user?.email
           const snapShot = firebase
             .firestore()
             .collection('staffs')
             .where('email', '==', email)
-            .get()
 
-          let staffFlag = false
-          snapShot.forEach(doc => {
-            if (doc.data().enable === true) {
-              staffFlag = true
+          snapShot.get().then(doc => {
+            if (doc.empty) {
+              dispatch(
+                signupInformation(
+                  data.user?.uid,
+                  fullName,
+                  data.user?.email,
+                  'admin',
+                  '',
+                  () => {
+                    history.push('/auth/create-restaurant')
+
+                    dispatch({
+                      type: 'REGISTER_REQUEST',
+                      payload: {
+                        id: data.user?.uid
+                      }
+                    })
+                  }
+                )
+              )
+            } else {
+              let exist = []
+              doc.forEach(item => {
+                exist.push(item.data())
+              })
+              if (exist[0].enable === true) {
+                dispatch(
+                  signupInformation(
+                    data.user?.uid,
+                    fullName,
+                    data.user?.email,
+                    'staff',
+                    exist[0].restaurantID,
+                    () => {
+                      history.push('/auth/login')
+
+                      dispatch({
+                        type: 'REGISTER_REQUEST',
+                        payload: {
+                          id: data.user?.uid
+                        }
+                      })
+                    }
+                  )
+                )
+              } else {
+                toast.error('Your email address is not allowed by admin.')
+              }
             }
           })
-          console.log('first')
-          if (staffFlag) {
-            dispatch(
-              signupInformation(
-                data.user?.uid,
-                fullName,
-                data.user?.email,
-                'staff',
-                () => {
-                  dispatch({
-                    type: 'REGISTER_REQUEST',
-                    payload: {
-                      id: data.user?.uid
-                    }
-                  })
-                }
-              )
-            )
-          } else {
-            dispatch(
-              signupInformation(
-                data.user?.uid,
-                fullName,
-                data.user?.email,
-                'admin',
-                () => {
-                  history.push('/auth/create-restaurant')
-
-                  dispatch({
-                    type: 'REGISTER_REQUEST',
-                    payload: {
-                      id: data.user?.uid
-                    }
-                  })
-                }
-              )
-            )
-          }
         })
         .catch(error => {
           toast.error(error.message)

@@ -382,7 +382,7 @@ const AdminNavbar = props => {
                           {user?.name}
                         </span>
                         <span className='mb-0 text-sm text-dark '>
-                          {user?.type}
+                          {user?.role}
                         </span>
                       </Media>
                     </Media>

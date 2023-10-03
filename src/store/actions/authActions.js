@@ -360,18 +360,17 @@ const forgetLoader = data => async dispatch => {
 // }
 
 export const signupInformation =
-  (id, name, email, type, onSuccess) => async dispatch => {
+  (id, name, email, type, restaurantID, onSuccess) => async dispatch => {
     dispatch({
       type: 'LOGIN_REQUEST'
     })
-
-    console.log('Signup Information')
 
     let personalInfo
 
     if (type === 'staff') {
       personalInfo = {
-        restaurantID: id,
+        restaurantID: restaurantID,
+        role: 'staff',
         name: name,
         email: email,
         active: true
@@ -379,6 +378,7 @@ export const signupInformation =
     } else {
       personalInfo = {
         restaurantID: id,
+        role: 'admin',
         name: name,
         email: email,
         active: false
@@ -504,7 +504,11 @@ export const checkUserActive = (id, onSuccess) => async dispatch => {
         } else {
           dispatch({
             type: 'LOGIN_SUCCESS',
-            user: { id: doc.id, active: doc.data().active, ...doc.data() },
+            user: {
+              id: doc.data().restaurantID,
+              active: doc.data().active,
+              ...doc.data()
+            },
             error: ''
           })
           dispatch({
