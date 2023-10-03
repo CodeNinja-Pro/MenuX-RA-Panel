@@ -128,6 +128,7 @@ export const getUnreadNotifications = uid => async dispatch => {
       .firestore()
       .collection('notifications')
       .where('destination', '==', uid)
+      .where('check', '==', false)
       .get()
 
     snapShot.forEach(doc => {

@@ -57,9 +57,9 @@ export default function ItemDetail () {
       }
     ],
     options: {
-      stroke: {
-        curve: 'smooth'
-      },
+      // stroke: {
+      //   curve: 'smooth'
+      // },
       chart: {
         type: 'line',
         dropShadow: {

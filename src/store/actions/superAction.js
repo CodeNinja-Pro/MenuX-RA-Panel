@@ -16,6 +16,7 @@ export const getAllRestaurants = () => async dispatch => {
       .firestore()
       .collection('users')
       .where('type', '==', 'restaurant')
+      .where('role', '==', 'admin')
       .where('active', '==', true)
       .get()
 

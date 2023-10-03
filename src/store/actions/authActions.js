@@ -501,8 +501,14 @@ export const setupRestaurant =
           restaurantID: id
         })
       })
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
     } catch (error) {
       toast.error(error.message)
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
     }
   }
 
@@ -582,5 +588,8 @@ export const checkUserActive = (id, onSuccess) => async dispatch => {
       })
   } catch (error) {
     toast.error(error.message)
+    dispatch({
+      type: 'LOGIN_REQUEST_END'
+    })
   }
 }

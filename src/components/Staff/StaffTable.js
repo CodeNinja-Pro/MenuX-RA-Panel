@@ -345,7 +345,7 @@ const StaffTable = () => {
                 onChange={e => setRoleName(e.target.value)}
               >
                 {allStaffInfo?.map((staffInfo, index) => (
-                  <MenuItem key={index} value={staffInfo.roleName}>
+                  <MenuItem key={index} value={staffInfo.id}>
                     {staffInfo.roleName}
                   </MenuItem>
                 ))}

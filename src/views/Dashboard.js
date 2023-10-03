@@ -170,7 +170,7 @@ export default function Dashboard () {
       formatter: function (val) {
         return val
       },
-      offsetY: -25,
+      offsetY: -55,
       style: {
         fontSize: '18px',
         fontFamily: 'Poppins',

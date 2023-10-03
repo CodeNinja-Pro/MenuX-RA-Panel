@@ -547,6 +547,9 @@ export default function SignUp () {
                         id: data.user?.uid
                       }
                     })
+                    dispatch({
+                      type: 'LOGIN_REQUEST_END'
+                    })
                   }
                 )
               )
@@ -584,12 +587,18 @@ export default function SignUp () {
                     console.log('User is deleted')
                   })
                   .catch(err => console.log(err.message))
+                dispatch({
+                  type: 'LOGIN_REQUEST_END'
+                })
               }
             }
           })
         })
     } catch (error) {
       toast.error(error.message)
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
     }
   }
 

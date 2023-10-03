@@ -90,6 +90,9 @@ export default function AccountSetting () {
   const [editPaymentCard, setEditPaymentCard] = useState(false)
   const [deleteModalFlag, setDeleteModalFlag] = useState(false)
 
+  const [confirmUpdatePasswordModal, setConfirmUpdatePasswordModal] =
+    useState(false)
+
   // For deleting ID saving
   const [toDeleteId, setToDeleteId] = useState('')
 
@@ -871,8 +874,7 @@ export default function AccountSetting () {
                     variant='contained'
                     style={{ margin: '20px' }}
                     onClick={() => {
-                      setChangePasswordModal(false)
-                      handleChangePassword()
+                      setConfirmUpdatePasswordModal(true)
                     }}
                     autoFocus
                   >
@@ -880,7 +882,6 @@ export default function AccountSetting () {
                   </Button>
                 </DialogActions>
               </Dialog>
-
               <Dialog
                 open={paymentCardModal}
                 onClose={() => setPaymentCardModal(false)}
@@ -1028,6 +1029,42 @@ export default function AccountSetting () {
                     </Box>
                   </DialogContentText>
                 </DialogContent>
+              </Dialog>
+
+              <Dialog
+                open={confirmUpdatePasswordModal}
+                onClose={() => setConfirmUpdatePasswordModal(false)}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  {'You pay attention here'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    Are you really going to update the password?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setConfirmUpdatePasswordModal(false)
+                      setChangePasswordModal(false)
+                    }}
+                  >
+                    Disagree
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setChangePasswordModal(false)
+                      setConfirmUpdatePasswordModal(false)
+                      handleChangePassword()
+                    }}
+                    autoFocus
+                  >
+                    Agree
+                  </Button>
+                </DialogActions>
               </Dialog>
             </Grid>
           </Grid>
