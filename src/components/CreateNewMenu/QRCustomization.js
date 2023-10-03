@@ -128,6 +128,8 @@ const QRCustomization = () => {
   const onDownloadClick = async () => {
     const keyArray = await generatePrimaryKey(tableNumber)
 
+    let linkText = ''
+
     keyArray.map((arrayItem, index) => {
       setPrimaryKey(arrayItem)
       const canvas = document.getElementById(user.email)
@@ -138,11 +140,21 @@ const QRCustomization = () => {
         let downloadLink = document.createElement('a')
         downloadLink.href = pngUrl
         downloadLink.download = index + '_' + user.restaurantName + '.' + format
+        linkText += index + '_' + user.restaurantName + '.' + format + '\n'
+        console.log(downloadLink)
         document.body.appendChild(downloadLink)
         downloadLink.click()
         document.body.removeChild(downloadLink)
       }
     })
+
+    const element = document.createElement('a')
+    const file = new Blob([linkText], { type: 'text/plain' })
+    element.href = URL.createObjectURL(file)
+    element.download = user.restaurantName + '.txt'
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+
     toast.success(`You downloaded ${tableNumber} QR codes successfully.`, {
       style: {
         fontFamily: 'Poppins'
@@ -356,7 +368,7 @@ const QRCustomization = () => {
                       </div>
                       <Button variant='contained' onClick={onAllDownloadClick}>
                         <FileDownloadOutlinedIcon />
-                        Download Single QR Code for all Tables
+                        Download A Single QR Code for all Tables
                       </Button>
                     </CardHeader>
                   </Card>

@@ -60,195 +60,161 @@ export default function CreateCoupon () {
     dispatch(
       addNewCoupon(user.id, newCoupon, () => {
         setFlag(false)
-        history.goBack()
       })
     )
   }
 
   return (
     <>
-      <OnlyHeader />
+      {/* <OnlyHeader /> */}
       <ThemeProvider theme={ThemeMain}>
-        <Container className='mt--9 mb-5' fluid>
-          <Box display={'flex'} alignItems={'center'}>
-            <IconButton
-              color='primary'
-              onClick={() => {
-                history.goBack()
-              }}
-              sx={{
-                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
-                marginBottom: '15px',
-                marginTop: '10px',
-                display: 'flex',
-                justifyContent: 'left',
-                marginLeft: '40px'
-              }}
-            >
-              <ArrowBackIosNewIcon sx={{ marginRight: '3px' }} />
-            </IconButton>
-            <Typography marginLeft={3} fontWeight={'bold'} fontSize={'24px'}>
-              Create Coupon
-            </Typography>
-          </Box>
-          <Container fluid>
-            <Card sx={{ boxShadow: 'none' }}>
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography
-                      textAlign={'left'}
-                      marginLeft={2}
-                      fontWeight={'bold'}
-                      fontSize={'22px'}
+        <Container fluid>
+          <Card sx={{ boxShadow: 'none' }}>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  marginRight={2}
+                  display={'flex'}
+                  flexDirection={'column'}
+                  xs={12}
+                  md={5}
+                >
+                  <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                    <FormHelperText
+                      style={{ fontSize: '18px' }}
+                      id='outlined-weight-helper-text'
                     >
-                      COUPON
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    marginRight={2}
+                      Coupon Name
+                    </FormHelperText>
+                    <OutlinedInput
+                      id='outlined-adornment-weight'
+                      aria-describedby='outlined-weight-helper-text'
+                      inputProps={{
+                        'aria-label': 'weight'
+                      }}
+                      value={couponName}
+                      onChange={e => setCouponName(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                    <FormHelperText
+                      style={{ fontSize: '18px' }}
+                      id='outlined-weight-helper-text'
+                    >
+                      <Typography>Discount Percentage/Amount</Typography>
+                      <Typography fontSize={'13px'}>
+                        Add % at the end of the value to add discount as the
+                        percent.
+                      </Typography>
+                    </FormHelperText>
+                    <TextField
+                      id='outlined-start-adornment'
+                      type='number'
+                      placeholder='30'
+                      value={discountPercentage}
+                      onChange={e => setDiscountPercentage(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <Typography>%</Typography>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                    <FormHelperText
+                      style={{ fontSize: '18px' }}
+                      id='outlined-weight-helper-text'
+                    >
+                      Maximum Discount
+                    </FormHelperText>
+                    <TextField
+                      id='outlined-start-adornment'
+                      type='number'
+                      placeholder='500'
+                      value={maximumDiscount}
+                      onChange={e => setMaximumDiscount(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <Typography>$</Typography>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                    <FormHelperText
+                      style={{ fontSize: '18px' }}
+                      id='outlined-weight-helper-text'
+                    >
+                      Maximum Uses
+                    </FormHelperText>
+                    <OutlinedInput
+                      type='number'
+                      id='outlined-adornment-weight'
+                      aria-describedby='outlined-weight-helper-text'
+                      inputProps={{
+                        'aria-label': 'weight'
+                      }}
+                      placeholder='100'
+                      value={maximumUses}
+                      onChange={e => setMaximumUses(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                    <FormHelperText
+                      style={{ fontSize: '18px' }}
+                      id='outlined-weight-helper-text'
+                    >
+                      Valid Till
+                    </FormHelperText>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                          value={dayjs(validTill)}
+                          onChange={newValue => setValidTill(newValue)}
+                          sx={{ width: '100%' }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </FormControl>
+                  <Box
                     display={'flex'}
-                    flexDirection={'column'}
-                    xs={12}
-                    md={5}
+                    marginTop={3}
+                    justifyContent={'space-around'}
                   >
-                    <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
-                      <FormHelperText
-                        style={{ fontSize: '18px' }}
-                        id='outlined-weight-helper-text'
-                      >
-                        Coupon Name
-                      </FormHelperText>
-                      <OutlinedInput
-                        id='outlined-adornment-weight'
-                        aria-describedby='outlined-weight-helper-text'
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
-                        value={couponName}
-                        onChange={e => setCouponName(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
-                      <FormHelperText
-                        style={{ fontSize: '18px' }}
-                        id='outlined-weight-helper-text'
-                      >
-                        <Typography>Discount Percentage/Amount</Typography>
-                        <Typography fontSize={'13px'}>
-                          Add % at the end of the value to add discount as the
-                          percent.
-                        </Typography>
-                      </FormHelperText>
-                      <TextField
-                        id='outlined-start-adornment'
-                        type='number'
-                        placeholder='30'
-                        value={discountPercentage}
-                        onChange={e => setDiscountPercentage(e.target.value)}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position='start'>
-                              <Typography>%</Typography>
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
-                      <FormHelperText
-                        style={{ fontSize: '18px' }}
-                        id='outlined-weight-helper-text'
-                      >
-                        Maximum Discount
-                      </FormHelperText>
-                      <TextField
-                        id='outlined-start-adornment'
-                        type='number'
-                        placeholder='500'
-                        value={maximumDiscount}
-                        onChange={e => setMaximumDiscount(e.target.value)}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position='start'>
-                              <Typography>$</Typography>
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
-                      <FormHelperText
-                        style={{ fontSize: '18px' }}
-                        id='outlined-weight-helper-text'
-                      >
-                        Maximum Uses
-                      </FormHelperText>
-                      <OutlinedInput
-                        type='number'
-                        id='outlined-adornment-weight'
-                        aria-describedby='outlined-weight-helper-text'
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
-                        placeholder='100'
-                        value={maximumUses}
-                        onChange={e => setMaximumUses(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
-                      <FormHelperText
-                        style={{ fontSize: '18px' }}
-                        id='outlined-weight-helper-text'
-                      >
-                        Valid Till
-                      </FormHelperText>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
-                          <DatePicker
-                            value={dayjs(validTill)}
-                            onChange={newValue => setValidTill(newValue)}
-                            sx={{ width: '100%' }}
-                          />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </FormControl>
-                    <Box
-                      display={'flex'}
-                      marginTop={3}
-                      justifyContent={'space-around'}
+                    <Button
+                      variant='outlined'
+                      onClick={() => {
+                        history.goBack()
+                      }}
                     >
-                      <Button
-                        variant='outlined'
-                        onClick={() => {
-                          history.goBack()
-                        }}
-                      >
-                        Discard
-                      </Button>
-                      <Button
-                        disabled={
-                          !discountPercentage ||
-                          !maximumDiscount ||
-                          !maximumUses ||
-                          !validTill ||
-                          flag
-                        }
-                        variant='contained'
-                        onClick={() => {
-                          setFlag(true)
-                          handleNewCoupon()
-                        }}
-                      >
-                        Add Coupon
-                      </Button>
-                    </Box>
-                  </Grid>
+                      Discard
+                    </Button>
+                    <Button
+                      disabled={
+                        !discountPercentage ||
+                        !maximumDiscount ||
+                        !maximumUses ||
+                        !validTill ||
+                        flag
+                      }
+                      variant='contained'
+                      onClick={() => {
+                        setFlag(true)
+                        handleNewCoupon()
+                      }}
+                    >
+                      Add Coupon
+                    </Button>
+                  </Box>
                 </Grid>
-              </CardContent>
-            </Card>
-          </Container>
+              </Grid>
+            </CardContent>
+          </Card>
         </Container>
       </ThemeProvider>
     </>

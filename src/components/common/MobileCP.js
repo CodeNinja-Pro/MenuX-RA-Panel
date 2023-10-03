@@ -75,13 +75,13 @@ function MyApp (props) {
       {/* <ThemeProvider theme={ThemeMain}> */}
       <Card
         sx={{
-          width: '380px',
+          width: '400px',
           marginBottom: '30px',
           border: 'solid',
           borderWidth: '15px',
           borderRadius: '70px',
           borderColor: 'black',
-          height: '700px'
+          height: '730px'
         }}
       >
         <CardActionArea disableRipple>

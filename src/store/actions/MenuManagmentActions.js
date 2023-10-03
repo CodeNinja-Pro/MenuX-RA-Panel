@@ -947,11 +947,11 @@ export const addCategory =
             }
           })
           onSuccess(categoryId)
-          toast.success('Category added Successfully', {
-            style: {
-              fontFamily: 'Poppins'
-            }
-          })
+          // toast.success('Category added Successfully', {
+          //   style: {
+          //     fontFamily: 'Poppins'
+          //   }
+          // })
           resolve(categoryId) // Resolve the promise with categoryId
         })
         .catch(error => {

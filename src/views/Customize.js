@@ -44,6 +44,9 @@ import {
 } from '../store/actions/customization'
 import { ThemeMain } from '../components/common/Theme'
 import { useHistory } from 'react-router-dom'
+import alertify from 'alertifyjs'
+import 'alertifyjs/build/css/alertify.css'
+import 'alertifyjs/build/css/themes/default.css'
 
 function Customize () {
   const dispatch = useDispatch()
@@ -70,21 +73,23 @@ function Customize () {
     setDeleteModal(!deleteModal)
   }
 
+  const [flag, setFlag] = useState(false)
   const [recommendModal, setRecommendModal] = useState(false)
 
   const history = useHistory()
   useEffect(() => {
     const unlisten = history.block((location, action) => {
-      if (
-        action === 'POP' ||
-        window.confirm(
-          'Are you really leave the customization page without save?'
+      if (action === 'POP')
+        alertify.confirm(
+          'Confirm Title',
+          'Confirm Message',
+          function () {
+            return true
+          },
+          function () {
+            return false
+          }
         )
-      ) {
-        return true
-      } else {
-        return false
-      }
     })
 
     return () => {
@@ -564,6 +569,7 @@ function Customize () {
                                 ) : (
                                   <div>
                                     <form
+                                      style={{ marginLeft: '40px' }}
                                       id='form-file-upload'
                                       onDragEnter={handleDrag}
                                       onSubmit={e => e.preventDefault()}
@@ -671,6 +677,7 @@ function Customize () {
                                 ) : (
                                   <div>
                                     <form
+                                      style={{ marginLeft: '45px' }}
                                       id='form-file-upload'
                                       onDragEnter={handleDrag}
                                       onSubmit={e => e.preventDefault()}
@@ -780,6 +787,7 @@ function Customize () {
                                 ) : (
                                   <div>
                                     <form
+                                      style={{ marginLeft: '40px' }}
                                       id='form-file-upload'
                                       onDragEnter={handleDrag}
                                       onSubmit={e => e.preventDefault()}

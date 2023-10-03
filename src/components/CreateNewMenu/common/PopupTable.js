@@ -19,10 +19,15 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  Switch
+  Switch,
+  Grid,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+
 import { useDispatch, useSelector } from 'react-redux'
 import {
   deletePopup,
@@ -141,6 +146,26 @@ const PopupTable = () => {
         <Spinner size={'lg'} color='primary' className='mr-2'></Spinner>
       ) : (
         <Card sx={{ boxShadow: 'none' }}>
+          <Grid
+            item
+            xs={12}
+            display={'flex'}
+            justifyContent={'start'}
+            marginTop={'20px'}
+            marginBottom={2}
+          >
+            <TextField
+              id='outlined-start-adornment'
+              placeholder='Search'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchOutlinedIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
           <Divider />
           <TableContainer>
             <Table>

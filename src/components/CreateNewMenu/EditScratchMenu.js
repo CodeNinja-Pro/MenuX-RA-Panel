@@ -304,13 +304,13 @@ const EditScratchMenu = () => {
             add: false,
             categoriesID
           }
-          setCategoriesAndItems(prevCategories => [...prevCategories, obj]) // add the new object to the existing array of categories
+          // setCategoriesAndItems(prevCategories => [...prevCategories, obj]) // add the new object to the existing array of categories
           if (saveAndAddMore) {
             setCategoryImage('')
             setName('')
             setSaveAndAddMore(false)
           } else {
-            setCustomOffcanvas(false) ///// // close the offcanvas
+            setCustomOffcanvas(false)
             setCategoryImage('')
             setName('')
             setSaveAndAddMore(false)
@@ -859,7 +859,7 @@ const EditScratchMenu = () => {
                         </div>
                       </div>
                       {ele.openSubMenu && (
-                        <Col className='pl-5'>
+                        <Col className='pl-4'>
                           <DragDropContext onDragEnd={onItemDragEnd}>
                             <Droppable droppableId={ele.id}>
                               {(provided, snapshot) => (

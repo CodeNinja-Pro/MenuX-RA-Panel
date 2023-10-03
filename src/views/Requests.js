@@ -1,27 +1,51 @@
-// reactstrap components
+import React, { useEffect, useState } from 'react'
+
 import { Container } from 'reactstrap'
-// core components
+
 import OnlyHeader from '../components/Headers/OnlyHeader.js'
-import RequestTable from '../components/Requests/RequestsTable'
-import { useEffect } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
-import { getRequests } from '../store/actions/RequestActions'
+import { Card, Grid, ThemeProvider, Typography } from '@mui/material'
+import RequestsTable from '../components/Requests/RequestsTable.js'
+import { ThemeMain } from '../components/common/Theme.js'
 
 const Requests = () => {
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
-  const { restaurantRequests } = useSelector(state => state.requests)
-  useEffect(() => {
-    dispatch(getRequests(user?.restaurantID))
-  }, [])
+
   return (
     <>
-      <OnlyHeader />
-      <Container className='mt--7' fluid>
+      <ThemeProvider theme={ThemeMain}>
+        <OnlyHeader />
         <Container fluid>
-          <RequestTable data={restaurantRequests} />
+          <Container className='mt--7 mb-5' fluid>
+            <Card sx={{ boxShadow: 'none' }}>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={12}
+                  marginTop={2}
+                  marginLeft={2}
+                  marginRight={2}
+                  marginBottom={2}
+                >
+                  <Grid item xs={12}>
+                    <Typography
+                      textAlign={'left'}
+                      fontWeight={'bold'}
+                      marginTop={'10px'}
+                      fontSize={'25px'}
+                    >
+                      Requests
+                    </Typography>
+                  </Grid>
+                  <RequestsTable />
+                </Grid>
+              </Grid>
+            </Card>
+          </Container>
         </Container>
-      </Container>
+      </ThemeProvider>
     </>
   )
 }

@@ -73,14 +73,14 @@ const headCells = [
     label: 'Customer Email'
   },
   {
-    id: 'title',
-    numeric: false,
-    label: 'Title'
-  },
-  {
     id: 'feedback',
     numeric: false,
     label: 'Feedback'
+  },
+  {
+    id: 'score',
+    numeric: false,
+    label: 'Emoji'
   },
   {
     id: 'createdAt',

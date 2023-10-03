@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Row } from 'reactstrap'
 import {
   Grid,
@@ -13,9 +13,11 @@ import {
 import { ThemeMain } from '../common/Theme'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import PopupTable from './common/PopupTable'
+import CreatePopup from './common/CreatePopup'
 import { Link } from 'react-router-dom'
 
 export default function Popup () {
+  const [addCP, setAddCP] = useState(false)
   return (
     <>
       <ThemeProvider theme={ThemeMain}>
@@ -45,31 +47,27 @@ export default function Popup () {
                     >
                       Marketing Banner
                     </Typography>
-                    <Link to='/admin/create-popup'>
-                      <Button variant='contained'>Add Marketing Banner</Button>
-                    </Link>
+                    {addCP && (
+                      <Button
+                        onClick={() => setAddCP(false)}
+                        variant='outlined'
+                      >
+                        Back
+                      </Button>
+                    )}
+                    {!addCP && (
+                      <Button
+                        onClick={() => setAddCP(true)}
+                        variant='contained'
+                      >
+                        Add Marketing Banner
+                      </Button>
+                    )}
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'start'}
-                    marginTop={'20px'}
-                  >
-                    <TextField
-                      id='outlined-start-adornment'
-                      placeholder='Search'
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <SearchOutlinedIcon />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
+
                   <Grid item xs={12} marginTop={2}>
-                    <PopupTable />
+                    {addCP && <CreatePopup />}
+                    {!addCP && <PopupTable />}
                   </Grid>
                 </Grid>
               </Grid>
