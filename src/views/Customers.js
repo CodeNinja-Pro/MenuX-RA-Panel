@@ -5,13 +5,37 @@ import { Container } from 'reactstrap'
 import OnlyHeader from '../components/Headers/OnlyHeader.js'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Grid, ThemeProvider, Typography } from '@mui/material'
+import { Card, Grid, ThemeProvider, Typography, Box } from '@mui/material'
 import CustomerTable from '../components/Customer/CustomerTable.js'
 import { ThemeMain } from '../components/common/Theme.js'
+import { getCurrentRoleDetail } from '../store/actions/staffAction.js'
 
 const Customers = () => {
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
+
+  // Status of this section as staff role
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    const obj = currentRoleDetail.filter(obj => obj.permission === 'Customers')
+    if (obj[0]?.allow === 'ViewEdit') {
+      setSectionPermission(true)
+    } else {
+      setSectionPermission(false)
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
 
   return (
     <>
@@ -39,7 +63,13 @@ const Customers = () => {
                       Customers
                     </Typography>
                   </Grid>
-                  <CustomerTable />
+                  <Box
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
+                  >
+                    <CustomerTable />
+                  </Box>
                 </Grid>
               </Grid>
             </Card>

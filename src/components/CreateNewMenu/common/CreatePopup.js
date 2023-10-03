@@ -112,7 +112,7 @@ export default function CreatePopup () {
       delay
     }
     dispatch(
-      addPopup(user.id, newPopup, bannerFile, () => {
+      addPopup(user.restaurantID, newPopup, bannerFile, () => {
         setHeading('')
         setText('')
         setDelay('')

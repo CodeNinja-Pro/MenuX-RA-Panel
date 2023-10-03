@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ThemeMain } from '../components/common/Theme'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import {
@@ -18,9 +18,38 @@ import ItemStatisticData from '../components/ItemStatistics/ItemStatisticData'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import PickDateRange from './auth/PickDateRange'
 import StatisticsChart from '../components/ItemStatistics/StatisticsChart'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCurrentRoleDetail } from '../store/actions/staffAction'
 
 export default function ItemStatistical () {
   const [tabFlag, setTabFlag] = useState('Table')
+  const { user } = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+
+  // Enable by staff role
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    const obj = currentRoleDetail.filter(
+      obj => obj.permission === 'Item Statistics'
+    )
+    if (obj[0]?.allow === 'ViewEdit') {
+      setSectionPermission(true)
+    } else {
+      setSectionPermission(false)
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
 
   const handleChange = (e, newValue) => {
     setTabFlag(newValue)
@@ -70,30 +99,43 @@ export default function ItemStatistical () {
                     Item Performance data
                   </Typography>
                   <Box
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
                   >
-                    <TextField
-                      id='outlined-start-adornment'
-                      sx={{ marginBottom: '15px', width: '40ch' }}
-                      placeholder='Search by ID, name, amount...'
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <SearchOutlinedIcon />
-                          </InputAdornment>
-                        )
+                    <Box
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
                       }}
-                    />
-                    <PickDateRange
-                      setDateState={handleDateChange}
-                      datestate={dateState}
-                    />
+                    >
+                      <TextField
+                        id='outlined-start-adornment'
+                        sx={{ marginBottom: '15px', width: '40ch' }}
+                        placeholder='Search by ID, name, amount...'
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <SearchOutlinedIcon />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                      <PickDateRange
+                        setDateState={handleDateChange}
+                        datestate={dateState}
+                      />
+                    </Box>
+                    <ItemStatisticData />
                   </Box>
-                  <ItemStatisticData />
                 </CardContent>
               </Card>
             ) : (
-              <StatisticsChart />
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <StatisticsChart />
+              </Box>
             )}
           </Container>
         </Container>

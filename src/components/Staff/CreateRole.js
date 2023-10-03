@@ -62,7 +62,7 @@ export default function CreateRole () {
   }, [staffData])
 
   useEffect(() => {
-    dispatch(getStaffs(user.id))
+    dispatch(getStaffs(user.restaurantID))
   }, [])
 
   const addRoleForSection = () => {
@@ -88,25 +88,31 @@ export default function CreateRole () {
   }
 
   const createNewRole = async () => {
-    const newRole = {
-      roleName,
-      role: staffRole
-    }
+    if (staffRole.length === 10) {
+      const newRole = {
+        roleName,
+        role: staffRole
+      }
 
-    let allKeys = []
-    allStaffInfo?.map(info => {
-      allKeys.push(info.roleName)
-    })
-    if (allKeys.includes(roleName)) {
-      toast.warn('You can not add the role with the same name.')
+      let allKeys = []
+      allStaffInfo?.map(info => {
+        allKeys.push(info.roleName)
+      })
+      if (allKeys.includes(roleName)) {
+        toast.warn('You can not add the role with the same name.')
+      } else {
+        dispatch(
+          addNewRole(user.restaurantID, newRole, () => {
+            setStaffRole([])
+            setSelectedSection([])
+            setRoleName('')
+            toast.success('You added new Staff Role successfully.')
+          })
+        )
+      }
     } else {
-      dispatch(
-        addNewRole(user.id, newRole, () => {
-          setStaffRole([])
-          setSelectedSection([])
-          setRoleName('')
-          toast.success('You added new Staff Role successfully.')
-        })
+      toast.error(
+        'You should set up the permission of all sections for staff role.'
       )
     }
   }

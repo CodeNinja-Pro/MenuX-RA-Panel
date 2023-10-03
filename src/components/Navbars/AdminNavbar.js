@@ -99,7 +99,7 @@ const AdminNavbar = props => {
   }
 
   useEffect(() => {
-    dispatch(getUnreadNotifications(user.id))
+    dispatch(getUnreadNotifications(user.restaurantID))
   }, [isDropdownOpen])
 
   const addToggle = () => {

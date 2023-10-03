@@ -498,6 +498,13 @@ export default function SignUp () {
                 )
               } else {
                 toast.error('Your email address is not allowed by admin.')
+                const currentUserRef = firebase.auth().currentUser
+                currentUserRef
+                  .delete()
+                  .then(() => {
+                    console.log('User is deleted')
+                  })
+                  .catch(err => console.log(err.message))
               }
             }
           })
@@ -516,43 +523,21 @@ export default function SignUp () {
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then(data => {
-          if (data.user?.email) {
-            const snapShot = firebase
-              .firestore()
-              .collection('staffs')
-              .where('email', '==', data.user?.email)
-              .get()
+          const email = data.user?.email
+          const snapShot = firebase
+            .firestore()
+            .collection('staffs')
+            .where('email', '==', email)
 
-            let staffFlag = false
-            snapShot.forEach(doc => {
-              if (doc.data().enable === true) {
-                staffFlag = true
-              }
-            })
-            if (staffFlag) {
-              dispatch(
-                signupInformation(
-                  data.user?.uid,
-                  data.user?.displayName,
-                  data.user?.email,
-                  'staff',
-                  () => {
-                    dispatch({
-                      type: 'REGISTER_REQUEST',
-                      payload: {
-                        id: data.user?.uid
-                      }
-                    })
-                  }
-                )
-              )
-            } else {
+          snapShot.get().then(doc => {
+            if (doc.empty) {
               dispatch(
                 signupInformation(
                   data.user?.uid,
                   data.user?.displayName,
                   data.user?.email,
                   'admin',
+                  '',
                   () => {
                     history.push('/auth/create-restaurant')
 
@@ -565,8 +550,43 @@ export default function SignUp () {
                   }
                 )
               )
+            } else {
+              let exist = []
+              doc.forEach(item => {
+                exist.push(item.data())
+              })
+              if (exist[0].enable === true) {
+                dispatch(
+                  signupInformation(
+                    data.user?.uid,
+                    data.user?.displayName,
+                    data.user?.email,
+                    'staff',
+                    exist[0].restaurantID,
+                    () => {
+                      history.push('/auth/login')
+
+                      dispatch({
+                        type: 'REGISTER_REQUEST',
+                        payload: {
+                          id: data.user?.uid
+                        }
+                      })
+                    }
+                  )
+                )
+              } else {
+                toast.error('Your email address is not allowed by admin.')
+                const currentUserRef = firebase.auth().currentUser
+                currentUserRef
+                  .delete()
+                  .then(() => {
+                    console.log('User is deleted')
+                  })
+                  .catch(err => console.log(err.message))
+              }
             }
-          }
+          })
         })
     } catch (error) {
       toast.error(error.message)

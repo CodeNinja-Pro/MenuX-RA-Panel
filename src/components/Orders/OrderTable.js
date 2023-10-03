@@ -259,14 +259,14 @@ export default function OrderTable () {
   const id = open ? 'simple-popover' : undefined
 
   const columns = [
-    { field: 'tableId', headerName: 'Table ID', width: 150 },
-    { field: 'orderId', headerName: 'Order ID', width: 150 },
+    { field: 'tableId', headerName: 'Table ID', width: 100 },
+    { field: 'orderId', headerName: 'Order ID', width: 100 },
     { field: 'name', headerName: 'Customer Name', width: 150 },
     { field: 'order', headerName: 'Order', width: 350 },
     { field: 'comments', headerName: 'Comments', width: 350 },
     { field: 'payment', headerName: 'Payments', width: 150 },
-    { field: 'amount', headerName: 'Amount', type: 'number', width: 200 },
-    { field: 'actions', headerName: 'Actions', width: 150 }
+    { field: 'amount', headerName: 'Amount', type: 'number', width: 100 },
+    { field: 'actions', headerName: 'Actions', width: 100 }
   ]
 
   return (
@@ -286,110 +286,6 @@ export default function OrderTable () {
               checkboxSelection
             />
           </Grid>
-
-          {/* <TableContainer>
-            <Table aria-labelledby='tableTitle'>
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={rows?.length}
-              />
-              <TableBody>
-                {paginatedTableData?.map((row, index) => {
-                  const labelId = `enhanced-table-checkbox-${index}`
-
-                  return (
-                    <TableRow
-                      hover
-                      tabIndex={-1}
-                      key={labelId}
-                      sx={{ cursor: 'pointer' }}
-                    >
-                      <TableCell align='center'>{row.name}</TableCell>
-                      <TableCell align='center'>{row.email}</TableCell>
-                      <TableCell align='center'>{row.role}</TableCell>
-                      <TableCell align='center'>
-                        {row.createdAt.toDate().toLocaleString()}
-                      </TableCell>
-                      <TableCell align='center' width={'10%'}>
-                        {row.enable === true ? (
-                          <Typography
-                            sx={{
-                              backgroundColor: 'rgba(40, 199, 111, 0.12)',
-                              borderRadius: '10px'
-                            }}
-                            color={'rgba(40, 199, 111, 1)'}
-                          >
-                            Enabled
-                          </Typography>
-                        ) : (
-                          <Typography
-                            sx={{
-                              backgroundColor: 'rgba(255, 245, 248, 1)',
-                              borderRadius: '10px'
-                            }}
-                            color={'rgba(241, 65, 108, 1)'}
-                          >
-                            Disabled
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell align='center' width={'10%'}>
-                        <IconButton
-                          aria-describedby={id}
-                          color='inherit'
-                          size='small'
-                          onClick={event => {
-                            handleClick(event)
-                            setSelectedItem(row.id)
-                          }}
-                        >
-                          <MoreVertIcon style={{ marginTop: '5px' }} />
-                        </IconButton>
-                      </TableCell>
-                      <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'left'
-                        }}
-                      >
-                        <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList id='split-button-menu'>
-                              <MenuItem
-                                onClick={() => {
-                                  setDeleteModal(true)
-                                }}
-                                key={'status'}
-                              >
-                                <DeleteOutlineOutlinedIcon color='error' />
-                                <Typography color={'error'}>Delete</Typography>
-                              </MenuItem>
-                            </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Popover>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component='div'
-            className='margin-none'
-            count={rows?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          /> */}
 
           <Dialog
             open={deleteModal}

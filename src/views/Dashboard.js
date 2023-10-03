@@ -8,8 +8,6 @@ import {
   Typography,
   CardContent,
   Grid,
-  Select,
-  MenuItem,
   Paper
 } from '@mui/material'
 import { Container } from 'reactstrap'
@@ -357,18 +355,9 @@ export default function Dashboard () {
                         Visits
                       </Typography>
                       <Box display={'flex'} alignItems={'center'}>
-                        <Typography>Total Visits: 440</Typography>
-                        <Box sx={{ minWidth: 120 }}>
-                          <Select
-                          // value={age}
-                          // label='Age'
-                          // onChange={handleChange}
-                          >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
-                          </Select>
-                        </Box>
+                        <Typography marginRight={4}>
+                          Average daily visits: 440
+                        </Typography>
                       </Box>
                     </Box>
                     <StatisticChart color={'#0074D9'} />
@@ -381,9 +370,9 @@ export default function Dashboard () {
                 >
                   <CardContent>
                     <Typography fontWeight={'bold'} fontSize={'20px'}>
-                      Revenue Earned
+                      Revenue Breakdown
                     </Typography>
-                    <Typography fontWeight={'bold'}>2540000</Typography>
+                    <Typography fontWeight={'bold'}>$2540000</Typography>
                     <Box marginLeft={-3} sx={{ width: '100%' }}>
                       <DonutChart
                         options={revenueByItems.options}
@@ -409,7 +398,7 @@ export default function Dashboard () {
                       textAlign={'left'}
                       fontSize={'20px'}
                     >
-                      Most Views Items
+                      Most Viewd Items
                     </Typography>
                     <BarChartForm
                       options={mostClickItems}
@@ -427,7 +416,7 @@ export default function Dashboard () {
                       textAlign={'left'}
                       fontSize={'20px'}
                     >
-                      Least Views Items
+                      Least Viewd Items
                     </Typography>
                     <BarChartForm
                       options={mostClickItems}

@@ -29,8 +29,7 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Grid,
-  Checkbox
+  Grid
 } from '@mui/material'
 
 import {
@@ -60,13 +59,10 @@ import { getParentMenu } from '../store/actions/MenuManagmentActions'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addlabel } from '../store/actions/MenuManagmentActions'
-import Labels from './Labels'
 import LabelsMenu from '../components/CreateNewMenu/LabelsMenu'
 import QRCustomization from '../components/CreateNewMenu/QRCustomization'
-import csvtojson from 'csvtojson'
 import exportFromJSON from 'export-from-json'
 import { importMenuNew } from '../store/actions/MenuManagmentActions'
-import Category from './Category'
 import { deleteMenuNew } from '../store/actions/MenuManagmentActions'
 import { Box } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -75,10 +71,9 @@ import TabsMenu from '../components/CreateNewMenu/TabsMenu'
 import Coupons from '../components/CreateNewMenu/Coupons'
 import Popup from '../components/CreateNewMenu/Popup'
 import { addDays } from 'date-fns'
-import PickDateRange from './auth/PickDateRange'
-import TimeRange from 'react-time-range'
 import moment from 'moment'
 import ScheduleForm from '../components/Settings/common/ScheduleForm'
+import { getCurrentRoleDetail } from '../store/actions/staffAction'
 
 function CreateNewMenu () {
   const theme = useTheme()
@@ -91,10 +86,32 @@ function CreateNewMenu () {
     addMenuLoader,
     editLabelLoader,
     addLabelLoader,
-    importLoader,
-    deleteLoader,
-    editMenuData
+    importLoader
   } = useSelector(state => state.menu)
+
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    if (user.role === 'staff') {
+      const obj = currentRoleDetail.filter(obj => obj.permission === 'Menu')
+      if (obj[0]?.allow === 'ViewEdit') {
+        setSectionPermission(true)
+      } else {
+        setSectionPermission(false)
+      }
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
 
   const [isOpen, setIsOpen] = useState(false)
   const [isMenuNameOpen, setIsMenuNameOpen] = useState(false)
@@ -413,7 +430,7 @@ function CreateNewMenu () {
       <ThemeProvider theme={ThemeMain}>
         <Container className='my--7' fluid>
           <Container fluid>
-            <Row>
+            <Row disabled>
               <Col className=' shadow-sm bg-white pt-3'>
                 <Box
                   display={'flex'}
@@ -440,15 +457,21 @@ function CreateNewMenu () {
                   >
                     {menuID ? menuName : 'New Menu'}
                   </Typography>
-                  <Button
-                    disabled={addMenuLoader}
-                    variant='contained'
-                    onClick={() => {
-                      setIsOpen(true)
-                    }}
+                  <Box
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
                   >
-                    Create New Menu
-                  </Button>
+                    <Button
+                      disabled={addMenuLoader}
+                      variant='contained'
+                      onClick={() => {
+                        setIsOpen(true)
+                      }}
+                    >
+                      Create New Menu
+                    </Button>
+                  </Box>
                 </Box>
                 {menuID ? (
                   ''
@@ -538,454 +561,497 @@ function CreateNewMenu () {
             </Row>
 
             {selectedTab === 'Menu Details' && (
-              <Row>
-                <Col>
-                  {/* {addMenuLoader ? (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <Row>
+                  <Col>
+                    {/* {addMenuLoader ? (
                     <div className='w-100 v-100 d-flex justify-content-center align-items-center py-5'>
                       <Spinner className='text-primary'></Spinner>
                     </div>
                   ) : */}
-                  {parents.length > 0 ? (
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      <Droppable droppableId='droppable'>
-                        {(provided, snapshot) => (
-                          <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                          >
-                            {parents.map((ele, index) => (
-                              <Draggable
-                                key={ele.id}
-                                draggableId={ele.id}
-                                index={index}
-                              >
-                                {(provided, snapshot) => (
-                                  <div
-                                    // className='droppable'
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
+                    {parents.length > 0 ? (
+                      <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId='droppable'>
+                          {(provided, snapshot) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                            >
+                              {parents.map((ele, index) => (
+                                <Draggable
+                                  key={ele.id}
+                                  draggableId={ele.id}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => (
                                     <div
-                                      key={ele.id}
-                                      className='d-flex align-items-center justify-content-between mt-2 bg-white rounded p-3 shadow  '
+                                      // className='droppable'
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
                                     >
-                                      <div className='d-flex align-items-center '>
-                                        <div className='d-flex align-items-center h-100'>
-                                          {' '}
-                                          <i className='fas fa-2x fa-ellipsis-v'></i>
-                                          <i className='fas fa-2x fa-ellipsis-v'></i>
+                                      <div
+                                        key={ele.id}
+                                        className='d-flex align-items-center justify-content-between mt-2 bg-white rounded p-3 shadow  '
+                                      >
+                                        <div className='d-flex align-items-center '>
+                                          <div className='d-flex align-items-center h-100'>
+                                            {' '}
+                                            <i className='fas fa-2x fa-ellipsis-v'></i>
+                                            <i className='fas fa-2x fa-ellipsis-v'></i>
+                                          </div>
+                                          <div className='ml-3 h-100 d-flex flex-column justify-content-space-evenly'>
+                                            <h2 className='mb-0 mt-2'>
+                                              {ele.name}
+                                            </h2>
+                                            <p className='text-muted'>
+                                              {moment
+                                                .unix(ele.createdAt?.seconds)
+                                                .format('MMM DD, YYYY')}
+                                            </p>
+                                          </div>
                                         </div>
-                                        <div className='ml-3 h-100 d-flex flex-column justify-content-space-evenly'>
-                                          <h2 className='mb-0 mt-2'>
-                                            {ele.name}
-                                          </h2>
-                                          <p className='text-muted'>
-                                            {moment
-                                              .unix(ele.createdAt?.seconds)
-                                              .format('MMM DD, YYYY')}
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div style={{ display: 'flex' }}>
-                                        <Switch
-                                          checked={
-                                            ele.active === 'true' ? true : false
-                                          }
-                                          onChange={() => {
-                                            setActiveHandle(ele.id, ele.active)
-                                          }}
-                                          name='loading'
-                                          color='primary'
-                                        />
-                                        <Button
-                                          sx={{
-                                            marginLeft: '20px',
-                                            marginRight: '20px'
-                                          }}
-                                          variant='contained'
-                                          onClick={event => {
-                                            setSelectedEdit(ele.id)
-
-                                            dispatch(
-                                              getParentMenu(ele.id, () => {
-                                                history.push(
-                                                  `/admin/edit-menu/${ele.id}`
-                                                )
-                                              })
-                                            )
-                                          }}
-                                        >
-                                          {editLabelLoader &&
-                                            ele.id == selectedEdit && (
-                                              <Spinner
-                                                size={'sm'}
-                                                className='mr-2'
-                                              ></Spinner>
-                                            )}{' '}
-                                          Edit
-                                        </Button>
-                                        <Tooltip arrow>
-                                          <IconButton
-                                            aria-describedby={id}
-                                            color='inherit'
-                                            size='small'
-                                            onClick={event => {
-                                              handleClick(event)
-                                              deleteHandleChange(ele)
-                                            }}
-                                          >
-                                            <SettingsOutlinedIcon
-                                              style={{ marginTop: '5px' }}
-                                            />
-                                          </IconButton>
-                                          <Popover
-                                            id={id}
-                                            open={open}
-                                            anchorEl={anchorEl}
-                                            onClose={handleClose}
-                                            anchorOrigin={{
-                                              vertical: 'bottom',
-                                              horizontal: 'left'
-                                            }}
-                                          >
-                                            <Paper>
-                                              <ClickAwayListener
-                                                onClickAway={handleClose}
-                                              >
-                                                <MenuList id='split-button-menu'>
-                                                  <MenuItem
-                                                    onClick={() => {
-                                                      setAvailabilityDrawer(
-                                                        true
-                                                      )
-                                                      setPopperOpen(false)
-                                                    }}
-                                                    key={'Availability'}
-                                                  >
-                                                    Availability
-                                                  </MenuItem>
-
-                                                  <MenuItem
-                                                    onClick={() => {
-                                                      setPopperOpen(false)
-                                                      setRenameModalOpen(true)
-                                                    }}
-                                                    key={'Rename'}
-                                                  >
-                                                    Rename
-                                                  </MenuItem>
-                                                  <MenuItem
-                                                    onClick={() => {
-                                                      setSelectedEdit(ele.id)
-                                                      exportData(ele)
-                                                      setPopperOpen(false)
-                                                    }}
-                                                    key={'Export'}
-                                                  >
-                                                    Export
-                                                  </MenuItem>
-                                                  <MenuItem
-                                                    onClick={() => {
-                                                      setPopperOpen(false)
-                                                      setDeleteModalShow(true)
-                                                    }}
-                                                    sx={{
-                                                      color: '#e74c3c'
-                                                    }}
-                                                    key={'Delete'}
-                                                  >
-                                                    Delete
-                                                  </MenuItem>
-                                                </MenuList>
-                                              </ClickAwayListener>
-                                            </Paper>
-                                          </Popover>
-                                          <Drawer
-                                            anchor={'right'}
-                                            open={availabilityDrawer}
-                                            onClose={() =>
-                                              setAvailabilityDrawer(false)
+                                        <div style={{ display: 'flex' }}>
+                                          <Switch
+                                            checked={
+                                              ele.active === 'true'
+                                                ? true
+                                                : false
                                             }
+                                            onChange={() => {
+                                              setActiveHandle(
+                                                ele.id,
+                                                ele.active
+                                              )
+                                            }}
+                                            name='loading'
+                                            color='primary'
+                                          />
+                                          <Button
+                                            sx={{
+                                              marginLeft: '20px',
+                                              marginRight: '20px'
+                                            }}
+                                            variant='contained'
+                                            onClick={event => {
+                                              setSelectedEdit(ele.id)
+
+                                              dispatch(
+                                                getParentMenu(ele.id, () => {
+                                                  history.push(
+                                                    `/admin/edit-menu/${ele.id}`
+                                                  )
+                                                })
+                                              )
+                                            }}
                                           >
-                                            <Box
-                                              sx={{ width: '410' }}
-                                              role='presentation'
-                                              onKeyDown={() =>
+                                            {editLabelLoader &&
+                                              ele.id == selectedEdit && (
+                                                <Spinner
+                                                  size={'sm'}
+                                                  className='mr-2'
+                                                ></Spinner>
+                                              )}{' '}
+                                            Edit
+                                          </Button>
+                                          <Tooltip arrow>
+                                            <IconButton
+                                              aria-describedby={id}
+                                              color='inherit'
+                                              size='small'
+                                              onClick={event => {
+                                                handleClick(event)
+                                                deleteHandleChange(ele)
+                                              }}
+                                            >
+                                              <SettingsOutlinedIcon
+                                                style={{ marginTop: '5px' }}
+                                              />
+                                            </IconButton>
+                                            <Popover
+                                              id={id}
+                                              open={open}
+                                              anchorEl={anchorEl}
+                                              onClose={handleClose}
+                                              anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left'
+                                              }}
+                                            >
+                                              <Paper>
+                                                <ClickAwayListener
+                                                  onClickAway={handleClose}
+                                                >
+                                                  <MenuList id='split-button-menu'>
+                                                    <MenuItem
+                                                      onClick={() => {
+                                                        setAvailabilityDrawer(
+                                                          true
+                                                        )
+                                                        setPopperOpen(false)
+                                                      }}
+                                                      key={'Availability'}
+                                                    >
+                                                      Availability
+                                                    </MenuItem>
+
+                                                    <MenuItem
+                                                      onClick={() => {
+                                                        setPopperOpen(false)
+                                                        setRenameModalOpen(true)
+                                                      }}
+                                                      key={'Rename'}
+                                                    >
+                                                      Rename
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                      onClick={() => {
+                                                        setSelectedEdit(ele.id)
+                                                        exportData(ele)
+                                                        setPopperOpen(false)
+                                                      }}
+                                                      key={'Export'}
+                                                    >
+                                                      Export
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                      onClick={() => {
+                                                        setPopperOpen(false)
+                                                        setDeleteModalShow(true)
+                                                      }}
+                                                      sx={{
+                                                        color: '#e74c3c'
+                                                      }}
+                                                      key={'Delete'}
+                                                    >
+                                                      Delete
+                                                    </MenuItem>
+                                                  </MenuList>
+                                                </ClickAwayListener>
+                                              </Paper>
+                                            </Popover>
+                                            <Drawer
+                                              anchor={'right'}
+                                              open={availabilityDrawer}
+                                              onClose={() =>
                                                 setAvailabilityDrawer(false)
                                               }
                                             >
-                                              <List>
-                                                <Grid
-                                                  container
-                                                  margin={2}
-                                                  spacing={2}
-                                                  width={500}
-                                                >
-                                                  <Grid item xs={12}>
-                                                    <Typography
-                                                      marginBottom={3}
-                                                      fontWeight={'bold'}
-                                                      fontSize={'23px'}
-                                                    >
-                                                      Availability
-                                                    </Typography>
-                                                  </Grid>
+                                              <Box
+                                                sx={{ width: '410' }}
+                                                role='presentation'
+                                                onKeyDown={() =>
+                                                  setAvailabilityDrawer(false)
+                                                }
+                                              >
+                                                <List>
                                                   <Grid
-                                                    item
-                                                    xs={12}
-                                                    marginRight={2}
+                                                    container
+                                                    margin={2}
+                                                    spacing={2}
+                                                    width={500}
                                                   >
-                                                    <RadioGroup
-                                                      defaultValue='Always'
-                                                      name='radio-buttons-group'
-                                                      value={
-                                                        availabilityCondition
-                                                      }
-                                                      onChange={e => {
-                                                        setAllDayCheck(true)
-                                                        setAvailabilityCondition(
-                                                          e.target.value
-                                                        )
-                                                      }}
-                                                    >
-                                                      <FormControlLabel
-                                                        value='Always'
-                                                        control={<Radio />}
-                                                        label='Always'
-                                                      />
+                                                    <Grid item xs={12}>
                                                       <Typography
-                                                        marginBottom={1}
-                                                        marginLeft={4}
+                                                        marginBottom={3}
+                                                        fontWeight={'bold'}
+                                                        fontSize={'23px'}
                                                       >
-                                                        The menu will always be
-                                                        shown
+                                                        Availability
                                                       </Typography>
-                                                      <FormControlLabel
-                                                        value='Periodic'
-                                                        control={<Radio />}
-                                                        label='Periodic'
-                                                      />
-                                                      <Grid
-                                                        item
-                                                        xs={12}
-                                                        marginLeft={2}
-                                                        sx={{ width: '100%' }}
-                                                      >
-                                                        {days.map(day => (
-                                                          <ScheduleForm
-                                                            disabled={
-                                                              availabilityCondition ===
-                                                              'Periodic'
-                                                                ? false
-                                                                : true
-                                                            }
-                                                            handlePeriodic={
-                                                              handlePeriodic
-                                                            }
-                                                            key={day}
-                                                            title={day}
-                                                            periodic={periodic}
-                                                          />
-                                                        ))}
-                                                      </Grid>
-                                                    </RadioGroup>
-                                                  </Grid>
-                                                  <Grid item xs={12}>
-                                                    <Box
+                                                    </Grid>
+                                                    <Grid
+                                                      item
+                                                      xs={12}
                                                       marginRight={2}
-                                                      display={'flex'}
-                                                      justifyContent={'end'}
                                                     >
-                                                      <Button
-                                                        variant='contained'
-                                                        color='error'
-                                                        sx={{ marginRight: 2 }}
+                                                      <RadioGroup
+                                                        defaultValue='Always'
+                                                        name='radio-buttons-group'
+                                                        value={
+                                                          availabilityCondition
+                                                        }
+                                                        onChange={e => {
+                                                          setAllDayCheck(true)
+                                                          setAvailabilityCondition(
+                                                            e.target.value
+                                                          )
+                                                        }}
                                                       >
-                                                        Cancel
-                                                      </Button>
-                                                      <Button variant='contained'>
-                                                        Save
-                                                      </Button>
-                                                    </Box>
+                                                        <FormControlLabel
+                                                          value='Always'
+                                                          control={<Radio />}
+                                                          label='Always'
+                                                        />
+                                                        <Typography
+                                                          marginBottom={1}
+                                                          marginLeft={4}
+                                                        >
+                                                          The menu will always
+                                                          be shown
+                                                        </Typography>
+                                                        <FormControlLabel
+                                                          value='Periodic'
+                                                          control={<Radio />}
+                                                          label='Periodic'
+                                                        />
+                                                        <Grid
+                                                          item
+                                                          xs={12}
+                                                          marginLeft={2}
+                                                          sx={{ width: '100%' }}
+                                                        >
+                                                          {days.map(day => (
+                                                            <ScheduleForm
+                                                              disabled={
+                                                                availabilityCondition ===
+                                                                'Periodic'
+                                                                  ? false
+                                                                  : true
+                                                              }
+                                                              handlePeriodic={
+                                                                handlePeriodic
+                                                              }
+                                                              key={day}
+                                                              title={day}
+                                                              periodic={
+                                                                periodic
+                                                              }
+                                                            />
+                                                          ))}
+                                                        </Grid>
+                                                      </RadioGroup>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                      <Box
+                                                        marginRight={2}
+                                                        display={'flex'}
+                                                        justifyContent={'end'}
+                                                      >
+                                                        <Button
+                                                          variant='contained'
+                                                          color='error'
+                                                          sx={{
+                                                            marginRight: 2
+                                                          }}
+                                                        >
+                                                          Cancel
+                                                        </Button>
+                                                        <Button variant='contained'>
+                                                          Save
+                                                        </Button>
+                                                      </Box>
+                                                    </Grid>
                                                   </Grid>
-                                                </Grid>
-                                              </List>
-                                            </Box>
-                                          </Drawer>
-                                          <Dialog
-                                            open={deleteModalShow}
-                                            onClose={() =>
-                                              setDeleteModalShow(false)
-                                            }
-                                            aria-labelledby='alert-dialog-title'
-                                            aria-describedby='alert-dialog-description'
-                                          >
-                                            <DialogTitle
-                                              id='alert-dialog-title'
-                                              style={{
-                                                fontSize: '25px',
-                                                fontWeight: 'bold'
-                                              }}
+                                                </List>
+                                              </Box>
+                                            </Drawer>
+                                            <Dialog
+                                              open={deleteModalShow}
+                                              onClose={() =>
+                                                setDeleteModalShow(false)
+                                              }
+                                              aria-labelledby='alert-dialog-title'
+                                              aria-describedby='alert-dialog-description'
                                             >
-                                              {'Delete Parent Menu'}
-                                            </DialogTitle>
-                                            <Divider />
-                                            <DialogContent>
-                                              <DialogContentText
-                                                id='alert-dialog-description'
+                                              <DialogTitle
+                                                id='alert-dialog-title'
                                                 style={{
-                                                  textAlign: 'center'
+                                                  fontSize: '25px',
+                                                  fontWeight: 'bold'
                                                 }}
                                               >
-                                                <Typography>
-                                                  Are you really going to delete
-                                                  this menu?
-                                                </Typography>
-                                              </DialogContentText>
-                                            </DialogContent>
-                                            <DialogActions
-                                              style={{
-                                                display: 'flex',
-                                                justifyContent: 'space-around'
-                                              }}
-                                            >
-                                              <Button
-                                                color='error'
-                                                variant='outlined'
-                                                style={{
-                                                  margin: '30px'
-                                                }}
-                                                fullWidth
-                                                onClick={() => {
-                                                  setDeleteModalShow(false)
-                                                }}
-                                              >
-                                                Cancel
-                                              </Button>
-                                              <Button
-                                                color='error'
-                                                fullWidth
-                                                variant='contained'
-                                                style={{
-                                                  margin: '30px'
-                                                }}
-                                                onClick={() => {
-                                                  setDeleteModalShow(false)
-                                                  setSelectedEdit(
-                                                    toDeleteParent.id
-                                                  )
-                                                  handleDelete(
-                                                    toDeleteParent.id
-                                                  )
-                                                }}
-                                                autoFocus
-                                              >
-                                                Delete
-                                              </Button>
-                                            </DialogActions>
-                                          </Dialog>
-                                          <Dialog
-                                            open={modalRenameOpen}
-                                            onClose={() =>
-                                              setRenameModalOpen(false)
-                                            }
-                                            aria-labelledby='alert-dialog-title'
-                                            aria-describedby='alert-dialog-description'
-                                          >
-                                            <DialogTitle
-                                              id='alert-dialog-title'
-                                              style={{
-                                                fontSize: '25px',
-                                                fontWeight: 'bold'
-                                              }}
-                                            >
-                                              {'Rename Parent Menu'}
-                                            </DialogTitle>
-                                            <Divider />
-                                            <DialogContent>
-                                              <DialogContentText
-                                                id='alert-dialog-description'
-                                                style={{
-                                                  textAlign: 'center'
-                                                }}
-                                              >
-                                                <Typography
-                                                  marginBottom={'20px'}
+                                                {'Delete Parent Menu'}
+                                              </DialogTitle>
+                                              <Divider />
+                                              <DialogContent>
+                                                <DialogContentText
+                                                  id='alert-dialog-description'
+                                                  style={{
+                                                    textAlign: 'center'
+                                                  }}
                                                 >
-                                                  Would you like to rename your
-                                                  menu?
-                                                </Typography>
-                                                <TextField
+                                                  <Typography>
+                                                    Are you really going to
+                                                    delete this menu?
+                                                  </Typography>
+                                                </DialogContentText>
+                                              </DialogContent>
+                                              <DialogActions
+                                                style={{
+                                                  display: 'flex',
+                                                  justifyContent: 'space-around'
+                                                }}
+                                              >
+                                                <Button
+                                                  color='error'
+                                                  variant='outlined'
+                                                  style={{
+                                                    margin: '30px'
+                                                  }}
                                                   fullWidth
-                                                  name='name'
-                                                  onChange={e =>
-                                                    setName(e.target.value)
-                                                  }
-                                                ></TextField>
-                                              </DialogContentText>
-                                            </DialogContent>
-                                            <DialogActions
-                                              style={{
-                                                display: 'flex',
-                                                justifyContent: 'space-around'
-                                              }}
+                                                  onClick={() => {
+                                                    setDeleteModalShow(false)
+                                                  }}
+                                                >
+                                                  Cancel
+                                                </Button>
+                                                <Button
+                                                  color='error'
+                                                  fullWidth
+                                                  variant='contained'
+                                                  style={{
+                                                    margin: '30px'
+                                                  }}
+                                                  onClick={() => {
+                                                    setDeleteModalShow(false)
+                                                    setSelectedEdit(
+                                                      toDeleteParent.id
+                                                    )
+                                                    handleDelete(
+                                                      toDeleteParent.id
+                                                    )
+                                                  }}
+                                                  autoFocus
+                                                >
+                                                  Delete
+                                                </Button>
+                                              </DialogActions>
+                                            </Dialog>
+                                            <Dialog
+                                              open={modalRenameOpen}
+                                              onClose={() =>
+                                                setRenameModalOpen(false)
+                                              }
+                                              aria-labelledby='alert-dialog-title'
+                                              aria-describedby='alert-dialog-description'
                                             >
-                                              <Button
-                                                variant='outlined'
+                                              <DialogTitle
+                                                id='alert-dialog-title'
                                                 style={{
-                                                  margin: '30px'
-                                                }}
-                                                fullWidth
-                                                onClick={() => {
-                                                  setRenameModalOpen(false)
+                                                  fontSize: '25px',
+                                                  fontWeight: 'bold'
                                                 }}
                                               >
-                                                Cancel
-                                              </Button>
-                                              <Button
-                                                fullWidth
-                                                variant='contained'
+                                                {'Rename Parent Menu'}
+                                              </DialogTitle>
+                                              <Divider />
+                                              <DialogContent>
+                                                <DialogContentText
+                                                  id='alert-dialog-description'
+                                                  style={{
+                                                    textAlign: 'center'
+                                                  }}
+                                                >
+                                                  <Typography
+                                                    marginBottom={'20px'}
+                                                  >
+                                                    Would you like to rename
+                                                    your menu?
+                                                  </Typography>
+                                                  <TextField
+                                                    fullWidth
+                                                    name='name'
+                                                    onChange={e =>
+                                                      setName(e.target.value)
+                                                    }
+                                                  ></TextField>
+                                                </DialogContentText>
+                                              </DialogContent>
+                                              <DialogActions
                                                 style={{
-                                                  margin: '30px'
+                                                  display: 'flex',
+                                                  justifyContent: 'space-around'
                                                 }}
-                                                onClick={() => {
-                                                  renameParentMenu()
-                                                  setRenameModalOpen(false)
-                                                }}
-                                                autoFocus
                                               >
-                                                Update
-                                              </Button>
-                                            </DialogActions>
-                                          </Dialog>
-                                        </Tooltip>
+                                                <Button
+                                                  variant='outlined'
+                                                  style={{
+                                                    margin: '30px'
+                                                  }}
+                                                  fullWidth
+                                                  onClick={() => {
+                                                    setRenameModalOpen(false)
+                                                  }}
+                                                >
+                                                  Cancel
+                                                </Button>
+                                                <Button
+                                                  fullWidth
+                                                  variant='contained'
+                                                  style={{
+                                                    margin: '30px'
+                                                  }}
+                                                  onClick={() => {
+                                                    renameParentMenu()
+                                                    setRenameModalOpen(false)
+                                                  }}
+                                                  autoFocus
+                                                >
+                                                  Update
+                                                </Button>
+                                              </DialogActions>
+                                            </Dialog>
+                                          </Tooltip>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                  ) : (
-                    <div className='w-100 v-100 d-flex justify-content-center align-items-center py-5'>
-                      <strong>No Menus found.</strong>
-                    </div>
-                  )}
-                </Col>
-              </Row>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
+                    ) : (
+                      <div className='w-100 v-100 d-flex justify-content-center align-items-center py-5'>
+                        <strong>No Menus found.</strong>
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+              </Box>
             )}
             {/* Label Section */}
-            {selectedTab == 'Labels' && <LabelsMenu></LabelsMenu>}
+            {selectedTab == 'Labels' && (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <LabelsMenu></LabelsMenu>
+              </Box>
+            )}
             {/* QR Customization */}
-            {selectedTab == 'QR' && <QRCustomization></QRCustomization>}
-            {selectedTab == 'Tabs' && <TabsMenu></TabsMenu>}
-            {selectedTab == 'Coupons' && <Coupons></Coupons>}
-            {selectedTab == 'Pop up' && <Popup></Popup>}
+            {selectedTab == 'QR' && (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <QRCustomization></QRCustomization>
+              </Box>
+            )}
+            {selectedTab == 'Tabs' && (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <TabsMenu></TabsMenu>
+              </Box>
+            )}
+            {selectedTab == 'Coupons' && (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <Coupons></Coupons>
+              </Box>
+            )}
+            {selectedTab == 'Pop up' && (
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <Popup></Popup>
+              </Box>
+            )}
           </Container>
         </Container>
         <Modal

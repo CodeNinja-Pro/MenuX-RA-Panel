@@ -34,7 +34,7 @@ export default function SoundSettingModal (props) {
   const dispatch = useDispatch()
 
   const handleSaveMusic = async () => {
-    dispatch(updateSoundSetting(user.id, flag))
+    dispatch(updateSoundSetting(user.restaurantID, flag))
   }
 
   return (

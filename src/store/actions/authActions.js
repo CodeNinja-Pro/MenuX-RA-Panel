@@ -264,11 +264,37 @@ export const reRegisterSnapshot = id => async dispatch => {
       //       .catch(ex => {})
       //   }
       // }
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        user: { id: doc.id, ...doc.data() },
-        error: ''
-      })
+      if (doc.data().role === 'staff') {
+        firebase
+          .firestore()
+          .collection('staffs')
+          .where('email', '==', doc.data().email)
+          .limit(1)
+          .get()
+          .then(item => {
+            if (!item.empty) {
+              const documentSnapshot = item.docs[0]
+              const result = documentSnapshot.data()
+
+              dispatch({
+                type: 'LOGIN_SUCCESS',
+                user: {
+                  id: doc.id,
+                  active: doc.data().active,
+                  staffRole: result.role,
+                  ...doc.data()
+                },
+                error: ''
+              })
+            }
+          })
+      } else {
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          user: { id: doc.id, ...doc.data() },
+          error: ''
+        })
+      }
 
       dispatch({
         type: 'LOGIN_REQUEST_END'
@@ -502,15 +528,42 @@ export const checkUserActive = (id, onSuccess) => async dispatch => {
             }
           )
         } else {
-          dispatch({
-            type: 'LOGIN_SUCCESS',
-            user: {
-              id: doc.data().restaurantID,
-              active: doc.data().active,
-              ...doc.data()
-            },
-            error: ''
-          })
+          let staffInfo = ''
+          if (doc.data().role === 'staff') {
+            firebase
+              .firestore()
+              .collection('staffs')
+              .where('email', '==', doc.data().email)
+              .limit(1)
+              .get()
+              .then(item => {
+                if (!item.empty) {
+                  const documentSnapshot = item.docs[0]
+                  const result = documentSnapshot.data()
+
+                  dispatch({
+                    type: 'LOGIN_SUCCESS',
+                    user: {
+                      id: doc.id,
+                      active: doc.data().active,
+                      staffRole: result.role,
+                      ...doc.data()
+                    },
+                    error: ''
+                  })
+                }
+              })
+          } else {
+            dispatch({
+              type: 'LOGIN_SUCCESS',
+              user: {
+                id: doc.id,
+                active: doc.data().active,
+                ...doc.data()
+              },
+              error: ''
+            })
+          }
           dispatch({
             type: 'REGISTER_REQUEST',
             payload: {

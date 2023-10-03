@@ -126,7 +126,7 @@ export default function AccountSetting () {
   }, [cardNumber])
 
   useEffect(() => {
-    dispatch(getCustomerID(user.id))
+    dispatch(getCustomerID(user.restaurantID))
   }, [])
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function AccountSetting () {
           toast.warn('You can not add more.')
         } else {
           dispatch(
-            attachPaymentMethod(user.id, body, res => {
+            attachPaymentMethod(user.restaurantID, body, res => {
               console.log('added result', res)
             })
           )

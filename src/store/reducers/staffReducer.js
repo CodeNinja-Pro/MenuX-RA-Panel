@@ -1,11 +1,17 @@
 const initState = {
   isLoading: false,
+  currentRoleDetail: [],
   staffData: [],
   staffs: [],
   staffRestData: null
 }
 const staffReducer = (state = initState, action) => {
   switch (action.type) {
+    case 'GET_CURRENT_ROLE_DETAIL':
+      return {
+        ...state,
+        currentRoleDetail: action.payload
+      }
     case 'GET_STAFFS':
       return {
         ...state,

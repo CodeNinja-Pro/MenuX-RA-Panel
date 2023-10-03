@@ -62,7 +62,7 @@ const CouponsTable = () => {
   const [selectedItem, setSelectedItem] = useState('')
 
   useEffect(() => {
-    dispatch(getCoupons(user.id))
+    dispatch(getCoupons(user.restaurantID))
   }, [])
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const CouponsTable = () => {
 
   const handleDeleteCoupon = () => {
     dispatch(
-      deleteCoupon(user.id, selectedItem, () => {
+      deleteCoupon(user.restaurantID, selectedItem, () => {
         // coupons = coupons.filter(coupon => coupon.id !== selectedItem)
         // setAllCoupons(coupons)
         toast.success('You deleted this coupon successfully.', {
@@ -102,7 +102,7 @@ const CouponsTable = () => {
 
   const handleChecked = (id, status) => {
     dispatch(
-      updateStatus(user.id, id, status, () => {
+      updateStatus(user.restaurantID, id, status, () => {
         // let newArray = [...coupons]
         // const indexToUpdate = coupons.findIndex(coupon => coupon.id === id)
         // if (indexToUpdate !== -1) {

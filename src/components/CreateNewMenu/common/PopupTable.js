@@ -63,7 +63,7 @@ const PopupTable = () => {
   const [selectedItem, setSelectedItem] = useState('')
 
   useEffect(() => {
-    dispatch(getPopups(user.id))
+    dispatch(getPopups(user.restaurantID))
   }, [])
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const PopupTable = () => {
 
   const handleDeletePopup = () => {
     dispatch(
-      deletePopup(user.id, selectedItem, () => {
+      deletePopup(user.restaurantID, selectedItem, () => {
         // popups = popups.filter(popup => popup.id !== selectedItem)
         // setAllPopups(popups)
         toast.success('You deleted this popup successfully.', {
@@ -104,7 +104,7 @@ const PopupTable = () => {
 
   const handleChecked = (id, status) => {
     dispatch(
-      updatePopupStatus(user.id, id, status, () => {
+      updatePopupStatus(user.restaurantID, id, status, () => {
         // let newArray = [...popups]
         // const indexToUpdate = popups.findIndex(popup => popup.id === id)
         // if (indexToUpdate !== -1) {

@@ -19,9 +19,13 @@ import PickDateRange from './auth/PickDateRange'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import OrderTable from '../components/Orders/OrderTable'
 import { toast } from 'react-toastify'
+import { getCurrentRoleDetail } from '../store/actions/staffAction'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function OrdersRestaurant () {
+  const dispatch = useDispatch()
   const [tabFlag, setTabFlag] = useState('All')
+  const { user } = useSelector(state => state.auth)
 
   const handleChange = (e, newValue) => {
     setTabFlag(newValue)
@@ -34,6 +38,30 @@ export default function OrdersRestaurant () {
 
   const minDistance = 10
 
+  // Status of this section as staff role
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    const obj = currentRoleDetail.filter(obj => obj.permission === 'Orders')
+    if (obj[0]?.allow === 'ViewEdit') {
+      setSectionPermission(true)
+    } else {
+      setSectionPermission(false)
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
+
+  // User setting up
   useEffect(() => {
     if (max > 100 || min < 0) {
       toast.error('You should be between 0 and 100.', {
@@ -107,79 +135,83 @@ export default function OrdersRestaurant () {
                   </Box>
                 </Grid>
               </Grid>
-              <Grid
-                marginTop={'20px'}
-                container
-                display={'flex'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
               >
                 <Grid
-                  item
-                  xs={4}
+                  marginTop={'20px'}
+                  container
                   display={'flex'}
-                  justifyContent={'center'}
+                  justifyContent={'space-between'}
                   alignItems={'center'}
                 >
-                  <TextField
-                    sx={{ width: '90%' }}
-                    id='outlined-start-adornment'
-                    placeholder='Search by ID, name, amount...'
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <SearchOutlinedIcon />
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xs={5}
-                  display={'flex'}
-                  justifyContent={'space-around'}
-                  alignItems={'center'}
-                  width={'90%'}
-                >
-                  <Box>
+                  <Grid
+                    item
+                    xs={4}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                  >
                     <TextField
-                      sx={{ width: '80px' }}
-                      value={min}
-                      type='number'
-                      onChange={e => setMin(e.target.value)}
-                    ></TextField>
-                  </Box>
-                  <Box sx={{ width: '100%' }} margin={2}>
-                    <Slider
-                      getAriaLabel={() => 'Minimum distance'}
-                      value={value1}
-                      onChange={handleChange1}
-                      valueLabelDisplay='auto'
-                      disableSwap
+                      sx={{ width: '90%' }}
+                      id='outlined-start-adornment'
+                      placeholder='Search by ID, name, amount...'
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <SearchOutlinedIcon />
+                          </InputAdornment>
+                        )
+                      }}
                     />
-                  </Box>
-                  <Box>
-                    <TextField
-                      type='number'
-                      sx={{ width: '80px', marginRight: '30px' }}
-                      value={max}
-                      onChange={e => setMax(e.target.value)}
-                    ></TextField>
-                  </Box>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={5}
+                    display={'flex'}
+                    justifyContent={'space-around'}
+                    alignItems={'center'}
+                    width={'90%'}
+                  >
+                    <Box>
+                      <TextField
+                        sx={{ width: '80px' }}
+                        value={min}
+                        type='number'
+                        onChange={e => setMin(e.target.value)}
+                      ></TextField>
+                    </Box>
+                    <Box sx={{ width: '100%' }} margin={2}>
+                      <Slider
+                        getAriaLabel={() => 'Minimum distance'}
+                        value={value1}
+                        onChange={handleChange1}
+                        valueLabelDisplay='auto'
+                        disableSwap
+                      />
+                    </Box>
+                    <Box>
+                      <TextField
+                        type='number'
+                        sx={{ width: '80px', marginRight: '30px' }}
+                        value={max}
+                        onChange={e => setMax(e.target.value)}
+                      ></TextField>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Box width={'90%'}>
+                      <PickDateRange
+                        setDateState={handleDateChange}
+                        datestate={dateState}
+                      />
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <Box width={'90%'}>
-                    <PickDateRange
-                      setDateState={handleDateChange}
-                      datestate={dateState}
-                    />
-                  </Box>
+                <Grid item xs={12} marginTop={2}>
+                  <OrderTable />
                 </Grid>
-              </Grid>
-              <Grid item xs={12} marginTop={2}>
-                <OrderTable />
-              </Grid>
+              </Box>
             </Card>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={8}>

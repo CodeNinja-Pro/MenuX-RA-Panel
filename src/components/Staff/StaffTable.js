@@ -71,8 +71,8 @@ const StaffTable = () => {
   const [tableData, setTableData] = useState([])
 
   useEffect(() => {
-    dispatch(getStaffs(user.id))
-    dispatch(getAllStaffInfo(user.id))
+    dispatch(getStaffs(user.restaurantID))
+    dispatch(getAllStaffInfo(user.restaurantID))
   }, [])
   useEffect(() => {
     setTableData(staffs)

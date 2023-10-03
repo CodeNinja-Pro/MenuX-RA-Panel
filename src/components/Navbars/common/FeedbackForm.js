@@ -74,7 +74,7 @@ export default function FeedbackForm (props) {
   const sendFeedback = () => {
     dispatch(
       saveFeedback(
-        user.id,
+        user.restaurantID,
         user.email,
         user.restaurantName,
         user.restaurantType,

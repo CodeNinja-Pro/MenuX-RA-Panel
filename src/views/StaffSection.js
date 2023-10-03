@@ -30,6 +30,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getAllStaffInfo,
+  getCurrentRoleDetail,
   getStaffs,
   sendNewStaffRequest
 } from '../store/actions/staffAction'
@@ -41,6 +42,29 @@ export default function StaffSection () {
   const { user } = useSelector(state => state.auth)
   const { staffData } = useSelector(state => state.staff)
 
+  // Status of this section as staff role
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    const obj = currentRoleDetail.filter(obj => obj.permission === 'Staff')
+    if (obj[0]?.allow === 'ViewEdit') {
+      setSectionPermission(true)
+    } else {
+      setSectionPermission(false)
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
+
   const [roleName, setRoleName] = useState('')
   const [staffEmail, setStaffEmail] = useState('')
   const [staffName, setStaffName] = useState('')
@@ -50,8 +74,8 @@ export default function StaffSection () {
   const [allStaffInfo, setAllStaffInfo] = useState([])
 
   useEffect(() => {
-    dispatch(getStaffs(user.id))
-    dispatch(getAllStaffInfo(user.id))
+    dispatch(getStaffs(user.restaurantID))
+    dispatch(getAllStaffInfo(user.restaurantID))
   }, [])
 
   useEffect(() => {
@@ -66,7 +90,7 @@ export default function StaffSection () {
     }
 
     dispatch(
-      sendNewStaffRequest(user.id, newStaff, () => {
+      sendNewStaffRequest(user.restaurantID, newStaff, () => {
         toast.success('You sent the request for new staff successfully.')
         setRoleName('')
         setStaffEmail('')
@@ -105,7 +129,13 @@ export default function StaffSection () {
                     >
                       Total Users
                     </Typography>
-                    <Box display={'flex'}>
+                    <Box
+                      display={'flex'}
+                      sx={
+                        user.role === 'staff' &&
+                        disableOnTrue(sectionPermission)
+                      }
+                    >
                       <Button
                         onClick={() => setModalFlag(true)}
                         sx={{ marginRight: 2 }}
@@ -127,28 +157,34 @@ export default function StaffSection () {
                       their associate Priviligies.
                     </Typography>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'start'}
-                    marginTop={'20px'}
+                  <Box
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
                   >
-                    <TextField
-                      id='outlined-start-adornment'
-                      placeholder='Search'
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <SearchOutlinedIcon />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} marginTop={2}>
-                    <StaffTable />
-                  </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      display={'flex'}
+                      justifyContent={'start'}
+                      marginTop={'20px'}
+                    >
+                      <TextField
+                        id='outlined-start-adornment'
+                        placeholder='Search'
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <SearchOutlinedIcon />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} marginTop={2}>
+                      <StaffTable />
+                    </Grid>
+                  </Box>
                 </Grid>
               </Grid>
             </Card>
@@ -184,7 +220,7 @@ export default function StaffSection () {
                       onChange={e => setRoleName(e.target.value)}
                     >
                       {allStaffInfo?.map((staffInfo, index) => (
-                        <MenuItem key={index} value={staffInfo.roleName}>
+                        <MenuItem key={index} value={staffInfo.id}>
                           {staffInfo.roleName}
                         </MenuItem>
                       ))}

@@ -209,7 +209,7 @@ export default function NotificationTable () {
   const [text, setText] = useState('')
 
   useEffect(() => {
-    dispatch(getAllNotifications(user.id))
+    dispatch(getAllNotifications(user.restaurantID))
   }, [])
 
   useEffect(() => {

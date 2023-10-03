@@ -58,7 +58,7 @@ export default function CreateCoupon () {
       validTill: validTill.$d
     }
     dispatch(
-      addNewCoupon(user.id, newCoupon, () => {
+      addNewCoupon(user.restaurantID, newCoupon, () => {
         setFlag(false)
       })
     )

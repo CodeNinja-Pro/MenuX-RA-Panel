@@ -4,6 +4,8 @@ import DeleteRestaurantImageModal from '../components/Modals/DeleteRestaurantIma
 import EditRestaurantImageModal from '../components/Modals/EditRestaurantImageModal'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import React, { useEffect } from 'react'
+import ReactDOM from 'react-dom'
+
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -47,12 +49,25 @@ import { useHistory } from 'react-router-dom'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css'
 import 'alertifyjs/build/css/themes/default.css'
+import { getCurrentRoleDetail } from '../store/actions/staffAction'
+
+const CustomConfirmDialog = ({ message, onConfirm, onCancel }) => {
+  return (
+    <div className='custom-confirm-dialog'>
+      <div className='message'>{message}</div>
+      <div className='buttons'>
+        <button onClick={onConfirm}>Confirm</button>
+        <button onClick={onCancel}>Cancel</button>
+      </div>
+    </div>
+  )
+}
 
 function Customize () {
   const dispatch = useDispatch()
   const { user, uid } = useSelector(state => state.auth)
   useEffect(() => {
-    dispatch(getCustomization(user.id))
+    dispatch(getCustomization(user.restaurantID))
   }, [])
   const { restaurantMedia } = useSelector(state => state.restaurant)
   const [galleryImages, setGalleryImages] = useState([])
@@ -61,6 +76,31 @@ function Customize () {
   const [deleteModal, setDeleteModal] = useState(false)
   const [editData, setEditData] = useState('')
   const [index, setIndex] = useState('')
+
+  // Status of this section as staff role
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    const obj = currentRoleDetail.filter(
+      obj => obj.permission === 'Customization'
+    )
+    if (obj[0]?.allow === 'ViewEdit') {
+      setSectionPermission(true)
+    } else {
+      setSectionPermission(false)
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
+  }
 
   const addToggle = () => {
     setAddModal(!addModal)
@@ -76,20 +116,52 @@ function Customize () {
   const [flag, setFlag] = useState(false)
   const [recommendModal, setRecommendModal] = useState(false)
 
+  // Custom comfirm modal making
+  const handleConfirm = () => {
+    // Handle confirm action
+  }
+
+  const handleCancel = () => {
+    // Handle cancel action
+  }
+
+  const showCustomConfirmDialog = message => {
+    // Render the custom confirm dialog
+    return new Promise(resolve => {
+      const dialogContainer = document.createElement('div')
+      document.body.appendChild(dialogContainer)
+
+      const handleClose = confirmed => {
+        ReactDOM.unmountComponentAtNode(dialogContainer)
+        document.body.removeChild(dialogContainer)
+        resolve(confirmed)
+      }
+
+      ReactDOM.render(
+        <CustomConfirmDialog
+          message={message}
+          onConfirm={() => handleClose(true)}
+          onCancel={() => handleClose(false)}
+        />,
+        dialogContainer
+      )
+    })
+  }
+
   const history = useHistory()
   useEffect(() => {
     const unlisten = history.block((location, action) => {
-      if (action === 'POP')
-        alertify.confirm(
-          'Confirm Title',
-          'Confirm Message',
-          function () {
-            return true
-          },
-          function () {
-            return false
-          }
-        )
+      if (action === 'PUSH') {
+        if (
+          window.confirm(
+            'Are you really leave the customization page without save?'
+          )
+        ) {
+          return true
+        } else {
+          return false
+        }
+      }
     })
 
     return () => {
@@ -256,7 +328,14 @@ function Customize () {
   })
 
   const removeImageHandle = (target, url) => {
-    dispatch(removeImage(user.id, customization.customization.id, target, url))
+    dispatch(
+      removeImage(
+        user.restaurantID,
+        customization.customization.id,
+        target,
+        url
+      )
+    )
   }
 
   useEffect(() => {
@@ -439,7 +518,13 @@ function Customize () {
   const onConfirmClick = () => {
     setSavedFlag(true)
     dispatch(
-      addCustomization(user.id, logoFile, coverFile, backgroundFile, theme)
+      addCustomization(
+        user.restaurantID,
+        logoFile,
+        coverFile,
+        backgroundFile,
+        theme
+      )
     )
   }
 
@@ -549,701 +634,720 @@ function Customize () {
                 <Spinner size={'lg'} className='text-primary'></Spinner>
               </div>
             ) : (
-              <Row>
-                <Col xs={8}>
-                  <Card className='shadow'>
-                    <CardContent>
-                      <Container fluid>
-                        <Row>
-                          <Col xs='12'>
-                            <Row>
-                              <Col xl='4' md='6' xs='12'>
-                                <p>App Logo</p>
-                                {customization.loading ? (
-                                  <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                    <Spinner
-                                      size={'lg'}
-                                      className='text-primary'
-                                    ></Spinner>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <form
-                                      style={{ marginLeft: '40px' }}
-                                      id='form-file-upload'
-                                      onDragEnter={handleDrag}
-                                      onSubmit={e => e.preventDefault()}
-                                    >
-                                      <input
-                                        ref={logoRef}
-                                        type='file'
-                                        id='input-file-upload'
-                                        multiple={true}
-                                        onChange={handleLogoChange}
-                                        style={{
-                                          width: '100px'
-                                        }}
-                                      />
-                                      {logoImage === '' ? (
-                                        <>
-                                          <label
+              <Box
+                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+              >
+                <Row>
+                  <Col xs={8}>
+                    <Card className='shadow'>
+                      <CardContent>
+                        <Container fluid>
+                          <Row>
+                            <Col xs='12'>
+                              <Row>
+                                <Col xl='4' md='6' xs='12'>
+                                  <p>App Logo</p>
+                                  {customization.loading ? (
+                                    <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
+                                      <Spinner
+                                        size={'lg'}
+                                        className='text-primary'
+                                      ></Spinner>
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <form
+                                        style={{ marginLeft: '40px' }}
+                                        id='form-file-upload'
+                                        onDragEnter={handleDrag}
+                                        onSubmit={e => e.preventDefault()}
+                                      >
+                                        <input
+                                          ref={logoRef}
+                                          type='file'
+                                          id='input-file-upload'
+                                          multiple={true}
+                                          onChange={handleLogoChange}
+                                          style={{
+                                            width: '100px'
+                                          }}
+                                        />
+                                        {logoImage === '' ? (
+                                          <>
+                                            <label
+                                              id='label-file-upload'
+                                              htmlFor='input-file-upload'
+                                              className={
+                                                dragActive ? 'drag-active' : ''
+                                              }
+                                            >
+                                              <div>
+                                                <p>
+                                                  Only *.JPG, *.JPEG, *.PNG and
+                                                  less then 2MB
+                                                </p>
+                                                <FileUploadOutlinedIcon
+                                                  sx={{
+                                                    width: '50px',
+                                                    height: '50px'
+                                                  }}
+                                                />
+                                                <button
+                                                  className='upload-button'
+                                                  onClick={onLogoButtonClick}
+                                                  style={{
+                                                    height: '100px',
+                                                    width: '100%'
+                                                  }}
+                                                >
+                                                  <Typography>
+                                                    Upload a file
+                                                  </Typography>
+                                                </button>
+                                              </div>
+                                            </label>
+                                            {dragActive && (
+                                              <div
+                                                id='drag-file-element'
+                                                onDragEnter={handleDrag}
+                                                onDragLeave={handleDrag}
+                                                onDragOver={handleDrag}
+                                                onDrop={handleLogoDrop}
+                                              ></div>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <img
                                             id='label-file-upload'
                                             htmlFor='input-file-upload'
-                                            className={
-                                              dragActive ? 'drag-active' : ''
-                                            }
-                                          >
-                                            <div>
-                                              <p>
-                                                Only *.JPG, *.JPEG, *.PNG and
-                                                less then 2MB
-                                              </p>
-                                              <FileUploadOutlinedIcon
-                                                sx={{
-                                                  width: '50px',
-                                                  height: '50px'
-                                                }}
-                                              />
-                                              <button
-                                                className='upload-button'
-                                                onClick={onLogoButtonClick}
-                                                style={{
-                                                  height: '100px',
-                                                  width: '100%'
-                                                }}
-                                              >
-                                                <Typography>
-                                                  Upload a file
-                                                </Typography>
-                                              </button>
-                                            </div>
-                                          </label>
-                                          {dragActive && (
-                                            <div
-                                              id='drag-file-element'
-                                              onDragEnter={handleDrag}
-                                              onDragLeave={handleDrag}
-                                              onDragOver={handleDrag}
-                                              onDrop={handleLogoDrop}
-                                            ></div>
-                                          )}
-                                        </>
-                                      ) : (
-                                        <img
-                                          id='label-file-upload'
-                                          htmlFor='input-file-upload'
-                                          style={{ width: '100%' }}
-                                          // className={dragActive ? 'drag-active' : ''}
-                                          src={logoImage}
+                                            style={{ width: '100%' }}
+                                            // className={dragActive ? 'drag-active' : ''}
+                                            src={logoImage}
+                                          />
+                                        )}
+                                      </form>
+                                      <Box
+                                        marginTop={'10px'}
+                                        display={'flex'}
+                                        justifyContent={'space-around'}
+                                      >
+                                        <IconButton
+                                          onClick={() =>
+                                            removeImageHandle(
+                                              'logoImage',
+                                              logoImage
+                                            )
+                                          }
+                                        >
+                                          <DeleteOutlineOutlinedIcon />
+                                        </IconButton>
+                                        <IconButton
+                                          onClick={() => {
+                                            setLogoImage('')
+                                            setLogoFile([])
+                                          }}
+                                        >
+                                          <CachedIcon />
+                                        </IconButton>
+                                      </Box>
+                                    </div>
+                                  )}
+                                </Col>
+                                <Col xl='4' md='6' xs='12'>
+                                  <p>Cover</p>
+                                  {customization.loading ? (
+                                    <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
+                                      <Spinner
+                                        size={'lg'}
+                                        className='text-primary'
+                                      ></Spinner>
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <form
+                                        style={{ marginLeft: '45px' }}
+                                        id='form-file-upload'
+                                        onDragEnter={handleDrag}
+                                        onSubmit={e => e.preventDefault()}
+                                      >
+                                        <input
+                                          ref={coverRef}
+                                          type='file'
+                                          id='input-file-upload'
+                                          multiple={true}
+                                          onChange={handleCoverChange}
+                                          style={{
+                                            width: '100px'
+                                          }}
                                         />
-                                      )}
-                                    </form>
-                                    <Box
-                                      marginTop={'10px'}
-                                      display={'flex'}
-                                      justifyContent={'space-around'}
-                                    >
-                                      <IconButton
-                                        onClick={() =>
-                                          removeImageHandle(
-                                            'logoImage',
-                                            logoImage
-                                          )
-                                        }
-                                      >
-                                        <DeleteOutlineOutlinedIcon />
-                                      </IconButton>
-                                      <IconButton
-                                        onClick={() => {
-                                          setLogoImage('')
-                                          setLogoFile([])
-                                        }}
-                                      >
-                                        <CachedIcon />
-                                      </IconButton>
-                                    </Box>
-                                  </div>
-                                )}
-                              </Col>
-                              <Col xl='4' md='6' xs='12'>
-                                <p>Cover</p>
-                                {customization.loading ? (
-                                  <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                    <Spinner
-                                      size={'lg'}
-                                      className='text-primary'
-                                    ></Spinner>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <form
-                                      style={{ marginLeft: '45px' }}
-                                      id='form-file-upload'
-                                      onDragEnter={handleDrag}
-                                      onSubmit={e => e.preventDefault()}
-                                    >
-                                      <input
-                                        ref={coverRef}
-                                        type='file'
-                                        id='input-file-upload'
-                                        multiple={true}
-                                        onChange={handleCoverChange}
-                                        style={{
-                                          width: '100px'
-                                        }}
-                                      />
-                                      {coverImage === '' ? (
-                                        <>
-                                          <label
+                                        {coverImage === '' ? (
+                                          <>
+                                            <label
+                                              id='label-file-upload'
+                                              htmlFor='input-file-upload'
+                                              className={
+                                                dragActive ? 'drag-active' : ''
+                                              }
+                                            >
+                                              <div>
+                                                <p>
+                                                  Only *.JPG, *.JPEG, *.PNG and
+                                                  less then 2MB
+                                                </p>
+                                                <FileUploadOutlinedIcon
+                                                  sx={{
+                                                    width: '50px',
+                                                    height: '50px'
+                                                  }}
+                                                />
+                                                <button
+                                                  className='upload-button'
+                                                  onClick={onCoverButtonClick}
+                                                  style={{
+                                                    height: '100px',
+                                                    width: '100%'
+                                                  }}
+                                                >
+                                                  <Typography>
+                                                    Upload a file
+                                                  </Typography>
+                                                </button>
+                                              </div>
+                                            </label>
+                                            {dragActive && (
+                                              <div
+                                                id='drag-file-element'
+                                                onDragEnter={handleDrag}
+                                                onDragLeave={handleDrag}
+                                                onDragOver={handleDrag}
+                                                onDrop={handleCoverDrop}
+                                              ></div>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <img
                                             id='label-file-upload'
                                             htmlFor='input-file-upload'
-                                            className={
-                                              dragActive ? 'drag-active' : ''
-                                            }
-                                          >
-                                            <div>
-                                              <p>
-                                                Only *.JPG, *.JPEG, *.PNG and
-                                                less then 2MB
-                                              </p>
-                                              <FileUploadOutlinedIcon
-                                                sx={{
-                                                  width: '50px',
-                                                  height: '50px'
-                                                }}
-                                              />
-                                              <button
-                                                className='upload-button'
-                                                onClick={onCoverButtonClick}
-                                                style={{
-                                                  height: '100px',
-                                                  width: '100%'
-                                                }}
-                                              >
-                                                <Typography>
-                                                  Upload a file
-                                                </Typography>
-                                              </button>
-                                            </div>
-                                          </label>
-                                          {dragActive && (
-                                            <div
-                                              id='drag-file-element'
-                                              onDragEnter={handleDrag}
-                                              onDragLeave={handleDrag}
-                                              onDragOver={handleDrag}
-                                              onDrop={handleCoverDrop}
-                                            ></div>
-                                          )}
-                                        </>
-                                      ) : (
-                                        <img
-                                          id='label-file-upload'
-                                          htmlFor='input-file-upload'
-                                          style={{ width: '100%' }}
-                                          // className={dragActive ? 'drag-active' : ''}
-                                          src={coverImage}
-                                          onmouseover='showDeleteButton(this)'
-                                          onmouseout='hideDeleteButton(this)'
+                                            style={{ width: '100%' }}
+                                            // className={dragActive ? 'drag-active' : ''}
+                                            src={coverImage}
+                                            onmouseover='showDeleteButton(this)'
+                                            onmouseout='hideDeleteButton(this)'
+                                          />
+                                        )}
+                                      </form>
+                                      <Box
+                                        marginTop={'10px'}
+                                        display={'flex'}
+                                        justifyContent={'space-around'}
+                                      >
+                                        <IconButton
+                                          onClick={() =>
+                                            removeImageHandle(
+                                              'coverImage',
+                                              coverImage
+                                            )
+                                          }
+                                        >
+                                          <DeleteOutlineOutlinedIcon />
+                                        </IconButton>
+                                        <IconButton
+                                          onClick={() => {
+                                            setCoverImage('')
+                                            setCoverFile([])
+                                          }}
+                                        >
+                                          <CachedIcon />
+                                        </IconButton>
+                                      </Box>
+                                    </div>
+                                  )}
+                                </Col>
+                                <Col xl='4' md='6' xs='12'>
+                                  <p>Background Pattern 1:1</p>
+                                  {customization.loading ? (
+                                    <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
+                                      <Spinner
+                                        size={'lg'}
+                                        className='text-primary'
+                                      ></Spinner>
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <form
+                                        style={{ marginLeft: '40px' }}
+                                        id='form-file-upload'
+                                        onDragEnter={handleDrag}
+                                        onSubmit={e => e.preventDefault()}
+                                      >
+                                        <input
+                                          ref={backgroundRef}
+                                          type='file'
+                                          id='input-file-upload'
+                                          multiple={true}
+                                          onChange={handleBackgroundChange}
+                                          style={{
+                                            width: '100px'
+                                          }}
                                         />
-                                      )}
-                                    </form>
-                                    <Box
-                                      marginTop={'10px'}
-                                      display={'flex'}
-                                      justifyContent={'space-around'}
-                                    >
-                                      <IconButton
-                                        onClick={() =>
-                                          removeImageHandle(
-                                            'coverImage',
-                                            coverImage
-                                          )
-                                        }
-                                      >
-                                        <DeleteOutlineOutlinedIcon />
-                                      </IconButton>
-                                      <IconButton
-                                        onClick={() => {
-                                          setCoverImage('')
-                                          setCoverFile([])
-                                        }}
-                                      >
-                                        <CachedIcon />
-                                      </IconButton>
-                                    </Box>
-                                  </div>
-                                )}
-                              </Col>
-                              <Col xl='4' md='6' xs='12'>
-                                <p>Background Pattern 1:1</p>
-                                {customization.loading ? (
-                                  <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                    <Spinner
-                                      size={'lg'}
-                                      className='text-primary'
-                                    ></Spinner>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <form
-                                      style={{ marginLeft: '40px' }}
-                                      id='form-file-upload'
-                                      onDragEnter={handleDrag}
-                                      onSubmit={e => e.preventDefault()}
-                                    >
-                                      <input
-                                        ref={backgroundRef}
-                                        type='file'
-                                        id='input-file-upload'
-                                        multiple={true}
-                                        onChange={handleBackgroundChange}
-                                        style={{
-                                          width: '100px'
-                                        }}
-                                      />
-                                      {backgroundImage === '' ? (
-                                        <>
-                                          <label
+                                        {backgroundImage === '' ? (
+                                          <>
+                                            <label
+                                              id='label-file-upload'
+                                              htmlFor='input-file-upload'
+                                              className={
+                                                dragActive ? 'drag-active' : ''
+                                              }
+                                            >
+                                              <div>
+                                                <p>
+                                                  Only *.JPG, *.JPEG, *.PNG and
+                                                  less then 2MB
+                                                </p>
+                                                <FileUploadOutlinedIcon
+                                                  sx={{
+                                                    width: '50px',
+                                                    height: '50px'
+                                                  }}
+                                                />
+                                                <button
+                                                  className='upload-button'
+                                                  onClick={
+                                                    onBackgroundButtonClick
+                                                  }
+                                                  style={{
+                                                    height: '100px',
+                                                    width: '100%'
+                                                  }}
+                                                >
+                                                  <Typography>
+                                                    Upload a file
+                                                  </Typography>
+                                                </button>
+                                              </div>
+                                            </label>
+                                            {dragActive && (
+                                              <div
+                                                id='drag-file-element'
+                                                onDragEnter={handleDrag}
+                                                onDragLeave={handleDrag}
+                                                onDragOver={handleDrag}
+                                                onDrop={handleBackgroundDrop}
+                                              ></div>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <img
                                             id='label-file-upload'
                                             htmlFor='input-file-upload'
-                                            className={
-                                              dragActive ? 'drag-active' : ''
-                                            }
-                                          >
-                                            <div>
-                                              <p>
-                                                Only *.JPG, *.JPEG, *.PNG and
-                                                less then 2MB
-                                              </p>
-                                              <FileUploadOutlinedIcon
-                                                sx={{
-                                                  width: '50px',
-                                                  height: '50px'
-                                                }}
-                                              />
-                                              <button
-                                                className='upload-button'
-                                                onClick={
-                                                  onBackgroundButtonClick
-                                                }
-                                                style={{
-                                                  height: '100px',
-                                                  width: '100%'
-                                                }}
-                                              >
-                                                <Typography>
-                                                  Upload a file
-                                                </Typography>
-                                              </button>
-                                            </div>
-                                          </label>
-                                          {dragActive && (
-                                            <div
-                                              id='drag-file-element'
-                                              onDragEnter={handleDrag}
-                                              onDragLeave={handleDrag}
-                                              onDragOver={handleDrag}
-                                              onDrop={handleBackgroundDrop}
-                                            ></div>
-                                          )}
+                                            style={{ width: '100%' }}
+                                            // className={dragActive ? 'drag-active' : ''}
+                                            src={backgroundImage}
+                                          />
+                                        )}
+                                      </form>
+                                      <Box
+                                        marginTop={'10px'}
+                                        display={'flex'}
+                                        justifyContent={'space-around'}
+                                      >
+                                        <IconButton
+                                          onClick={() =>
+                                            removeImageHandle(
+                                              'backgroundImage',
+                                              backgroundImage
+                                            )
+                                          }
+                                        >
+                                          <DeleteOutlineOutlinedIcon />
+                                        </IconButton>
+                                        <IconButton
+                                          onClick={() => {
+                                            setBackgroundImage('')
+                                            setBackgroundFile([])
+                                          }}
+                                        >
+                                          <CachedIcon />
+                                        </IconButton>
+                                      </Box>
+                                      {backgroundImage !== '' ? (
+                                        <>
+                                          <Typography>Size</Typography>
+                                          <Slider
+                                            aria-label='Temperature'
+                                            defaultValue={3}
+                                            // getAriaValueText={valuetext}
+                                            valueLabelDisplay='auto'
+                                            value={patternSize}
+                                            onChange={onPatternSizeChange}
+                                            step={1}
+                                            marks
+                                            min={1}
+                                            max={10}
+                                          />
+                                          7 <Typography>Tilt</Typography>
+                                          <Slider
+                                            aria-label='Temperature'
+                                            defaultValue={30}
+                                            // getAriaValueText={valuetext}
+                                            valueLabelDisplay='auto'
+                                            value={patternTilt}
+                                            onChange={onPatternTiltChange}
+                                            step={10}
+                                            marks
+                                            min={0}
+                                            max={360}
+                                          />
                                         </>
                                       ) : (
-                                        <img
-                                          id='label-file-upload'
-                                          htmlFor='input-file-upload'
-                                          style={{ width: '100%' }}
-                                          // className={dragActive ? 'drag-active' : ''}
-                                          src={backgroundImage}
-                                        />
+                                        ''
                                       )}
-                                    </form>
-                                    <Box
-                                      marginTop={'10px'}
-                                      display={'flex'}
-                                      justifyContent={'space-around'}
-                                    >
-                                      <IconButton
-                                        onClick={() =>
-                                          removeImageHandle(
-                                            'backgroundImage',
-                                            backgroundImage
-                                          )
-                                        }
-                                      >
-                                        <DeleteOutlineOutlinedIcon />
-                                      </IconButton>
-                                      <IconButton
-                                        onClick={() => {
-                                          setBackgroundImage('')
-                                          setBackgroundFile([])
-                                        }}
-                                      >
-                                        <CachedIcon />
-                                      </IconButton>
-                                    </Box>
-                                    {backgroundImage !== '' ? (
-                                      <>
-                                        <Typography>Size</Typography>
-                                        <Slider
-                                          aria-label='Temperature'
-                                          defaultValue={3}
-                                          // getAriaValueText={valuetext}
-                                          valueLabelDisplay='auto'
-                                          value={patternSize}
-                                          onChange={onPatternSizeChange}
-                                          step={1}
-                                          marks
-                                          min={1}
-                                          max={10}
-                                        />
-                                        7 <Typography>Tilt</Typography>
-                                        <Slider
-                                          aria-label='Temperature'
-                                          defaultValue={30}
-                                          // getAriaValueText={valuetext}
-                                          valueLabelDisplay='auto'
-                                          value={patternTilt}
-                                          onChange={onPatternTiltChange}
-                                          step={10}
-                                          marks
-                                          min={0}
-                                          max={360}
-                                        />
-                                      </>
-                                    ) : (
-                                      ''
-                                    )}
-                                  </div>
-                                )}
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col>
-                                <h3
-                                  style={{
-                                    marginTop: '30px',
-                                    marginBottom: '30px',
-                                    textAlign: 'left'
-                                  }}
-                                >
-                                  Colors
-                                </h3>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Grid container spacing={3}>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Category Text Color'}
-                                    currentColor={categoryColor}
-                                    setColor={setCategoryColor}
-                                    colorChange={categoryColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Item Border Color'}
-                                    currentColor={borderColor}
-                                    setColor={setBorderColor}
-                                    colorChange={borderColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Price Text Color'}
-                                    currentColor={priceColor}
-                                    setColor={setPriceColor}
-                                    colorChange={priceColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Item Text Color'}
-                                    currentColor={itemColor}
-                                    setColor={setItemColor}
-                                    colorChange={itemColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Item Color'}
-                                    currentColor={backgroundColor}
-                                    setColor={setBackgroundColor}
-                                    colorChange={backgroundColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <ColorPickerCP
-                                    title={'Entire Color'}
-                                    currentColor={entireColor}
-                                    setColor={setEntireColor}
-                                    colorChange={entireColorChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <Box
-                                    display={'flex'}
-                                    justifyContent={'space-between'}
+                                    </div>
+                                  )}
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col>
+                                  <h3
+                                    style={{
+                                      marginTop: '30px',
+                                      marginBottom: '30px',
+                                      textAlign: 'left'
+                                    }}
                                   >
-                                    <Typography
-                                      marginTop={'10px'}
-                                      marginLeft={'30px'}
-                                    >
-                                      Header Theme
-                                    </Typography>
-                                    <FormControlLabel
-                                      onClick={onSelectColorMode}
-                                      checked={!colorMode}
-                                      control={
-                                        <MaterialUISwitch
-                                          sx={{ m: 1 }}
-                                          defaultChecked={false}
-                                        />
-                                      }
+                                    Colors
+                                  </h3>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Grid container spacing={3}>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Category Text Color'}
+                                      currentColor={categoryColor}
+                                      setColor={setCategoryColor}
+                                      colorChange={categoryColorChange}
                                     />
-                                  </Box>
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Item Border Color'}
+                                      currentColor={borderColor}
+                                      setColor={setBorderColor}
+                                      colorChange={borderColorChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Price Text Color'}
+                                      currentColor={priceColor}
+                                      setColor={setPriceColor}
+                                      colorChange={priceColorChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Item Text Color'}
+                                      currentColor={itemColor}
+                                      setColor={setItemColor}
+                                      colorChange={itemColorChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Item Color'}
+                                      currentColor={backgroundColor}
+                                      setColor={setBackgroundColor}
+                                      colorChange={backgroundColorChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <ColorPickerCP
+                                      title={'Entire Color'}
+                                      currentColor={entireColor}
+                                      setColor={setEntireColor}
+                                      colorChange={entireColorChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <Box
+                                      display={'flex'}
+                                      justifyContent={'space-between'}
+                                    >
+                                      <Typography
+                                        marginTop={'10px'}
+                                        marginLeft={'30px'}
+                                      >
+                                        Header Theme
+                                      </Typography>
+                                      <FormControlLabel
+                                        onClick={onSelectColorMode}
+                                        checked={!colorMode}
+                                        control={
+                                          <MaterialUISwitch
+                                            sx={{ m: 1 }}
+                                            defaultChecked={false}
+                                          />
+                                        }
+                                      />
+                                    </Box>
+                                  </Grid>
                                 </Grid>
-                              </Grid>
-                            </Row>
-                            <Row>
-                              <Col>
-                                <h3
-                                  style={{
-                                    marginTop: '30px',
-                                    marginBottom: '30px',
-                                    textAlign: 'left'
-                                  }}
+                              </Row>
+                              <Row>
+                                <Col>
+                                  <h3
+                                    style={{
+                                      marginTop: '30px',
+                                      marginBottom: '30px',
+                                      textAlign: 'left'
+                                    }}
+                                  >
+                                    Fonts
+                                  </h3>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Grid
+                                  container
+                                  marginBottom={'20px'}
+                                  spacing={4}
                                 >
-                                  Fonts
-                                </h3>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Grid container marginBottom={'20px'} spacing={4}>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <FontSizeCP
-                                    title='Header Font Size'
-                                    size={fontSize}
-                                    setSize={onFontSizeChange}
-                                  />
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  {/* <FontSizeCP
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <FontSizeCP
+                                      title='Header Font Size'
+                                      size={fontSize}
+                                      setSize={onFontSizeChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    {/* <FontSizeCP
                                     title='Secondary Font'
                                     size={secondaryFontSize}
                                     setSize={onSecondaryFontSizeChange}
                                   /> */}
-                                  <Typography>Text Font Weight</Typography>
-                                  <Switch
-                                    value={fontWeight}
-                                    onChange={onFontWeightChange}
-                                    sx={{ marginTop: '10px' }}
-                                    {...label}
-                                  />
+                                    <Typography>Text Font Weight</Typography>
+                                    <Switch
+                                      value={fontWeight}
+                                      onChange={onFontWeightChange}
+                                      sx={{ marginTop: '10px' }}
+                                      {...label}
+                                    />
+                                  </Grid>
                                 </Grid>
-                              </Grid>
-                            </Row>
-                            <Row>
-                              <Grid container marginBottom={'20px'} spacing={4}>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <Typography fontFamily={mainFont}>
-                                    We love MenuX
-                                  </Typography>
-                                </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <Typography fontFamily={secondaryFont}>
-                                    We love MenuX
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Row>
-                            <Row>
-                              <Grid container marginBottom={'20px'} spacing={4}>
+                              </Row>
+                              <Row>
                                 <Grid
-                                  item
-                                  xl={5}
-                                  md={5}
-                                  xs={12}
-                                  marginLeft={'30px'}
+                                  container
+                                  marginBottom={'20px'}
+                                  spacing={4}
                                 >
-                                  <FontCP
-                                    title={'Header Font Size'}
-                                    fontFamily={mainFont}
-                                    setFontFamily={setMainFont}
-                                  />
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <Typography fontFamily={mainFont}>
+                                      We love MenuX
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <Typography fontFamily={secondaryFont}>
+                                      We love MenuX
+                                    </Typography>
+                                  </Grid>
                                 </Grid>
-                                <Grid item xl={5} md={5} xs={12}>
-                                  <FontCP
-                                    title={'Secondary Font'}
-                                    fontFamily={secondaryFont}
-                                    setFontFamily={setSecondaryFont}
-                                  />
+                              </Row>
+                              <Row>
+                                <Grid
+                                  container
+                                  marginBottom={'20px'}
+                                  spacing={4}
+                                >
+                                  <Grid
+                                    item
+                                    xl={5}
+                                    md={5}
+                                    xs={12}
+                                    marginLeft={'30px'}
+                                  >
+                                    <FontCP
+                                      title={'Header Font Size'}
+                                      fontFamily={mainFont}
+                                      setFontFamily={setMainFont}
+                                    />
+                                  </Grid>
+                                  <Grid item xl={5} md={5} xs={12}>
+                                    <FontCP
+                                      title={'Secondary Font'}
+                                      fontFamily={secondaryFont}
+                                      setFontFamily={setSecondaryFont}
+                                    />
+                                  </Grid>
                                 </Grid>
-                              </Grid>
-                            </Row>
+                              </Row>
+                            </Col>
+                          </Row>
+                        </Container>
+                      </CardContent>
+                    </Card>
+                  </Col>
+                  <Col xs={4}>
+                    <div
+                      style={{
+                        width: '25%',
+                        marginLeft: '20px',
+                        position: 'fixed',
+                        top: '100px',
+                        padding: '5px'
+                      }}
+                    >
+                      <Container fluid>
+                        <Row>
+                          <Col>
+                            <h2>Menu Preview</h2>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <MobileCP theme={theme} />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Box
+                              display={'flex'}
+                              justifyContent={'space-around'}
+                            >
+                              <Button
+                                variant='contained'
+                                onClick={() => setConfirmModal(true)}
+                              >
+                                Save Changes
+                              </Button>
+                              {/* <Button variant='contained'>Preset themes</Button> */}
+                            </Box>
+                            <Dialog
+                              open={confirmModal}
+                              onClose={() => setConfirmModal(false)}
+                              aria-labelledby='alert-dialog-title'
+                              aria-describedby='alert-dialog-description'
+                            >
+                              <DialogTitle
+                                id='alert-dialog-title'
+                                style={{
+                                  fontSize: '25px',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                {'Save Changes'}
+                              </DialogTitle>
+                              <Divider />
+                              <DialogContent>
+                                <DialogContentText
+                                  id='alert-dialog-description'
+                                  style={{ textAlign: 'center' }}
+                                >
+                                  <Typography variant='h6' fontWeight={'bold'}>
+                                    Apply the Changes
+                                  </Typography>
+                                  <Typography fontWeight={'bold'}>
+                                    Are you sure you want to make the changes to
+                                    the application
+                                  </Typography>
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-around'
+                                }}
+                              >
+                                <Button
+                                  variant='outlined'
+                                  style={{ margin: '20px' }}
+                                  fullWidth
+                                  onClick={() => {
+                                    setConfirmModal(false)
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  fullWidth
+                                  variant='contained'
+                                  style={{ margin: '20px' }}
+                                  onClick={() => {
+                                    setConfirmModal(false)
+                                    onConfirmClick()
+                                  }}
+                                  autoFocus
+                                >
+                                  Confirm
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+
+                            <Dialog
+                              open={recommendModal}
+                              onClose={() => setRecommendModal(false)}
+                              aria-labelledby='alert-dialog-title'
+                              aria-describedby='alert-dialog-description'
+                            >
+                              <DialogTitle
+                                id='alert-dialog-title'
+                                style={{
+                                  fontSize: '25px',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                {'Recommend for Save'}
+                              </DialogTitle>
+                              <Divider />
+                              <DialogContent>
+                                <DialogContentText
+                                  id='alert-dialog-description'
+                                  style={{ textAlign: 'center' }}
+                                >
+                                  <Typography fontWeight={'bold'}>
+                                    Are you going to leave here no without
+                                    saving the style?
+                                  </Typography>
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-around'
+                                }}
+                              >
+                                <Button
+                                  variant='outlined'
+                                  style={{ margin: '20px' }}
+                                  fullWidth
+                                  onClick={() => {
+                                    setConfirmModal(false)
+                                  }}
+                                >
+                                  Skip
+                                </Button>
+                                <Button
+                                  fullWidth
+                                  variant='contained'
+                                  style={{ margin: '20px' }}
+                                  onClick={() => {
+                                    setConfirmModal(false)
+                                    onConfirmClick()
+                                  }}
+                                  autoFocus
+                                >
+                                  Save
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
                           </Col>
                         </Row>
                       </Container>
-                    </CardContent>
-                  </Card>
-                </Col>
-                <Col xs={4}>
-                  <div
-                    style={{
-                      width: '25%',
-                      marginLeft: '20px',
-                      position: 'fixed',
-                      top: '100px',
-                      padding: '5px'
-                    }}
-                  >
-                    <Container fluid>
-                      <Row>
-                        <Col>
-                          <h2>Menu Preview</h2>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <MobileCP theme={theme} />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <Box display={'flex'} justifyContent={'space-around'}>
-                            <Button
-                              variant='contained'
-                              onClick={() => setConfirmModal(true)}
-                            >
-                              Save Changes
-                            </Button>
-                            {/* <Button variant='contained'>Preset themes</Button> */}
-                          </Box>
-                          <Dialog
-                            open={confirmModal}
-                            onClose={() => setConfirmModal(false)}
-                            aria-labelledby='alert-dialog-title'
-                            aria-describedby='alert-dialog-description'
-                          >
-                            <DialogTitle
-                              id='alert-dialog-title'
-                              style={{
-                                fontSize: '25px',
-                                fontWeight: 'bold'
-                              }}
-                            >
-                              {'Save Changes'}
-                            </DialogTitle>
-                            <Divider />
-                            <DialogContent>
-                              <DialogContentText
-                                id='alert-dialog-description'
-                                style={{ textAlign: 'center' }}
-                              >
-                                <Typography variant='h6' fontWeight={'bold'}>
-                                  Apply the Changes
-                                </Typography>
-                                <Typography fontWeight={'bold'}>
-                                  Are you sure you want to make the changes to
-                                  the application
-                                </Typography>
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-around'
-                              }}
-                            >
-                              <Button
-                                variant='outlined'
-                                style={{ margin: '20px' }}
-                                fullWidth
-                                onClick={() => {
-                                  setConfirmModal(false)
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                fullWidth
-                                variant='contained'
-                                style={{ margin: '20px' }}
-                                onClick={() => {
-                                  setConfirmModal(false)
-                                  onConfirmClick()
-                                }}
-                                autoFocus
-                              >
-                                Confirm
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-
-                          <Dialog
-                            open={recommendModal}
-                            onClose={() => setRecommendModal(false)}
-                            aria-labelledby='alert-dialog-title'
-                            aria-describedby='alert-dialog-description'
-                          >
-                            <DialogTitle
-                              id='alert-dialog-title'
-                              style={{
-                                fontSize: '25px',
-                                fontWeight: 'bold'
-                              }}
-                            >
-                              {'Recommend for Save'}
-                            </DialogTitle>
-                            <Divider />
-                            <DialogContent>
-                              <DialogContentText
-                                id='alert-dialog-description'
-                                style={{ textAlign: 'center' }}
-                              >
-                                <Typography fontWeight={'bold'}>
-                                  Are you going to leave here no without saving
-                                  the style?
-                                </Typography>
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-around'
-                              }}
-                            >
-                              <Button
-                                variant='outlined'
-                                style={{ margin: '20px' }}
-                                fullWidth
-                                onClick={() => {
-                                  setConfirmModal(false)
-                                }}
-                              >
-                                Skip
-                              </Button>
-                              <Button
-                                fullWidth
-                                variant='contained'
-                                style={{ margin: '20px' }}
-                                onClick={() => {
-                                  setConfirmModal(false)
-                                  onConfirmClick()
-                                }}
-                                autoFocus
-                              >
-                                Save
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </Col>
-                      </Row>
-                    </Container>
-                  </div>
-                </Col>
-              </Row>
+                    </div>
+                  </Col>
+                </Row>
+              </Box>
             )}
           </Container>
         </Container>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ThemeMain } from '../components/common/Theme'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import { Box, Card, Tabs, Tab, ThemeProvider, Grid } from '@mui/material'
@@ -6,12 +6,40 @@ import { Container } from 'reactstrap'
 import AccountSetting from '../components/Settings/AccountSetting'
 import PaymentIntegration from '../components/Settings/PaymentIntegration'
 import VenueSetting from '../components/Settings/VenueSetting'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCurrentRoleDetail } from '../store/actions/staffAction'
 
 export default function SettingSection () {
   const [tabFlag, setTabFlag] = useState('Account Settings')
 
+  const { user } = useSelector(state => state.auth)
+  const dispatch = useDispatch()
   const handleChange = (e, newValue) => {
     setTabFlag(newValue)
+  }
+
+  const [sectionPermission, setSectionPermission] = useState(false)
+  const { currentRoleDetail } = useSelector(state => state.staff)
+  useEffect(() => {
+    if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+  }, [])
+
+  useEffect(() => {
+    if (user.role === 'staff') {
+      const obj = currentRoleDetail.filter(obj => obj.permission === 'Menu')
+      if (obj[0]?.allow === 'ViewEdit') {
+        setSectionPermission(true)
+      } else {
+        setSectionPermission(false)
+      }
+    }
+  }, [currentRoleDetail])
+
+  const disableOnTrue = flag => {
+    return {
+      opacity: flag ? 1 : 0.8,
+      pointerEvents: flag ? 'initial' : 'none'
+    }
   }
 
   return (
@@ -48,13 +76,27 @@ export default function SettingSection () {
                   </Box>
                 </Card>
                 {tabFlag === 'Account Settings' && <AccountSetting />}
-                {tabFlag === 'Venue Settings' && <VenueSetting />}
+                {tabFlag === 'Venue Settings' && (
+                  <Box
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
+                  >
+                    <VenueSetting />
+                  </Box>
+                )}
               </Grid>
             </Grid>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 {tabFlag === 'Payment and Integration' && (
-                  <PaymentIntegration />
+                  <Box
+                    sx={
+                      user.role === 'staff' && disableOnTrue(sectionPermission)
+                    }
+                  >
+                    <PaymentIntegration />
+                  </Box>
                 )}
               </Grid>
             </Grid>

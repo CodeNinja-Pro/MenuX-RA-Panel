@@ -1,12 +1,30 @@
 import firebase from '../../config/firebase'
 import algoliasearch from 'algoliasearch'
 import { createNullCache } from '@algolia/cache-common'
-import { enqueueSnackbar } from 'notistack'
 import { toast } from 'react-toastify'
 
 const client = algoliasearch('99PJ9S7CN9', '4dd3b464870ca480ed3bbbe36ef739cd', {
   responsesCache: createNullCache()
 })
+
+export const getCurrentRoleDetail = id => async dispatch => {
+  try {
+    await firebase
+      .firestore()
+      .collection('roles')
+      .doc(id)
+      .get()
+      .then(doc => {
+        console.log(doc.data())
+        dispatch({
+          type: 'GET_CURRENT_ROLE_DETAIL',
+          payload: doc.data().role
+        })
+      })
+  } catch (err) {
+    toast.error(err.message)
+  }
+}
 
 export const getStaffs = id => async dispatch => {
   dispatch({
