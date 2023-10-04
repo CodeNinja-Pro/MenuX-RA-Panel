@@ -120,40 +120,41 @@ export default function OrdersRestaurant () {
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Box sx={{ width: '100%', typography: 'body1' }}>
-                    <Tabs
-                      value={tabFlag}
-                      onChange={handleChange}
-                      aria-label='wrapped label tabs example'
-                    >
-                      <Tab value='All' label='All' />
-                      <Tab value='New' label='New' />
-                      <Tab value='Processing' label='Processing' />
-                      <Tab value='Ready' label='Ready' />
-                      <Tab value='Completed' label='Completed' />
-                    </Tabs>
-                  </Box>
+                  {/* <Box sx={{ width: '100%', typography: 'body1' }}> */}
+                  <Tabs
+                    value={tabFlag}
+                    onChange={handleChange}
+                    aria-label='wrapped label tabs example'
+                  >
+                    <Tab value='All' label='All' />
+                    <Tab value='New' label='New' />
+                    <Tab value='Processing' label='Processing' />
+                    <Tab value='Ready' label='Ready' />
+                    <Tab value='Completed' label='Completed' />
+                  </Tabs>
+                  {/* </Box> */}
                 </Grid>
               </Grid>
               <Box
                 sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
               >
                 <Grid
-                  marginTop={'20px'}
                   container
                   display={'flex'}
                   justifyContent={'space-between'}
                   alignItems={'center'}
+                  spacing={2}
                 >
                   <Grid
                     item
-                    xs={4}
+                    xs={12}
+                    lg={4}
                     display={'flex'}
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
                     <TextField
-                      sx={{ width: '90%' }}
+                      fullWidth
                       id='outlined-start-adornment'
                       placeholder='Search by ID, name, amount...'
                       InputProps={{
@@ -167,15 +168,15 @@ export default function OrdersRestaurant () {
                   </Grid>
                   <Grid
                     item
-                    xs={5}
+                    xs={12}
+                    lg={5}
                     display={'flex'}
                     justifyContent={'space-around'}
                     alignItems={'center'}
-                    width={'90%'}
                   >
                     <Box>
                       <TextField
-                        sx={{ width: '80px' }}
+                        fullWidth
                         value={min}
                         type='number'
                         onChange={e => setMin(e.target.value)}
@@ -193,14 +194,14 @@ export default function OrdersRestaurant () {
                     <Box>
                       <TextField
                         type='number'
-                        sx={{ width: '80px', marginRight: '30px' }}
+                        fullWidth
                         value={max}
                         onChange={e => setMax(e.target.value)}
                       ></TextField>
                     </Box>
                   </Grid>
-                  <Grid item xs={3}>
-                    <Box width={'90%'}>
+                  <Grid item xs={12} lg={3}>
+                    <Box>
                       <PickDateRange
                         setDateState={handleDateChange}
                         datestate={dateState}
