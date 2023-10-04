@@ -44,6 +44,22 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 
+import { makeStyles } from '@mui/styles'
+const useStyles = makeStyles(() => ({
+  textField: {
+    width: '100%',
+    maxWidth: '400px',
+
+    '@media (max-width: 600px)': {
+      maxWidth: '300px'
+    },
+
+    '@media (min-width: 1280px)': {
+      maxWidth: '500px'
+    }
+  }
+}))
+
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1
@@ -266,6 +282,8 @@ export default function SuperStaffTable () {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
+  const classes = useStyles()
+
   return (
     <>
       <Grid
@@ -281,6 +299,7 @@ export default function SuperStaffTable () {
           sx={{ width: '400px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
+          className={classes.textField}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>

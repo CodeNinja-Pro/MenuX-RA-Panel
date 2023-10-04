@@ -353,17 +353,17 @@ export default function SuperDashboard () {
                       New Promoter Score
                     </Typography>
                     <Typography fontWeight={'bold'}>Avrage: 7.34</Typography>
-                    <Box marginLeft={-3} sx={{ width: '100%' }}>
+                    <Box sx={{ width: '100%' }}>
                       <DonutChart
                         options={revenueByItems.options}
                         series={revenueByItems.series}
                       />
+                      <SidebarDonut
+                        options={revenueByItems.labels}
+                        series={revenueByItems.series}
+                        colors={revenueByItems.colors}
+                      />
                     </Box>
-                    <SidebarDonut
-                      options={revenueByItems.labels}
-                      series={revenueByItems.series}
-                      colors={revenueByItems.colors}
-                    />
                   </CardContent>
                 </Card>
               </Grid>
@@ -457,57 +457,67 @@ export default function SuperDashboard () {
                       justifyContent={'space-between'}
                       alignItems={'center'}
                     >
-                      <Typography
-                        fontWeight={'bold'}
-                        textAlign={'left'}
-                        fontSize={'20px'}
-                        marginBottom={3}
-                        marginLeft={5}
-                      >
-                        Visits
-                      </Typography>
-                      <Box display={'flex'} alignItems={'center'}>
-                        <Paper
-                          sx={{
-                            width: '15px',
-                            height: '15px',
-                            borderRadius: '50%',
-                            backgroundColor: '#0074D9',
-                            marginRight: 2
-                          }}
-                        ></Paper>
-                        <Typography marginRight={2}>Restaurants</Typography>
-                        <Paper
-                          sx={{
-                            width: '15px',
-                            height: '15px',
-                            borderRadius: '50%',
-                            backgroundColor: '#FF9920',
-                            marginRight: 2
-                          }}
-                        ></Paper>
-                        <Typography marginRight={2}>Cafe</Typography>
-                        <Paper
-                          sx={{
-                            width: '15px',
-                            height: '15px',
-                            borderRadius: '50%',
-                            backgroundColor: '#7DDC97',
-                            marginRight: 2
-                          }}
-                        ></Paper>
-                        <Typography marginRight={2}>Food Truck</Typography>
-                        <Paper
-                          sx={{
-                            width: '15px',
-                            height: '15px',
-                            borderRadius: '50%',
-                            backgroundColor: '#FF5959',
-                            marginRight: 2
-                          }}
-                        ></Paper>
-                        <Typography marginRight={2}>Hotel</Typography>
-                      </Box>
+                      <Grid container spacing={1}>
+                        <Grid item xs={12} lg={6}>
+                          <Typography
+                            fontWeight={'bold'}
+                            textAlign={'left'}
+                            fontSize={'20px'}
+                            marginBottom={3}
+                            marginLeft={5}
+                          >
+                            Visits
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} lg={6}>
+                          <Box
+                            display={'flex'}
+                            justifyContent={'end'}
+                            alignItems={'center'}
+                          >
+                            <Paper
+                              sx={{
+                                width: '15px',
+                                height: '15px',
+                                borderRadius: '50%',
+                                backgroundColor: '#0074D9',
+                                marginRight: 1
+                              }}
+                            ></Paper>
+                            <Typography marginRight={1}>Restaurants</Typography>
+                            <Paper
+                              sx={{
+                                width: '15px',
+                                height: '15px',
+                                borderRadius: '50%',
+                                backgroundColor: '#FF9920',
+                                marginRight: 1
+                              }}
+                            ></Paper>
+                            <Typography marginRight={1}>Cafe</Typography>
+                            <Paper
+                              sx={{
+                                width: '15px',
+                                height: '15px',
+                                borderRadius: '50%',
+                                backgroundColor: '#7DDC97',
+                                marginRight: 1
+                              }}
+                            ></Paper>
+                            <Typography marginRight={1}>Food Truck</Typography>
+                            <Paper
+                              sx={{
+                                width: '15px',
+                                height: '15px',
+                                borderRadius: '50%',
+                                backgroundColor: '#FF5959',
+                                marginRight: 1
+                              }}
+                            ></Paper>
+                            <Typography marginRight={1}>Hotel</Typography>
+                          </Box>
+                        </Grid>
+                      </Grid>
                     </Box>
                     <div style={{ width: '100%', height: 430 }}>
                       <ResponsiveContainer>

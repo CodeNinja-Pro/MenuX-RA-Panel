@@ -215,36 +215,55 @@ const LabelsMenu = () => {
                 justifyContent={'space-between'}
                 alignItems={'center'}
               >
-                <Typography fontWeight={'bold'} fontSize={'22px'}>
-                  Labels
-                </Typography>
+                <Grid container>
+                  <Grid item xs={6} lg={7}>
+                    <Typography
+                      textAlign={'left'}
+                      marginLeft={2}
+                      fontWeight={'bold'}
+                      fontSize={'22px'}
+                    >
+                      Labels
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    lg={2}
+                    display={'flex'}
+                    alignItems={'center'}
+                  >
+                    <Button
+                      variant='contained'
+                      onClick={addtoggle}
+                      sx={{ marginBottom: '15px' }}
+                    >
+                      Create a new label
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} lg={3}>
+                    <TextField
+                      fullWidth
+                      value={searchField}
+                      onChange={e => setSearchField(e.target.value)}
+                      id='outlined-start-adornment'
+                      sx={{ marginBottom: '15px' }}
+                      placeholder='Search'
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <SearchOutlinedIcon />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
+                </Grid>
                 <Box
                   display={'flex'}
                   justifyContent={'space-between'}
                   alignItems={'center'}
-                >
-                  <Button
-                    variant='contained'
-                    onClick={addtoggle}
-                    sx={{ marginBottom: '15px', marginRight: '20px' }}
-                  >
-                    Create a new label
-                  </Button>
-                  <TextField
-                    value={searchField}
-                    onChange={e => setSearchField(e.target.value)}
-                    id='outlined-start-adornment'
-                    sx={{ marginBottom: '15px', width: '40ch' }}
-                    placeholder='Search'
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <SearchOutlinedIcon />
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Box>
+                ></Box>
               </Box>
               {user?.type == 'kitchen-admin' ? (
                 <>
@@ -269,7 +288,11 @@ const LabelsMenu = () => {
       </Row>
       <Dialog
         open={addModal}
-        onClose={() => setAddModal(false)}
+        onClose={() => {
+          setAddModal(false)
+          setLabelImageFile([])
+          setLabelImage('')
+        }}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >

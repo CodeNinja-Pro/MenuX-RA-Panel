@@ -18,7 +18,7 @@ export default function TextFieldUpdateForm (props) {
   }
   return (
     <>
-      <Grid container m={1} display={'flex'} alignItems={'center'}>
+      <Grid container marginBottom={1} display={'flex'} alignItems={'center'}>
         <Grid item xs={4}>
           <Typography textAlign={'left'}>{props.title}</Typography>
         </Grid>

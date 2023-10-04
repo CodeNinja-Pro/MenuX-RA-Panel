@@ -14,13 +14,14 @@ export default function SidebarDonut (props) {
       >
         {labels?.map((label, index) => (
           <Grid container spacing={1}>
-            <Grid item xs={4}>
-              <Box
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                flexDirection={'column'}
-              >
+            <Grid
+              item
+              xs={4}
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Box display={'flex'} flexDirection={'column'}>
                 <Typography>{label}</Typography>
                 <Box>
                   <Paper

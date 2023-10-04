@@ -337,11 +337,7 @@ export default function AccountSetting () {
               <TextFieldForm title={'Street'} />
               <TextFieldForm title={'City'} />
               <TextFieldForm title={'Country'} />
-              <Button
-                variant='contained'
-                sx={{ m: 1, height: '40px' }}
-                fullWidth
-              >
+              <Button variant='contained' sx={{ height: '40px' }} fullWidth>
                 Save
               </Button>
             </Grid>
@@ -353,14 +349,13 @@ export default function AccountSetting () {
           <Grid container spacing={2}>
             <Grid item xs={12} lg={8}>
               <Typography
-                marginLeft={'10px'}
                 textAlign={'left'}
                 fontWeight={'bold'}
                 fontSize={'20px'}
               >
                 Privacy and Security
               </Typography>
-              <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+              <FormControl fullWidth variant='outlined'>
                 <FormHelperText
                   style={{ fontSize: '15px' }}
                   id='outlined-weight-helper-text'
@@ -387,7 +382,7 @@ export default function AccountSetting () {
                     sendVerificationCode()
                   }
                 }}
-                sx={{ m: 1, height: '40px' }}
+                sx={{ height: '40px' }}
                 fullWidth
               >
                 Change Password
@@ -514,11 +509,7 @@ export default function AccountSetting () {
                 setSocialInfo={onChangeSocialAccount}
                 title={'LinkTree'}
               />
-              <Button
-                variant='contained'
-                sx={{ m: 1, height: '40px' }}
-                fullWidth
-              >
+              <Button variant='contained' sx={{ height: '40px' }} fullWidth>
                 Save
               </Button>
             </Grid>

@@ -137,7 +137,7 @@ export default function CreatePopup () {
                 <CardContent>
                   <Row>
                     <Col sm='6' lg={{ size: 4 }}>
-                      <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                      <FormControl fullWidth variant='outlined'>
                         <FormHelperText
                           style={{ fontSize: '18px' }}
                           id='outlined-weight-helper-text'
@@ -155,7 +155,7 @@ export default function CreatePopup () {
                           onChange={e => setHeading(e.target.value)}
                         />
                       </FormControl>
-                      <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                      <FormControl fullWidth variant='outlined'>
                         <FormHelperText
                           style={{ fontSize: '18px' }}
                           id='outlined-weight-helper-text'
@@ -173,7 +173,7 @@ export default function CreatePopup () {
                           onChange={e => setText(e.target.value)}
                         />
                       </FormControl>
-                      <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+                      <FormControl fullWidth variant='outlined'>
                         <FormHelperText
                           style={{ fontSize: '18px' }}
                           id='outlined-weight-helper-text'
@@ -193,7 +193,7 @@ export default function CreatePopup () {
                         />
                       </FormControl>
                       <Button
-                        sx={{ margin: 1, marginTop: 3 }}
+                        sx={{ marginTop: 3 }}
                         fullWidth
                         variant='contained'
                         disabled={!heading || !text || !delay || !bannerImage}
@@ -214,7 +214,13 @@ export default function CreatePopup () {
                     </Col>
                     <Col sm='6' lg={{ size: 3, offset: 2 }}>
                       <p>Upload Banner</p>
-                      <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
                         <form
                           id='form-file-upload'
                           onDragEnter={handleDrag}
@@ -271,16 +277,16 @@ export default function CreatePopup () {
                             />
                           )}
                         </form>
-                        <IconButton
-                          onClick={() => {
-                            setBannerImage('')
-                            setBannerFile({})
-                          }}
-                          style={{ marginTop: '-20px' }}
-                        >
-                          <CachedIcon />
-                        </IconButton>
                       </div>
+                      <IconButton
+                        onClick={() => {
+                          setBannerImage('')
+                          setBannerFile({})
+                        }}
+                        style={{ marginTop: '-20px' }}
+                      >
+                        <CachedIcon />
+                      </IconButton>
                     </Col>
                   </Row>
                 </CardContent>

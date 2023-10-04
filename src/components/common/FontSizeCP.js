@@ -33,7 +33,8 @@ export default function FontSizeCP (props) {
         value={props.size}
         label='Size'
         onChange={props.setSize}
-        sx={{ width: 300 }}
+        fullWidth
+        // sx={{ width: 300 }}
       >
         {fonts.map(font => (
           <MenuItem value={font.value}>{font.name}</MenuItem>

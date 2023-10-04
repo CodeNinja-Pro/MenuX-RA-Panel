@@ -25,14 +25,7 @@ export default function Coupons () {
           <div className='col px-0'>
             <Card sx={{ boxShadow: 'none' }}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+                <Grid item xs={12}>
                   <Grid
                     item
                     xs={12}
@@ -44,25 +37,28 @@ export default function Coupons () {
                       fontWeight={'bold'}
                       marginTop={'10px'}
                       fontSize={'25px'}
+                      marginLeft={3}
                     >
                       Coupons
                     </Typography>
-                    {!addCP && (
-                      <Button
-                        onClick={() => setAddCP(true)}
-                        variant='contained'
-                      >
-                        Add Coupon
-                      </Button>
-                    )}
-                    {addCP && (
-                      <Button
-                        variant='outlined'
-                        onClick={() => setAddCP(false)}
-                      >
-                        Back
-                      </Button>
-                    )}
+                    <Box marginRight={3} marginTop={1}>
+                      {!addCP && (
+                        <Button
+                          onClick={() => setAddCP(true)}
+                          variant='contained'
+                        >
+                          Add Coupon
+                        </Button>
+                      )}
+                      {addCP && (
+                        <Button
+                          variant='outlined'
+                          onClick={() => setAddCP(false)}
+                        >
+                          Back
+                        </Button>
+                      )}
+                    </Box>
                   </Grid>
 
                   <Grid item xs={12} marginTop={2}>

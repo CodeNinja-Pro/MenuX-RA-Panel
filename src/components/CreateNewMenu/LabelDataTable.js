@@ -139,23 +139,24 @@ function LabelDataTable (props) {
                         />
                       </Box>
                     </TableCell>
-                    <TableCell align='center'>
-                      <Button
-                        variant='contained'
-                        sx={{ marginRight: '20px' }}
-                        onClick={() => props.edittoggle(labelData)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant='contained'
-                        color='error'
-                        onClick={() =>
-                          dispatch(props.deleteLabel(labelData.id))
-                        }
-                      >
-                        Delete
-                      </Button>
+                    <TableCell align='center' width={'20%'}>
+                      <Box display={'flex'} justifyContent={'space-around'}>
+                        <Button
+                          variant='contained'
+                          onClick={() => props.edittoggle(labelData)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant='contained'
+                          color='error'
+                          onClick={() =>
+                            dispatch(props.deleteLabel(labelData.id))
+                          }
+                        >
+                          Delete
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 )

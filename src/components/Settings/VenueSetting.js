@@ -107,11 +107,10 @@ export default function VenueSetting () {
                 justifyContent={'space-between'}
                 alignItems={'center'}
               >
-                <Typography>Selected Currency</Typography>
+                <Typography textAlign={'left'}>Selected Currency</Typography>
                 <Select
                   labelId='demo-simple-select-label'
                   id='demo-simple-select'
-                  sx={{ width: '150px' }}
                   defaultValue={'USD'}
                 >
                   <MenuItem value={'USD'}>USD</MenuItem>
@@ -134,29 +133,33 @@ export default function VenueSetting () {
       <Card sx={{ marginTop: '15px' }}>
         <CardContent>
           <Grid container spacing={2}>
-            <Grid item margin={1}>
-              <Typography fontWeight={'bold'} fontSize={'20px'}>
+            <Grid item xs={12} margin={1}>
+              <Typography
+                textAlign={'left'}
+                fontWeight={'bold'}
+                fontSize={'20px'}
+              >
                 Fees
               </Typography>
             </Grid>
-            <Grid
-              margin={1}
-              item
-              xs={11}
-              display={'flex'}
-              justifyContent={'space-between'}
-              alignItems={'center'}
-              spacing={1}
-            >
-              <Typography>{'Fee Name'}</Typography>
-              <TextField placeholder={'$2.50'}></TextField>
+            <Grid item xs={12} lg={6} display={'flex'} alignItems={'center'}>
+              <Typography marginRight={1}>{'Fee Name'}</Typography>
+              <TextField
+                sx={{ marginRight: 1 }}
+                placeholder={'$2.50'}
+              ></TextField>
               <TextField placeholder={'2.9%'}></TextField>
-              <Typography>Max</Typography>
-              <TextField placeholder={'$20'}></TextField>
+            </Grid>
+            <Grid item xs={12} lg={6} display={'flex'} alignItems={'center'}>
+              <Typography marginRight={1}>Max</Typography>
+              <TextField
+                sx={{ marginRight: 1 }}
+                placeholder={'$20'}
+              ></TextField>
               <Typography>Mandatory</Typography>
               <Switch inputProps={'aria-label'} defaultChecked></Switch>
             </Grid>
-            <Grid item xs={4} margin={1}>
+            <Grid item xs={12} lg={4} margin={1}>
               <Button variant='contained' fullWidth>
                 Create a new fee
               </Button>

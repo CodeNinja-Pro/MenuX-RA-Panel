@@ -17,7 +17,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  DialogContentText
+  DialogContentText,
+  Grid
 } from '@mui/material'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -96,36 +97,50 @@ const TabsMenu = () => {
                 justifyContent={'space-between'}
                 alignItems={'center'}
               >
-                <Typography fontWeight={'bold'} fontSize={'22px'}>
-                  Tags
-                </Typography>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                >
-                  <Button
-                    variant='contained'
-                    onClick={addtoggle}
-                    sx={{ marginBottom: '15px', marginRight: '20px' }}
+                <Grid container>
+                  <Grid item xs={9} lg={7}>
+                    <Typography
+                      textAlign={'left'}
+                      marginLeft={1}
+                      fontWeight={'bold'}
+                      fontSize={'22px'}
+                    >
+                      Tags
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    lg={2}
+                    display={'flex'}
+                    alignItems={'center'}
                   >
-                    Add Tag
-                  </Button>
-                  <TextField
-                    value={searchField}
-                    onChange={e => setSearchField(e.target.value)}
-                    id='outlined-start-adornment'
-                    sx={{ marginBottom: '15px', width: '40ch' }}
-                    placeholder='Search by tab name.'
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <SearchOutlinedIcon />
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Box>
+                    <Button
+                      variant='contained'
+                      onClick={addtoggle}
+                      sx={{ marginBottom: '15px' }}
+                    >
+                      Add Tag
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} lg={3}>
+                    <TextField
+                      fullWidth
+                      value={searchField}
+                      onChange={e => setSearchField(e.target.value)}
+                      id='outlined-start-adornment'
+                      sx={{ marginBottom: '15px' }}
+                      placeholder='Search by tab name.'
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <SearchOutlinedIcon />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
               {user?.type == 'kitchen-admin' ? (
                 <>

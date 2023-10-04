@@ -242,11 +242,12 @@ export default function RequestsTable () {
         display={'flex'}
         justifyContent={'start'}
         marginTop={'20px'}
+        marginLeft={2}
       >
         <TextField
           id='outlined-start-adornment'
           placeholder='Search by Name, Email and Gender.'
-          sx={{ width: '400px' }}
+          sx={{ width: '300px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{
@@ -259,7 +260,7 @@ export default function RequestsTable () {
         />
       </Grid>
       <Grid item xs={12} marginTop={2}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
           <TableContainer>
             <Table aria-labelledby='tableTitle'>
               <EnhancedTableHead

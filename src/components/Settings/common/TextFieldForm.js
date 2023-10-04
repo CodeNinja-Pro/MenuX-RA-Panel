@@ -4,7 +4,7 @@ import { FormControl, FormHelperText, OutlinedInput } from '@mui/material'
 export default function TextFieldForm (props) {
   return (
     <>
-      <FormControl fullWidth sx={{ m: 1 }} variant='outlined'>
+      <FormControl fullWidth variant='outlined'>
         <FormHelperText
           style={{ fontSize: '15px' }}
           id='outlined-weight-helper-text'

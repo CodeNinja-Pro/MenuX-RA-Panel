@@ -21,7 +21,6 @@ import {
   Divider,
   OutlinedInput
 } from '@mui/material'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import { ThemeMain } from '../components/common/Theme'
@@ -107,14 +106,7 @@ export default function StaffSection () {
           <Container fluid>
             <Card sx={{ boxShadow: 'none' }}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+                <Grid item xs={12}>
                   <Grid
                     item
                     xs={12}
@@ -126,6 +118,8 @@ export default function StaffSection () {
                       fontWeight={'bold'}
                       marginTop={'10px'}
                       fontSize={'25px'}
+                      textAlign={'left'}
+                      marginLeft={2}
                     >
                       Total Users
                     </Typography>
@@ -144,7 +138,7 @@ export default function StaffSection () {
                         Assign Role
                       </Button>
                       <Link to='/admin/create-role'>
-                        <Button variant='contained'>
+                        <Button sx={{ marginRight: 2 }} variant='contained'>
                           <AddOutlinedIcon />
                           Create Role
                         </Button>
@@ -152,7 +146,7 @@ export default function StaffSection () {
                     </Box>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography textAlign={'left'}>
+                    <Typography marginLeft={2} textAlign={'left'}>
                       Find all of your company's administrator accounts and
                       their associate Priviligies.
                     </Typography>
@@ -162,25 +156,6 @@ export default function StaffSection () {
                       user.role === 'staff' && disableOnTrue(sectionPermission)
                     }
                   >
-                    <Grid
-                      item
-                      xs={12}
-                      display={'flex'}
-                      justifyContent={'start'}
-                      marginTop={'20px'}
-                    >
-                      <TextField
-                        id='outlined-start-adornment'
-                        placeholder='Search'
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position='start'>
-                              <SearchOutlinedIcon />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                    </Grid>
                     <Grid item xs={12} marginTop={2}>
                       <StaffTable />
                     </Grid>

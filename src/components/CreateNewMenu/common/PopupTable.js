@@ -153,6 +153,7 @@ const PopupTable = () => {
             justifyContent={'start'}
             marginTop={'20px'}
             marginBottom={2}
+            marginLeft={3}
           >
             <TextField
               id='outlined-start-adornment'

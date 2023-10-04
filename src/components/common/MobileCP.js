@@ -64,6 +64,7 @@ function MyApp (props) {
   const colorMode = React.useContext(ColorModeContext)
 
   const styles = useStyles()
+  const width = props.width
 
   // Extract the red, green, and blue components
   const red = parseInt(props.style.categoryTextColor.substring(1, 3), 16)
@@ -75,13 +76,13 @@ function MyApp (props) {
       {/* <ThemeProvider theme={ThemeMain}> */}
       <Card
         sx={{
-          width: '400px',
+          width: { width },
           marginBottom: '30px',
           border: 'solid',
           borderWidth: '15px',
           borderRadius: '70px',
           borderColor: 'black',
-          height: '730px'
+          height: '700px'
         }}
       >
         <CardActionArea disableRipple>
@@ -725,6 +726,7 @@ function MyApp (props) {
 
 export default function MobileCP (props) {
   const style = props.theme
+  const width = props.width
 
   const [mode, setMode] = React.useState('light')
 
@@ -758,7 +760,7 @@ export default function MobileCP (props) {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <MyApp style={style} />
+        <MyApp width={width} style={style} />
       </ThemeProvider>
     </ColorModeContext.Provider>
   )

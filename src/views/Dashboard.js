@@ -373,17 +373,19 @@ export default function Dashboard () {
                       Revenue Breakdown
                     </Typography>
                     <Typography fontWeight={'bold'}>$2540000</Typography>
-                    <Box marginLeft={-3} sx={{ width: '100%' }}>
+                    <Box sx={{ width: '100%' }}>
                       <DonutChart
                         options={revenueByItems.options}
                         series={revenueByItems.series}
                       />
                     </Box>
-                    <SidebarDonut
-                      options={revenueByItems.labels}
-                      series={revenueByItems.series}
-                      colors={revenueByItems.colors}
-                    />
+                    <Box marginLeft={1}>
+                      <SidebarDonut
+                        options={revenueByItems.labels}
+                        series={revenueByItems.series}
+                        colors={revenueByItems.colors}
+                      />
+                    </Box>
                   </CardContent>
                 </Card>
               </Grid>

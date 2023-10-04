@@ -45,8 +45,8 @@ export default function ColorPickerCP (props) {
   return (
     <>
       <ThemeProvider theme={ThemeMain}>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <FormControl sx={{ m: 1, width: '25ch' }} variant='outlined'>
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'flex-end' }}>
+          <FormControl sx={{ m: 1 }} variant='outlined'>
             <FormHelperText
               style={{ fontSize: '15px' }}
               id='outlined-weight-helper-text'
@@ -54,6 +54,7 @@ export default function ColorPickerCP (props) {
               {props.title}
             </FormHelperText>
             <OutlinedInput
+              fullWidth
               id='outlined-adornment-weight'
               aria-describedby='outlined-weight-helper-text'
               inputProps={{

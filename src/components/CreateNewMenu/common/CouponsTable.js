@@ -144,7 +144,8 @@ const CouponsTable = () => {
             xs={12}
             display={'flex'}
             justifyContent={'start'}
-            marginTop={'20px'}
+            marginLeft={3}
+            marginTop={2}
             marginBottom={2}
           >
             <TextField

@@ -245,8 +245,8 @@ export default function CustomerTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email and Gender.'
-          sx={{ width: '400px' }}
+          placeholder='Search'
+          sx={{ width: '300px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{

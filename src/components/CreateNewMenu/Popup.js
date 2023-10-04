@@ -25,14 +25,7 @@ export default function Popup () {
           <div className='col px-0'>
             <Card sx={{ boxShadow: 'none' }}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+                <Grid item xs={12}>
                   <Grid
                     item
                     xs={12}
@@ -41,28 +34,32 @@ export default function Popup () {
                     alignItems={'center'}
                   >
                     <Typography
+                      textAlign={'left'}
+                      marginLeft={3}
                       fontWeight={'bold'}
                       marginTop={'10px'}
                       fontSize={'25px'}
                     >
                       Marketing Banner
                     </Typography>
-                    {addCP && (
-                      <Button
-                        onClick={() => setAddCP(false)}
-                        variant='outlined'
-                      >
-                        Back
-                      </Button>
-                    )}
-                    {!addCP && (
-                      <Button
-                        onClick={() => setAddCP(true)}
-                        variant='contained'
-                      >
-                        Add Marketing Banner
-                      </Button>
-                    )}
+                    <Box marginRight={3} marginTop={2}>
+                      {addCP && (
+                        <Button
+                          onClick={() => setAddCP(false)}
+                          variant='outlined'
+                        >
+                          Back
+                        </Button>
+                      )}
+                      {!addCP && (
+                        <Button
+                          onClick={() => setAddCP(true)}
+                          variant='contained'
+                        >
+                          Add Marketing Banner
+                        </Button>
+                      )}
+                    </Box>
                   </Grid>
 
                   <Grid item xs={12} marginTop={2}>

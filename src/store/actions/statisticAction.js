@@ -1,17 +1,11 @@
 import firebase from '../../config/firebase'
 import { toast } from 'react-toastify'
-import algoliasearch from 'algoliasearch'
-import { createNullCache } from '@algolia/cache-common'
 import {
   sortCategoryByView,
   sortItemByView,
   boughtSortItems
 } from '../../Statistical/generalStatistics'
 import { reviews } from '../../Statistical/reviewData'
-
-const client = algoliasearch('99PJ9S7CN9', '4dd3b464870ca480ed3bbbe36ef739cd', {
-  responsesCache: createNullCache()
-})
 
 export const getActiveMerchants = () => async dispatch => {
   try {

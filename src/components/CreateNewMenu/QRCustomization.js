@@ -210,11 +210,11 @@ const QRCustomization = () => {
   return (
     <>
       <Row className='mt-2'>
-        <Col sm='12' lg='8' style={{ paddingLeft: '0px', paddingRight: '0px' }}>
+        <Col sm='12' xl='8'>
           <Card className='shadow '>
             <CardHeader>
               <Row>
-                <Col sm='6' md={{ size: 4 }}>
+                <Col xs='5' lg={{ size: 4 }}>
                   <ColorPickerCP
                     title={'QR Color'}
                     currentColor={pointColor}
@@ -228,7 +228,7 @@ const QRCustomization = () => {
                     colorChange={backgroundColorChange}
                   />
                 </Col>
-                <Col sm='6' md={{ size: 3, offset: 2 }}>
+                <Col xs='7' lg={{ size: 3, offset: 2 }}>
                   <p>App Logo</p>
                   <div>
                     <form
@@ -377,7 +377,7 @@ const QRCustomization = () => {
             </CardHeader>
           </Card>
         </Col>
-        <Col sm='12' lg='4' style={{ paddingRight: '0px' }}>
+        <Col sm='12' xl='4'>
           <Card className='shadow' style={{ height: '100%' }}>
             <CardHeader style={{ height: '100%' }}>
               <Typography

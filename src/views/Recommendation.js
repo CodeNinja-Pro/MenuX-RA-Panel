@@ -151,25 +151,33 @@ function Recommendation () {
           <Container fluid>
             <Row>
               <Col>
-                <Card sx={{ height: '410px', boxShadow: 'none' }}>
-                  <div>
+                {window.innerWidth > 768 ? (
+                  <Card
+                    sx={{
+                      width: '100%',
+                      height: `400px`,
+                      boxShadow: 'none'
+                    }}
+                  >
                     <iframe
                       src={process.env.PUBLIC_URL + '/Animation.html'}
                       title={'Animation'}
                       style={{
-                        width: '1400px',
-                        height: '410px'
+                        width: '100%',
+                        height: '100%'
                       }}
                     ></iframe>
-                  </div>
-                </Card>
+                  </Card>
+                ) : (
+                  ''
+                )}
               </Col>
             </Row>
             <Box sx={user.role === 'staff' && disableOnTrue(sectionPermission)}>
               <Row style={{ marginTop: '20px' }}>
                 <Col xs={12} md={9}></Col>
                 <Col
-                  xs={12}
+                  xs={3}
                   md={1}
                   style={{ display: 'flex', alignItems: 'flex-end' }}
                 >
@@ -183,11 +191,12 @@ function Recommendation () {
                   </Button>
                 </Col>
                 <Col
-                  xs={12}
+                  xs={9}
                   md={2}
                   style={{
                     display: 'flex',
-                    alignItems: 'flex-end',
+                    justifyContent: 'end',
+                    alignItems: 'center',
                     width: '100%'
                   }}
                 >

@@ -28,12 +28,17 @@ import {
   FormHelperText,
   OutlinedInput,
   DialogContentText,
-  Select
+  Select,
+  Grid,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+
 import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteStaff,
@@ -148,6 +153,26 @@ const StaffTable = () => {
 
   return (
     <Card sx={{ boxShadow: 'none' }}>
+      <Grid
+        item
+        xs={12}
+        display={'flex'}
+        justifyContent={'start'}
+        marginBottom={2}
+        marginLeft={2}
+      >
+        <TextField
+          id='outlined-start-adornment'
+          placeholder='Search'
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchOutlinedIcon />
+              </InputAdornment>
+            )
+          }}
+        />
+      </Grid>
       <Divider />
       <TableContainer>
         <Table aria-labelledby='tableTitle'>
@@ -285,7 +310,6 @@ const StaffTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Dialog
         open={deleteModal}
         onClose={() => setDeleteModal(false)}
@@ -313,7 +337,6 @@ const StaffTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={modalFlag}
         onClose={() => setModalFlag(false)}

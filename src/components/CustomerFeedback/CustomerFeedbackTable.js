@@ -245,8 +245,8 @@ export default function CustomerFeedbackTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email, Title and Feedback.'
-          sx={{ width: '450px' }}
+          placeholder='Search'
+          sx={{ width: '300px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{

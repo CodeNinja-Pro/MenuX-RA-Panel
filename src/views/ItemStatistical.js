@@ -106,7 +106,8 @@ export default function ItemStatistical () {
                     <Box
                       style={{
                         display: 'flex',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                       }}
                     >
                       <TextField
@@ -121,10 +122,12 @@ export default function ItemStatistical () {
                           )
                         }}
                       />
-                      <PickDateRange
-                        setDateState={handleDateChange}
-                        datestate={dateState}
-                      />
+                      <Box width={300}>
+                        <PickDateRange
+                          setDateState={handleDateChange}
+                          datestate={dateState}
+                        />
+                      </Box>
                     </Box>
                     <ItemStatisticData />
                   </Box>

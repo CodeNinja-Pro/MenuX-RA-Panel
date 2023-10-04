@@ -44,19 +44,13 @@ const Requests = () => {
           <Container className='mt--7 mb-5' fluid>
             <Card sx={{ boxShadow: 'none' }}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+                <Grid item xs={12}>
                   <Grid item xs={12}>
                     <Typography
                       textAlign={'left'}
                       fontWeight={'bold'}
-                      marginTop={'10px'}
+                      marginTop={1}
+                      marginLeft={2}
                       fontSize={'25px'}
                     >
                       Requests

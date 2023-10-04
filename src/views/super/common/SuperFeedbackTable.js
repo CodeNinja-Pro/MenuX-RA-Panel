@@ -49,6 +49,22 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+import { makeStyles } from '@mui/styles'
+
+const useStyles = makeStyles(() => ({
+  textField: {
+    width: '100%',
+    maxWidth: '400px',
+
+    '@media (max-width: 600px)': {
+      maxWidth: '300px'
+    },
+
+    '@media (min-width: 1280px)': {
+      maxWidth: '500px'
+    }
+  }
+}))
 
 const style = {
   position: 'absolute',
@@ -295,6 +311,7 @@ export default function SuperStaffTable () {
 
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
+  const classes = useStyles()
 
   return (
     <>
@@ -310,6 +327,7 @@ export default function SuperStaffTable () {
           id='outlined-start-adornment'
           placeholder='Search by Name, Email, Type, Score and Feedback.'
           value={searchValue}
+          className={classes.textField}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{
             startAdornment: (

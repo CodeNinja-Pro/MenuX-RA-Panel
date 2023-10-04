@@ -93,11 +93,11 @@ const RecommendTable = ({ tableItems = [] }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align='center'>Subject Matter</TableCell>
+                <TableCell align='center'>Subject</TableCell>
                 <TableCell align='center'>Image</TableCell>
-                <TableCell align='center'>Recommendation Title</TableCell>
+                <TableCell align='center'>Title</TableCell>
                 <TableCell align='center'>Date Generated</TableCell>
-                <TableCell align='center'>Explanation</TableCell>
+                <TableCell align='center'>Recommendation Explanation</TableCell>
                 <TableCell align='center'>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -135,8 +135,8 @@ const RecommendTable = ({ tableItems = [] }) => {
                         }}
                       >
                         <Typography color='text.primary'>
-                          {tableItem.explanation.length > 150
-                            ? tableItem.explanation.slice(0, 150) + '...'
+                          {tableItem.explanation.length > 100
+                            ? tableItem.explanation.slice(0, 100) + '...'
                             : tableItem.explanation}
                         </Typography>
                       </TableCell>
@@ -153,7 +153,6 @@ const RecommendTable = ({ tableItems = [] }) => {
                           color='primary'
                           onClick={() => setEditModal(true)}
                           sx={{
-                            marginLeft: '10px',
                             boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)'
                           }}
                         >
