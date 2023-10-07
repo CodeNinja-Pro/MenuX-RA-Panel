@@ -535,7 +535,7 @@ export const getMenu =
   }
 
 export const editMenu =
-  (id, payload, onSuccess = () => {}, imagesToRemove, videosToRemove) =>
+  (id, payload, onSuccess = () => {}, imagesToRemove) =>
   async dispatch => {
     dispatch({
       type: 'ADD_MENU_LOADER',
@@ -545,11 +545,7 @@ export const editMenu =
     imagesToRemove?.map(url => {
       firebase.storage().refFromURL(url).delete()
     })
-    videosToRemove?.map(url => {
-      firebase.storage().refFromURL(url).delete()
-    })
     let uploadImages = []
-    let uploadVideos = []
     for (var image of payload.images) {
       if (image?.name) {
         let fileName = image?.name
@@ -562,29 +558,17 @@ export const editMenu =
         uploadImages.push(image)
       }
     }
-    for (var video of payload.videos) {
-      if (video?.name) {
-        let fileName = video?.name
-        let fileName1 = fileName.slice(fileName.lastIndexOf('.'))
-        let fileName2 = uuidv4() + fileName1.toLowerCase()
-        let storageRef = await firebase.storage().ref(fileName2).put(video)
-        let url = await storageRef.ref.getDownloadURL()
-        uploadVideos.push({ url })
-      } else {
-        uploadVideos.push(video)
-      }
-    }
+
     await firebase
       .firestore()
       .collection('menus')
       .doc(id)
-      .update({ ...payload, videos: uploadVideos, images: uploadImages })
+      .update({ ...payload, images: uploadImages })
       .then(() => {
         onSuccess({
           type: 'item',
           id: id,
-          ...payload, // Include all properties from the payload, including the updated images and videos
-          videos: uploadVideos,
+          ...payload,
           images: uploadImages
         })
         toast.success('Menu Updated', {
@@ -596,8 +580,7 @@ export const editMenu =
           type: 'UPDATE_MENU',
           payload: {
             id: id,
-            ...payload, // Include all properties from the payload, including the updated images and videos
-            videos: uploadVideos,
+            ...payload,
             images: uploadImages
           }
         })
@@ -740,7 +723,7 @@ export const addMenuNew = (payload, onSuccess) => async dispatch => {
   })
   try {
     const uploadImagesPromises = payload.images?.map(async image => {
-      compressImage(image)
+      // compressImage(image)
       const fileName = image?.name
       const fileName1 = fileName.slice(fileName.lastIndexOf('.'))
       const fileName2 = uuidv4() + fileName1.toLowerCase()
@@ -750,23 +733,13 @@ export const addMenuNew = (payload, onSuccess) => async dispatch => {
       return url
     })
 
-    // const uploadVideosPromises = payload.videos?.map(async video => {
-    //   const fileName = video?.name
-    //   const fileName1 = fileName.slice(fileName.lastIndexOf('.'))
-    //   const fileName2 = uuidv4() + fileName1.toLowerCase()
-    //   const storageRef = firebase.storage().ref(fileName2)
-    //   await storageRef.put(video)
-    //   const url = await storageRef.getDownloadURL()
-    //   return url
-    // })
-
     const uploadImages = await Promise.all(uploadImagesPromises)
     // const uploadVideos = await Promise.all(uploadVideosPromises)
 
     const newMenu = {
       ...payload,
       views: 0,
-      // videos: uploadVideos,
+      purchase: 0,
       images: uploadImages
     }
 

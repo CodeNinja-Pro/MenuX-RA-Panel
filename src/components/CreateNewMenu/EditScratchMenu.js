@@ -28,7 +28,8 @@ import {
   deleteMenu,
   rearrangeOrder,
   getLabels,
-  getParentMenuName
+  getParentMenuName,
+  getTabs
 } from '../../store/actions/MenuManagmentActions'
 
 import {
@@ -50,13 +51,28 @@ import {
   Divider,
   ListItemText,
   InputLabel,
-  StyledEngineProvider
+  StyledEngineProvider,
+  Tab,
+  Grid,
+  FormHelperText,
+  Switch,
+  FormControlLabel,
+  Input,
+  InputAdornment,
+  CardActionArea
 } from '@mui/material'
+
+import { TabContext, TabList, TabPanel } from '@mui/lab'
+
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
+import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 
 import { useTheme } from '@mui/material/styles'
 
 import { ThemeMain } from '../common/Theme'
+import MultipleSelectForm from './forms/MultipleSelectForm'
+import { FiCardContent, FiCardMedia } from '../common/CardBackground'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -88,8 +104,12 @@ const EditScratchMenu = () => {
   const history = useHistory()
   const { user, userPermissions } = useSelector(state => state.auth)
 
+  const [allLabels, setAllLabels] = useState([])
+  const [allTabs, setAllTabs] = useState([])
+
   const {
     labelsData,
+    tabsData,
     editLabelLoader,
     addMenuLoader,
     categoryLoader,
@@ -100,18 +120,31 @@ const EditScratchMenu = () => {
   const pathParts = window.location.href.split('/')
   const menuID = pathParts[pathParts.length - 1]
 
-  let labels = []
+  const [selectedTab, setSelectedTab] = useState('General Information')
+
+  const handleSelectedTab = (e, newValue) => {
+    setSelectedTab(newValue)
+  }
+
   useEffect(() => {
     dispatch(getLabels(user?.restaurantID))
+    dispatch(getTabs(user?.restaurantID))
     dispatch(getParentMenuName(menuID))
   }, [])
 
   useEffect(() => {
-    labelsData.map(label => {
-      labels.push(label.labelName)
+    const names = labelsData.map(label => {
+      return label.labelName
     })
-    console.log(labels)
+    setAllLabels(names)
   }, [labelsData])
+
+  useEffect(() => {
+    const names = tabsData.map(tab => {
+      return tab.tabName
+    })
+    setAllTabs(names)
+  }, [tabsData])
 
   const [selectedOption, setSelectedOption] = useState(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -125,30 +158,65 @@ const EditScratchMenu = () => {
   const [imagesToRemove, setImagesToRemove] = useState([])
   const [videosToRemove, setVideosToRemove] = useState([])
   const [saveAndAddMore, setSaveAndAddMore] = useState(false)
-  // Field for new Value
+
+  // General information for new item
   const [item, setItem] = useState('')
+  const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
-  const [labelGroup, setLabelGroup] = useState([])
-  const [itemTag, setItemTag] = useState('')
-  const [comments, setComments] = useState('')
   const [previewImages, setPreviewImages] = useState([])
+  const [labels, setLabels] = useState([])
+  const [tabs, setTabs] = useState([])
+  const [recommendations, setRecommendations] = useState('')
+  const [markAsSold, setMarkAsSold] = useState(false)
+
+  // Price options
+  const [topping, setTopping] = useState('')
+  const [variationName, setVariationName] = useState('')
+  const [mandatoryOption, setMandatoryOption] = useState('')
+  const [priceOptions, setPriceOptions] = useState([])
+  const [optionName, setOptionName] = useState('')
+  const [optionPrice, setOptionPrice] = useState('')
+
+  // COGS
+  const [costOfGoods, setCostOfGoods] = useState([])
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [itemName, setItemName] = useState('')
+  const [itemPrice, setItemPrice] = useState('')
+
+  const [labelGroup, setLabelGroup] = useState([])
   const [subItem, setSubItem] = useState('')
   const [subPrice, setSubPrice] = useState('')
   const [subCalories, setSubCalories] = useState('')
   const [Items, setItems] = useState([])
-  const [calories, setCalories] = useState('')
-  const [estimatedTime, setEstimatedTime] = useState('')
-  const [recommendations, setRecommendations] = useState([])
   const [secondTableItems, setSecondTableItems] = useState([])
 
   const [category, setCategory] = useState('')
   const [selectedOptions, setSelectedOptions] = useState([])
-  const [label, setLabel] = useState('')
-  const [videos, setVideos] = useState([])
   const [images, setImages] = useState([])
   const [menuItemCount, setMenuItemCount] = useState(0)
 
   const [editTitle, setEditTitle] = useState('')
+
+  const handleCostOfGoods = () => {
+    setCostOfGoods([
+      ...costOfGoods,
+      {
+        name: itemName,
+        price: itemPrice
+      }
+    ])
+    setItemName('')
+    setItemPrice('')
+    setTotalPrice(Number(totalPrice) + Number(itemPrice))
+  }
+
+  const getTotalPrice = () => {
+    let sum = 0
+    costOfGoods.map(item => {
+      sum += Number(item.price)
+    })
+    return Number(sum)
+  }
 
   const handleLabelChange = event => {
     const {
@@ -185,13 +253,8 @@ const EditScratchMenu = () => {
       setSecondTableItems(filterItems)
     }
   }
-  // const imagesHandleChange = (e) => {
-  //   const files = e.target.files;
-  //   const newImages = [...images, ...files];
-  //   setImages(newImages);
-  //   setPreviewImages(newImages.map((file) => URL.createObjectURL(file)));
-  // };
 
+  // Image handleChange Event
   const imagesHandleChange = e => {
     const files = e.target.files
     const newImages = []
@@ -233,48 +296,9 @@ const EditScratchMenu = () => {
     setPreviewImages([...previewImages, ...newPreviewImages])
   }
 
-  // const videosHandleChange = (e) => {
-  //   const files = e.target.files;
-  //   const validFormat = "video/mp4";
-  //   const maxSize = 10 * 1024 * 1024; // 10MB
-  //   const newVideos = [];
-  //   const newPreviewVideos = [];
-
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  //     const fileType = file.type;
-  //     const fileSize = file.size;
-
-  //     if (fileType !== validFormat) {
-  //       toast.error(
-  //         `Error: Invalid file format ${file?.name}. Please select an .mp4 video.`
-  //       );
-  //       // Perform your error handling or display a message to the user
-  //       continue; // Skip further processing for non-mp4 files
-  //     }
-
-  //     if (fileSize > maxSize) {
-  //       toast.error(
-  //         `Error: File ${file?.name} exceeds the maximum allowed size of 10MB. Please select a smaller video.`
-  //       );
-  //       // Perform your error handling or display a message to the user
-  //       continue; // Skip further processing for oversized files
-  //     }
-
-  //     newVideos.push(file);
-  //     newPreviewVideos.push(URL.createObjectURL(file));
-  //   }
-
-  //   setVideos([...videos, ...newVideos]);
-  //   setPreviewVideos([...previewVideos, ...newPreviewVideos]);
-  // };
-
   const handleChange = selectedOptions => {
     setSelectedOptions(selectedOptions)
   }
-  // const productOptions = menuData.map((menu) => {
-  //   return { value: `${menu.name}`, label: `${menu.name}` };
-  // });
 
   const subItemsClick = e => {
     e.preventDefault()
@@ -328,25 +352,29 @@ const EditScratchMenu = () => {
       })
     )
   }
+
   const addItemhandle = event => {
     event.preventDefault()
 
     let obj = {
-      order: menuItemCount,
-      name: item,
-      price: price,
-      comments,
-      calories,
-      itemTag: itemTag,
-      estimatedTime,
-      sizes: Items,
-      label: labelGroup || '',
-      images: images || [],
-      recommendations: recommendations,
-      subItems: secondTableItems,
       restaurantID: user.restaurantID,
       menuID,
-      categoriesID: category?.id || ''
+      categoriesID: category?.id || '',
+      order: menuItemCount,
+      item: item,
+      description: description,
+      price: price,
+      images: images || [],
+      labels: labels,
+      tabs: tabs,
+      recommendations: recommendations,
+      markAsSold: markAsSold,
+      topping: topping,
+      variationName: variationName,
+      mandatoryOption: mandatoryOption,
+      priceOptions: priceOptions,
+      costOfGoods: costOfGoods,
+      totalPrice: totalPrice
     }
 
     // Dispatch addMenu action here...
@@ -356,7 +384,6 @@ const EditScratchMenu = () => {
         const updatedCategoriesAndItems = [...categoriesAndItems]
         if (res.categoriesID) {
           // Find the matching category object using Array.find()
-          console.log(category)
           const categoryObj = updatedCategoriesAndItems.find(
             ele => ele.id === category.id
           )
@@ -380,20 +407,23 @@ const EditScratchMenu = () => {
       })
     )
   }
+
   const clearData = () => {
     setItem('')
-    setComments('')
+    setDescription('')
     setImages('')
-    setVideos('')
-    setLabel('')
-    setSelectedOptions([])
-    setItems([])
-    setCalories('')
-    setEstimatedTime('')
-    setCategory('')
     setPrice('')
-    setSubPrice('')
+    setLabels([])
+    setTabs([])
+    setRecommendations([])
+    setMarkAsSold(false)
+    setTopping('')
+    setVariationName('')
+    setMandatoryOption('')
+    setPriceOptions([])
     setPreviewImages([])
+    setCostOfGoods([])
+    setTotalPrice('')
   }
 
   const productOptions = []
@@ -442,58 +472,46 @@ const EditScratchMenu = () => {
 
   const setEditItem = (event, item) => {
     event.preventDefault()
-    setItem(item?.name)
+    setItem(item?.item)
     setPrice(item?.price)
-    setComments(item?.comments)
-    setImages(item?.images)
+    setDescription(item?.description)
+    setLabels(item?.labels)
+    setTabs(item?.tabs)
     setPreviewImages(item?.images)
-    setLabel(item?.label)
-    setItems(item?.sizes)
-    setItemTag(item?.itemTag)
-    setLabelGroup(item?.labelGroup)
-    setCalories(item?.calories)
-    setEstimatedTime(item?.estimatedTime)
-    setSecondTableItems(item?.subItems)
+    setRecommendations(item?.recommendations)
+    setMarkAsSold(item?.markAsSold)
+    setTopping(item?.topping)
+    setVariationName(item?.variationName)
+    setMandatoryOption(item?.mandatoryOption)
+    setPriceOptions(item?.priceOptions)
+    setCostOfGoods(item?.costOfGoods)
+    setTotalPrice(item?.totalPrice)
     setSelectedOption('Items')
     setCustomOffcanvas(true)
     setToEdit(item)
   }
+
   const updateItemHandle = event => {
     event.preventDefault()
 
-    if (!Items) {
-      toast.error('Add sub item', {
-        style: {
-          fontFamily: 'Poppins'
-        }
-      })
-      return
-    }
-    // if (!images || !previewImages) {
-    //   toast.error("Add atleast one Images");
-    //   return;
-    // }
-    // if (!videos || !previewVideos) {
-    //   toast.error("Add atleast one video");
-    //   return;
-    // }
-
     let obj = {
-      name: item,
-      comments,
-      price: price,
-      // category,
-      // inventory,
-      calories,
-      estimatedTime,
-      sizes: Items || [],
-      label: label || '',
-      images: images || [],
-      videos: videos || [],
-      subItems: secondTableItems || [],
       restaurantID: user.restaurantID,
       menuID,
-      categoriesID: toEdit?.categoriesID || ''
+      categoriesID: toEdit?.categoriesID || '',
+      item: item,
+      description: description,
+      price: price,
+      images: images || [],
+      labels: labels,
+      tabs: tabs,
+      recommendations: recommendations,
+      markAsSold: markAsSold,
+      topping: topping,
+      variationName: variationName,
+      mandatoryOption: mandatoryOption,
+      priceOptions: priceOptions,
+      costOfGoods: costOfGoods,
+      totalPrice: totalPrice
     }
 
     // Dispatch addMenu action here...
@@ -534,8 +552,7 @@ const EditScratchMenu = () => {
           setCategory('')
           setToEdit('')
         },
-        imagesToRemove,
-        videosToRemove
+        imagesToRemove
       )
     )
   }
@@ -712,11 +729,6 @@ const EditScratchMenu = () => {
                       }}
                     ></i>
                   </div>
-                  {/* {addMenuLoader ? (
-                    <div className='w-100 v-100 d-flex justify-content-center align-items-center py-5'>
-                      <Spinner className='text-primary'></Spinner>
-                    </div>
-                  ) : ( */}
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId='droppable'>
                       {(provided, snapshot) => (
@@ -908,7 +920,7 @@ const EditScratchMenu = () => {
                                                 <></>
                                               )}
                                               <h2 className='ml-3 mb-0'>
-                                                {ele.name?.toUpperCase()}
+                                                {ele.item?.toUpperCase()}
                                               </h2>
                                             </div>
 
@@ -973,65 +985,6 @@ const EditScratchMenu = () => {
                           </div>
                         </Col>
                       )}
-                      {/* <div>
-                        <div
-                          className='d-flex align-items-center p-3 mt-2 bg-white rounded w-100 mb-2 cursor-pointer float-right'
-                          onClick={() => {
-                            setSelectedOption('Items')
-                            // setItemofCategory(ele.categoryName);
-                            clearData()
-                            setToEdit('')
-                            setCustomOffcanvas(true)
-                            setCategory(ele)
-                          }}
-                        >
-                          <i className='fas fa-plus cursor-pointer pb-1'></i>
-                          <h3 className='ml-2 mb-0 '>
-                            {toEdit ? 'Edit Item' : 'Add Item'}
-                          </h3>
-                        </div>
-                      </div>
-                      {ele.items?.map(item => {
-                        return (
-                          <div style={{ marginLeft: '30px' }}>
-                            <div
-                              key={index}
-                              className='mt-2 shadow d-flex justify-content-between align-items-center p-3  shadow-sm rounded bg-white cursor-pointer '
-                              onClick={event => {
-                                setEditItem(event, item)
-                              }}
-                            >
-                              <div className='d-flex align-items-center '>
-                                <i className='fas fa-equals'></i>
-                                <img
-                                  src={
-                                    item?.images.length > 0
-                                      ? item?.images[0] instanceof File
-                                        ? URL.createObjectURL(item?.images[0])
-                                        : item?.images[0]
-                                      : Logo
-                                  }
-                                  height={50}
-                                  width={50}
-                                  className='ml-4 rounded'
-                                />
-                                <h2 className='ml-3 mb-0'>
-                                  {item?.categoryName?.toUpperCase()}
-                                </h2>
-                              </div>
-    
-                              <div className='d-flex bg-secondary rounded w-25 align-items-center border border-gray shadow-sm'>
-                                <p className='mb-0 text-dark px-2'> $ </p>
-                                <Input
-                                  className='bg-white text-dark'
-                                  disabled
-                                  value={item?.sizes[0]?.price || 'NaN'}
-                                ></Input>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })} */}
                     </>
                   )
                 })
@@ -1131,7 +1084,7 @@ const EditScratchMenu = () => {
                         {toEdit ? 'Edit Items' : 'Add Items'}
                       </Typography>
                     </div>
-                    <div className='p-4 '>
+                    {/* <div className='p-4 '>
                       <Box>
                         <Row>
                           <Col>
@@ -1406,11 +1359,6 @@ const EditScratchMenu = () => {
                                         handleRemove('subItems', index)
                                       }
                                     />
-                                    {/* <img
-                                      src={edit}
-                                      alt=''
-                                      className='mx-2 cursor-pointer'
-                                    /> */}
                                   </td>
                                 </tr>
                               )
@@ -1418,38 +1366,6 @@ const EditScratchMenu = () => {
                           </tbody>
                         </Table>
                         <Divider sx={{ marginBottom: '20px' }} />
-                        <Row>
-                          <Col>
-                            {/* <FormControl fullWidth sx={{ marginTop: '20px' }}>
-                              <Typography for='item-name' marginBottom={1}>
-                                Recommendation Product
-                              </Typography>
-                              <Select
-                                multiple
-                                value={recommendations}
-                                onChange={handleRecommendationChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                              >
-                                {recommendations.map(
-                                  (recommendation, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={recommendation}
-                                      style={getRecommendationStyles(
-                                        recommendation,
-                                        recommendations,
-                                        theme
-                                      )}
-                                    >
-                                      {recommendation}
-                                    </MenuItem>
-                                  )
-                                )}
-                              </Select>
-                            </FormControl> */}
-                          </Col>
-                        </Row>
                         <Row style={{ marginTop: '20px' }}>
                           <Col>
                             <FormControl>
@@ -1506,7 +1422,577 @@ const EditScratchMenu = () => {
                           </Col>
                         </Row>
                       </Box>
-                    </div>
+                    </div> */}
+
+                    <Box sx={{ width: '100%', typography: 'body1' }}>
+                      <TabContext value={selectedTab}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                          <TabList
+                            onChange={handleSelectedTab}
+                            aria-label='lab API tabs example'
+                          >
+                            <Tab
+                              label='General Information'
+                              value='General Information'
+                            />
+                            <Tab label='Price Options' value='Price Options' />
+                            <Tab label='COGS' value='COGS' />
+                          </TabList>
+                        </Box>
+                        <TabPanel value='General Information'>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Name
+                                </FormHelperText>
+                                <OutlinedInput
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  value={item}
+                                  onChange={e => setItem(e.target.value)}
+                                />
+                              </FormControl>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Description
+                                </FormHelperText>
+                                <OutlinedInput
+                                  multiline
+                                  rows={10}
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  value={description}
+                                  onChange={e => setDescription(e.target.value)}
+                                />
+                              </FormControl>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Price
+                                </FormHelperText>
+                                <OutlinedInput
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  endAdornment={
+                                    <InputAdornment position='end'>
+                                      $
+                                    </InputAdornment>
+                                  }
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  value={price}
+                                  type='number'
+                                  onChange={e => setPrice(e.target.value)}
+                                />
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography textAlign={'left'} marginLeft={1}>
+                                Images({previewImages.length}/5)
+                              </Typography>
+                              <Row className='overflow-auto'>
+                                {previewImages?.map((url, index) => (
+                                  <Col xs={4} className='mt-2 mb-2'>
+                                    <Card
+                                      key={index}
+                                      style={{ height: '140px' }}
+                                      sx={{
+                                        border: 'dashed',
+                                        borderWidth: '1px',
+                                        borderColor: '#0074D9',
+                                        boxShadow: 'none'
+                                      }}
+                                    >
+                                      <CardActionArea
+                                        disableRipple
+                                        sx={{ height: '100%' }}
+                                      >
+                                        <FiCardMedia
+                                          media='picture'
+                                          alt='Background'
+                                          image={url}
+                                          sx={{ height: '100%' }}
+                                        />
+                                        <FiCardContent>
+                                          {/* <i
+                                              className='fas fa-trash-alt p-2 border w-100 d-flex justify-content-center  cursor-pointer shadow-sm '
+                                              style={{ height: '100%' }}
+                                              onClick={() => {
+                                                setImagesToRemove(
+                                                  prevImagesToRemove => [
+                                                    ...prevImagesToRemove,
+                                                    url
+                                                  ]
+                                                )
+                                                setPreviewImages(
+                                                  prevPreviewImages =>
+                                                    prevPreviewImages.filter(
+                                                      image => image !== url
+                                                    )
+                                                )
+                                              }}
+                                            ></i> */}
+                                          <Box
+                                            display={'flex'}
+                                            justifyContent={'flex-start'}
+                                          >
+                                            <IconButton
+                                              sx={{ color: 'white' }}
+                                              onClick={() => {
+                                                setImagesToRemove(
+                                                  prevImagesToRemove => [
+                                                    ...prevImagesToRemove,
+                                                    url
+                                                  ]
+                                                )
+                                                setPreviewImages(
+                                                  prevPreviewImages =>
+                                                    prevPreviewImages.filter(
+                                                      image => image !== url
+                                                    )
+                                                )
+                                              }}
+                                            >
+                                              <RemoveCircleOutlineOutlinedIcon color='white' />
+                                            </IconButton>
+                                          </Box>
+                                        </FiCardContent>
+                                      </CardActionArea>
+                                    </Card>
+                                  </Col>
+                                ))}
+                                <Col xs={4} className='mt-2 mb-2'>
+                                  {previewImages.length < 5 ? (
+                                    <Card
+                                      style={{ height: '140px' }}
+                                      sx={{
+                                        border: 'dashed',
+                                        borderWidth: '1px',
+                                        borderColor: '#0074D9',
+                                        boxShadow: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        flexDirection: 'column'
+                                      }}
+                                    >
+                                      <CardContent sx={{ padding: '2px' }}>
+                                        <FileUploadOutlinedIcon
+                                          sx={{ width: '40px', height: '40px' }}
+                                        />
+                                      </CardContent>
+                                      <CardActions>
+                                        <input
+                                          type='file'
+                                          multiple
+                                          name='item'
+                                          id='file-images'
+                                          placeholder='Images'
+                                          className='file-input__input'
+                                          accept='.jpg,.jpeg,.png'
+                                          onChange={imagesHandleChange}
+                                        />
+                                        <Label
+                                          style={{
+                                            width: '100%'
+                                          }}
+                                          for='file-images'
+                                          className={`d-flex flex-column file-input__label`}
+                                        >
+                                          <span className='d-flex flex-column text-center'>
+                                            Upload
+                                          </span>
+                                        </Label>
+                                      </CardActions>
+                                    </Card>
+                                  ) : (
+                                    ''
+                                  )}
+                                </Col>
+                              </Row>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <MultipleSelectForm
+                                title={'Labels'}
+                                items={allLabels}
+                                selectedItems={labels}
+                                handleSelected={setLabels}
+                              />
+                            </Grid>
+                            <Grid item xs={12}>
+                              <MultipleSelectForm
+                                title={'Tags'}
+                                items={allTabs}
+                                selectedItems={tabs}
+                                handleSelected={setTabs}
+                              />
+                            </Grid>
+                            <Grid item xs={12}>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Recommended Items
+                                </FormHelperText>
+                                <OutlinedInput
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  value={recommendations}
+                                  onChange={e =>
+                                    setRecommendations(e.target.value)
+                                  }
+                                />
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={12} marginBottom={9}>
+                              <Box
+                                display={'flex'}
+                                justifyContent={'space-between'}
+                                alignItems={'center'}
+                              >
+                                <Typography marginLeft={2}>
+                                  Mark as Sold out
+                                </Typography>
+                                <Switch
+                                  checked={markAsSold}
+                                  onChange={e =>
+                                    setMarkAsSold(e.target.checked)
+                                  }
+                                  defaultChecked
+                                />
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        </TabPanel>
+                        <TabPanel value='Price Options'>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <FormControl
+                                sx={{ marginTop: 3 }}
+                                fullWidth
+                                variant='standard'
+                              >
+                                <Input
+                                  id='standard-adornment-weight'
+                                  endAdornment={
+                                    <InputAdornment position='end'>
+                                      <AddOutlinedIcon />
+                                    </InputAdornment>
+                                  }
+                                  aria-describedby='standard-weight-helper-text'
+                                  value={topping}
+                                  onChange={e => setTopping(e.target.value)}
+                                />
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Variation Name
+                                </FormHelperText>
+                                <OutlinedInput
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  value={variationName}
+                                  onChange={e =>
+                                    setVariationName(e.target.value)
+                                  }
+                                />
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={7}>
+                              <FormControl fullWidth variant='outlined'>
+                                <FormHelperText
+                                  style={{ fontSize: '15px' }}
+                                  id='outlined-weight-helper-text'
+                                >
+                                  Mandatory Options
+                                </FormHelperText>
+                                <OutlinedInput
+                                  fullWidth
+                                  id='outlined-adornment-weight'
+                                  aria-describedby='outlined-weight-helper-text'
+                                  inputProps={{
+                                    'aria-label': 'weight'
+                                  }}
+                                  type='number'
+                                  value={mandatoryOption}
+                                  onChange={e =>
+                                    setMandatoryOption(e.target.value)
+                                  }
+                                />
+                              </FormControl>
+                            </Grid>
+                            {priceOptions?.map((option, index) => (
+                              <Grid item xs={12}>
+                                <Grid item xs={12}>
+                                  <Typography textAlign={'left'} marginLeft={1}>
+                                    Option {index}
+                                  </Typography>
+                                </Grid>
+                                <Grid
+                                  container
+                                  spacing={1}
+                                  alignItems={'center'}
+                                >
+                                  <Grid item xs={7}>
+                                    <TextField
+                                      disabled
+                                      value={option.name}
+                                      fullWidth
+                                    />
+                                  </Grid>
+                                  <Grid item xs={3}>
+                                    <OutlinedInput
+                                      endAdornment={
+                                        <InputAdornment position='end'>
+                                          $
+                                        </InputAdornment>
+                                      }
+                                      fullWidth
+                                      disabled
+                                      type='number'
+                                      value={option.price}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <IconButton
+                                      onClick={() => {
+                                        const filtered = priceOptions.filter(
+                                          (item, i) => i !== index
+                                        )
+                                        setPriceOptions(filtered)
+                                      }}
+                                    >
+                                      <RemoveCircleOutlineOutlinedIcon color='error' />
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            ))}
+                            <Grid item xs={12}>
+                              <Grid item xs={12}>
+                                <Typography textAlign={'left'} marginLeft={1}>
+                                  Option {priceOptions.length + 1}
+                                </Typography>
+                              </Grid>
+                              <Grid container spacing={1} alignItems={'center'}>
+                                <Grid item xs={7}>
+                                  <TextField
+                                    fullWidth
+                                    value={optionName}
+                                    onChange={e =>
+                                      setOptionName(e.target.value)
+                                    }
+                                  />
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <OutlinedInput
+                                    endAdornment={
+                                      <InputAdornment position='end'>
+                                        $
+                                      </InputAdornment>
+                                    }
+                                    fullWidth
+                                    type='number'
+                                    value={optionPrice}
+                                    onChange={e =>
+                                      setOptionPrice(e.target.value)
+                                    }
+                                  />
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Button
+                                fullWidth
+                                disabled={!optionName || !optionPrice}
+                                variant='contained'
+                                onClick={() => {
+                                  setPriceOptions([
+                                    ...priceOptions,
+                                    { name: optionName, price: optionPrice }
+                                  ])
+                                  setOptionName('')
+                                  setOptionPrice('')
+                                }}
+                              >
+                                <AddOutlinedIcon />
+                                Add
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </TabPanel>
+                        <TabPanel value='COGS'>
+                          <Grid container spacing={2}>
+                            {costOfGoods?.map((item, index) => (
+                              <Grid item xs={12}>
+                                <Grid item xs={12}>
+                                  <Typography textAlign={'left'} marginLeft={1}>
+                                    Item
+                                  </Typography>
+                                </Grid>
+                                <Grid
+                                  container
+                                  spacing={1}
+                                  alignItems={'center'}
+                                >
+                                  <Grid item xs={7}>
+                                    <TextField
+                                      disabled
+                                      fullWidth
+                                      value={item.name}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={3}>
+                                    <OutlinedInput
+                                      endAdornment={
+                                        <InputAdornment position='end'>
+                                          $
+                                        </InputAdornment>
+                                      }
+                                      fullWidth
+                                      disabled
+                                      value={item.price}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <IconButton
+                                      onClick={() => {
+                                        const filtered = costOfGoods.filter(
+                                          (item, i) => i !== index
+                                        )
+                                        setCostOfGoods(filtered)
+                                      }}
+                                    >
+                                      <RemoveCircleOutlineOutlinedIcon color='error' />
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            ))}
+
+                            <Grid item xs={12}>
+                              <Grid item xs={12}>
+                                <Typography textAlign={'left'} marginLeft={1}>
+                                  New Item
+                                </Typography>
+                              </Grid>
+                              <Grid container spacing={1} alignItems={'center'}>
+                                <Grid item xs={7}>
+                                  <TextField
+                                    fullWidth
+                                    value={itemName}
+                                    onChange={e => setItemName(e.target.value)}
+                                  />
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <OutlinedInput
+                                    endAdornment={
+                                      <InputAdornment position='end'>
+                                        $
+                                      </InputAdornment>
+                                    }
+                                    fullWidth
+                                    type='number'
+                                    value={itemPrice}
+                                    onChange={e => setItemPrice(e.target.value)}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Button
+                                fullWidth
+                                variant='contained'
+                                disabled={!itemName || !itemPrice}
+                                onClick={() => {
+                                  handleCostOfGoods()
+                                  setItemName('')
+                                  setItemPrice('')
+                                }}
+                              >
+                                <AddOutlinedIcon />
+                                Add
+                              </Button>
+                            </Grid>
+                            <Grid marginTop={9} item xs={12} display={'flex'}>
+                              <Typography
+                                fontSize={18}
+                                fontWeight={'bold'}
+                                textAlign={'left'}
+                              >
+                                {`${'Total Price : ' + getTotalPrice() + '$'}`}
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              display={'flex'}
+                              justifyContent={'space-around'}
+                              alignItems={'center'}
+                              item
+                              xs={12}
+                              marginTop={2}
+                            >
+                              <Button
+                                sx={{ width: '150px' }}
+                                variant='outlined'
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                sx={{ width: '150px' }}
+                                variant='contained'
+                                disabled={!item || !price}
+                                onClick={
+                                  toEdit ? updateItemHandle : addItemhandle
+                                }
+                              >
+                                {addMenuLoader ? (
+                                  <Spinner
+                                    size={'sm'}
+                                    className='mr-3'
+                                  ></Spinner>
+                                ) : (
+                                  ''
+                                )}{' '}
+                                {toEdit ? 'Update' : 'Save'}
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </TabPanel>
+                      </TabContext>
+                    </Box>
                   </div>
                 </Col>
               ))}

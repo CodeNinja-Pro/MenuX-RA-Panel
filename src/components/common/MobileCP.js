@@ -18,11 +18,6 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
 import { FiCardContent, FiCardMedia } from './CardBackground'
-import {
-  Rotate90DegreesCcw,
-  Rotate90DegreesCwRounded,
-  RotateLeftSharp
-} from '@mui/icons-material'
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
 const useStyles = makeStyles({
