@@ -1,15 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
-import {
-  Col,
-  FormGroup,
-  Label,
-  Row,
-  Table,
-  Container,
-  Spinner
-} from 'reactstrap'
+import React, { useEffect, useState } from 'react'
+import { Col, FormGroup, Label, Row, Container, Spinner } from 'reactstrap'
 
-import deleteIcon from '../../assets/img/icons/delete.svg'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
@@ -36,27 +27,19 @@ import {
   IconButton,
   Card,
   CardActions,
-  CardMedia,
   Typography,
   ThemeProvider,
   TextField,
   Button,
   Checkbox,
   FormControl,
-  MenuItem,
   OutlinedInput,
-  Select,
   CardContent,
   Box,
-  Divider,
-  ListItemText,
-  InputLabel,
-  StyledEngineProvider,
   Tab,
   Grid,
   FormHelperText,
   Switch,
-  FormControlLabel,
   Input,
   InputAdornment,
   CardActionArea
@@ -68,41 +51,14 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 
-import { useTheme } from '@mui/material/styles'
-
 import { ThemeMain } from '../common/Theme'
 import MultipleSelectForm from './forms/MultipleSelectForm'
 import { FiCardContent, FiCardMedia } from '../common/CardBackground'
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-}
-
-const itemTags = [
-  'Vegetarian',
-  'Vegan',
-  'Keto',
-  'Kosher',
-  'Halal',
-  'Spicy',
-  'Molluscs',
-  'Customizable',
-  'Organic',
-  'GMO',
-  'Dairy'
-]
-
 const EditScratchMenu = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { user, userPermissions } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.auth)
 
   const [allLabels, setAllLabels] = useState([])
   const [allTabs, setAllTabs] = useState([])
@@ -147,7 +103,6 @@ const EditScratchMenu = () => {
   }, [tabsData])
 
   const [selectedOption, setSelectedOption] = useState(null)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
   const [customOffcanvas, setCustomOffcanvas] = useState(false)
   const [categoryImage, setCategoryImage] = useState(null)
   const [name, setName] = useState('')
@@ -156,7 +111,6 @@ const EditScratchMenu = () => {
 
   const [categoryImagesToRemove, setCategoryImageToRemove] = useState('')
   const [imagesToRemove, setImagesToRemove] = useState([])
-  const [videosToRemove, setVideosToRemove] = useState([])
   const [saveAndAddMore, setSaveAndAddMore] = useState(false)
 
   // General information for new item
@@ -183,15 +137,7 @@ const EditScratchMenu = () => {
   const [itemName, setItemName] = useState('')
   const [itemPrice, setItemPrice] = useState('')
 
-  const [labelGroup, setLabelGroup] = useState([])
-  const [subItem, setSubItem] = useState('')
-  const [subPrice, setSubPrice] = useState('')
-  const [subCalories, setSubCalories] = useState('')
-  const [Items, setItems] = useState([])
-  const [secondTableItems, setSecondTableItems] = useState([])
-
   const [category, setCategory] = useState('')
-  const [selectedOptions, setSelectedOptions] = useState([])
   const [images, setImages] = useState([])
   const [menuItemCount, setMenuItemCount] = useState(0)
 
@@ -216,42 +162,6 @@ const EditScratchMenu = () => {
       sum += Number(item.price)
     })
     return Number(sum)
-  }
-
-  const handleLabelChange = event => {
-    const {
-      target: { value }
-    } = event
-    setLabelGroup(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    )
-  }
-
-  const fileInput = useRef(null)
-  // const imagesRef = useRef(null);
-  // const fileVideosInputRef = useRef(null);
-
-  const handleImageClick = () => {
-    fileInput.current.click()
-  }
-
-  const handleFileChange = event => {
-    setCategoryImageToRemove(categoryImage || '')
-    setCategoryImage(event.target.files[0])
-  }
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen)
-    setToEdit('')
-  }
-  const handleRemove = (arr, index) => {
-    if (arr === 'subItems') {
-      let filterItems = Items.filter((x, i) => i !== index)
-      setItems(filterItems)
-    } else if (arr === 'recommended') {
-      let filterItems = secondTableItems.filter((x, i) => i !== index)
-      setSecondTableItems(filterItems)
-    }
   }
 
   // Image handleChange Event
@@ -296,17 +206,6 @@ const EditScratchMenu = () => {
     setPreviewImages([...previewImages, ...newPreviewImages])
   }
 
-  const handleChange = selectedOptions => {
-    setSelectedOptions(selectedOptions)
-  }
-
-  const subItemsClick = e => {
-    e.preventDefault()
-    setItems([...Items, { subItem, subPrice, subCalories }])
-    setSubItem('')
-    setSubPrice('')
-    setSubCalories('')
-  }
   const addCategoryHandle = event => {
     event.preventDefault() // prevent the default form submission behavior
 
@@ -514,7 +413,6 @@ const EditScratchMenu = () => {
       totalPrice: totalPrice
     }
 
-    // Dispatch addMenu action here...
     dispatch(
       editMenu(
         toEdit?.id,
@@ -579,17 +477,6 @@ const EditScratchMenu = () => {
     setIsDragging(false)
   }
 
-  const handleDragOver = event => {
-    event.preventDefault()
-  }
-
-  const handleDrop = event => {
-    event.preventDefault()
-    // Access the data being dropped
-    const droppedItem = event.dataTransfer.getData('text/plain')
-    // Handle the dropped item
-  }
-
   const onDeleteIconClick = async (event, item) => {
     event.preventDefault()
 
@@ -622,7 +509,6 @@ const EditScratchMenu = () => {
   }, [categories])
 
   const onDragEnd = result => {
-    // dropped outside the list
     if (!result.destination) {
       return
     }
@@ -643,14 +529,6 @@ const EditScratchMenu = () => {
   const [menuItems, setMenuItems] = useState([])
   const [categoryIndex, setCategoryIndex] = useState('')
 
-  // const setCurrentMenuItems = id => {
-  //   const result = categories.filter(data => {
-  //     return data.id === id
-  //   })
-  //   setMenuItems(result[0].items)
-  //   // console.log('menuItems', result[0].items)
-  // }
-
   useEffect(() => {
     if (itemFlag && menuItems) {
       // const id = menuItems[0].categoriesID
@@ -660,8 +538,6 @@ const EditScratchMenu = () => {
   }, [menuItems])
 
   const onItemDragEnd = result => {
-    // setCurrentMenuItems(result.source.droppableId)
-    // dropped outside the list
     setCategoryIndex(result.source.droppableId)
     const menus = categories.filter(data => {
       return data.id === result.source.droppableId
@@ -681,7 +557,6 @@ const EditScratchMenu = () => {
     setMenuItems(items)
   }
 
-  // a little function to help us with reordering the result
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
     const [removed] = result.splice(startIndex, 1)
@@ -1068,7 +943,6 @@ const EditScratchMenu = () => {
                   </div>
                 </Col>
               ) : (
-                // Add items
                 <Col md={6}>
                   <div className='w-100 h-100 bg-white shadow-sm d-flex flex-column justify-content-evenly '>
                     <div className='d-flex align-items-center py-4 px-4 border-bottom border-top'>
@@ -1084,346 +958,6 @@ const EditScratchMenu = () => {
                         {toEdit ? 'Edit Items' : 'Add Items'}
                       </Typography>
                     </div>
-                    {/* <div className='p-4 '>
-                      <Box>
-                        <Row>
-                          <Col>
-                            <FormControl fullWidth>
-                              <Typography for='item-name' marginBottom={1}>
-                                Item Name
-                              </Typography>
-                              <TextField
-                                name='item'
-                                id='item'
-                                placeholder='Item Name'
-                                value={item}
-                                onChange={e => setItem(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormControl sx={{ marginTop: '20px' }} fullWidth>
-                              <Typography marginBottom={1}>
-                                Item Price
-                              </Typography>
-                              <TextField
-                                type='number'
-                                placeholder='Item Price'
-                                value={price}
-                                onChange={e => setPrice(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <StyledEngineProvider injectFirst>
-                              <FormControl fullWidth sx={{ marginTop: '20px' }}>
-                                <Typography marginBottom={1}>Labels</Typography>
-                                <Select
-                                  multiple
-                                  value={labelGroup}
-                                  onChange={handleLabelChange}
-                                  input={<OutlinedInput />}
-                                  renderValue={selected => selected.join(', ')}
-                                  MenuProps={MenuProps}
-                                >
-                                  {labels.map(name => (
-                                    <MenuItem key={name} value={name}>
-                                      <Checkbox
-                                        checked={labelGroup.indexOf(name) > -1}
-                                      />
-                                      <ListItemText primary={name} />
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                            </StyledEngineProvider>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormControl fullWidth sx={{ marginTop: '20px' }}>
-                              <Typography marginBottom={1}>
-                                Item Tags
-                              </Typography>
-                              <Select
-                                value={itemTag}
-                                onChange={e => setItemTag(e.target.value)}
-                              >
-                                {itemTags.map((item, index) => (
-                                  <MenuItem key={index} value={item}>
-                                    {item}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <FormControl
-                              sx={{
-                                marginTop: '20px',
-                                marginBottom: '70px',
-                                height: '100px'
-                              }}
-                              fullWidth
-                            >
-                              <Typography marginBottom={1}>
-                                Description
-                              </Typography>
-                              <TextField
-                                placeholder='Description'
-                                value={comments}
-                                multiline
-                                rows={4}
-                                onChange={e => setComments(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row className='overflow-auto'>
-                          {previewImages?.map((url, index) => (
-                            <Col md={3} className='mt-2 mb-2'>
-                              <Card
-                                key={index}
-                                style={{ height: '140px' }}
-                                sx={{
-                                  border: 'dashed',
-                                  borderWidth: '1px',
-                                  borderColor: '#0074D9',
-                                  boxShadow: 'none'
-                                }}
-                              >
-                                <CardMedia
-                                  component='img'
-                                  height='80'
-                                  image={url}
-                                  alt=''
-                                />
-                                <CardActions>
-                                  <i
-                                    className='fas fa-trash-alt p-2  border w-100 d-flex justify-content-center  cursor-pointer shadow-sm '
-                                    onClick={() => {
-                                      setImagesToRemove(prevImagesToRemove => [
-                                        ...prevImagesToRemove,
-                                        url
-                                      ])
-                                      setPreviewImages(prevPreviewImages =>
-                                        prevPreviewImages.filter(
-                                          image => image !== url
-                                        )
-                                      )
-                                    }}
-                                  ></i>
-                                </CardActions>
-                              </Card>
-                            </Col>
-                          ))}
-                          <Col md={6} className='mt-2 mb-2'>
-                            <Card
-                              style={{ height: '140px' }}
-                              sx={{
-                                border: 'dashed',
-                                borderWidth: '1px',
-                                borderColor: '#0074D9',
-                                boxShadow: 'none'
-                              }}
-                            >
-                              <CardContent sx={{ padding: '2px' }}>
-                                <FileUploadOutlinedIcon />
-                                <Typography>
-                                  *.JPG, *.PNG, *.JPEG and less than 2MB
-                                </Typography>
-                              </CardContent>
-                              <CardActions>
-                                <input
-                                  type='file'
-                                  multiple
-                                  name='item'
-                                  id='file-images'
-                                  placeholder='Images'
-                                  className='file-input__input'
-                                  accept='.jpg,.jpeg,.png'
-                                  onChange={imagesHandleChange}
-                                />
-                                <Label
-                                  style={{ width: '100%' }}
-                                  for='file-images'
-                                  className={`d-flex flex-column file-input__label ${
-                                    previewImages && previewImages.length > 0
-                                      ? 'd-none'
-                                      : ''
-                                  }`}
-                                >
-                                  <span className='d-flex flex-column text-center'>
-                                    Upload
-                                  </span>
-                                </Label>
-                              </CardActions>
-                            </Card>
-                          </Col>
-                        </Row>
-                        <Divider sx={{ marginTop: '20px' }} />
-                        <Row>
-                          <Col>
-                            <Typography
-                              marginTop={2}
-                              fontWeight={'bold'}
-                              fontSize={'18px'}
-                            >
-                              Sub Item Information
-                            </Typography>
-                          </Col>
-                        </Row>
-                        <Row className='mt-3'>
-                          <Col>
-                            <FormControl>
-                              <Typography>Item Name</Typography>
-                              <TextField
-                                name='subItem'
-                                placeholder='Item Name'
-                                value={subItem}
-                                onChange={e => setSubItem(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                          <Col>
-                            <FormControl>
-                              <Typography>Item Price</Typography>
-                              <TextField
-                                type='number'
-                                min={1}
-                                name='subPrice'
-                                placeholder='Price'
-                                value={subPrice}
-                                onChange={e => setSubPrice(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                          <Col>
-                            <FormControl>
-                              <Typography>Calories</Typography>
-                              <TextField
-                                type='number'
-                                min={1}
-                                name='subCalories'
-                                placeholder='Calories'
-                                value={subCalories}
-                                onChange={e => setSubCalories(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <Button
-                              fullWidth
-                              sx={{ marginTop: '10px', marginBottom: '10px' }}
-                              variant='outlined'
-                              disabled={!subItem || !subCalories || !subPrice}
-                              onClick={e => subItemsClick(e)}
-                            >
-                              Add New Sub Item
-                            </Button>
-                          </Col>
-                        </Row>
-                        <Table
-                          className='align-items-center table-flush sub__items-table'
-                          responsive
-                        >
-                          <thead style={{ backgroundColor: '#cfebff' }}>
-                            <tr>
-                              <th scope='col'>Item</th>
-                              <th scope='col'>Price</th>
-                              <th scope='col'>Calories</th>
-                              <th scope='col'>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Items?.map((item, index) => {
-                              return (
-                                <tr key={index}>
-                                  <td>{item.subItem}</td>
-                                  <td>{item.subPrice}</td>
-                                  <td>{item.subCalories}</td>
-                                  <td className='table-actions'>
-                                    <img
-                                      src={deleteIcon}
-                                      alt=''
-                                      className='mx-2 cursor-pointer'
-                                      onClick={() =>
-                                        handleRemove('subItems', index)
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              )
-                            })}
-                          </tbody>
-                        </Table>
-                        <Divider sx={{ marginBottom: '20px' }} />
-                        <Row style={{ marginTop: '20px' }}>
-                          <Col>
-                            <FormControl>
-                              <Typography for='item-name' marginBottom={1}>
-                                EST (Min)
-                              </Typography>
-                              <TextField
-                                fullWidth
-                                type='number'
-                                min={1}
-                                placeholder='EST, Preparation Time'
-                                value={estimatedTime}
-                                onBlur={e => {
-                                  if (Number(e.target.value) < 0) {
-                                    setEstimatedTime('')
-                                  }
-                                }}
-                                onChange={e => setEstimatedTime(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                          <Col>
-                            <FormControl>
-                              <Typography marginBottom={1}>Calories</Typography>
-                              <TextField
-                                type='Number'
-                                min={1}
-                                name='item'
-                                placeholder='Calories'
-                                value={calories}
-                                onChange={e => setCalories(e.target.value)}
-                              />
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row style={{ marginBottom: '20px' }}>
-                          <Col className='d-flex justify-content-end'>
-                            <Button
-                              sx={{ marginTop: '20px' }}
-                              fullWidth
-                              variant='contained'
-                              disabled={!item || !price}
-                              onClick={
-                                toEdit ? updateItemHandle : addItemhandle
-                              }
-                            >
-                              {addMenuLoader ? (
-                                <Spinner size={'sm'} className='mr-3'></Spinner>
-                              ) : (
-                                ''
-                              )}{' '}
-                              {toEdit ? 'Update' : 'Save'}
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Box>
-                    </div> */}
-
                     <Box sx={{ width: '100%', typography: 'body1' }}>
                       <TabContext value={selectedTab}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -1533,24 +1067,6 @@ const EditScratchMenu = () => {
                                           sx={{ height: '100%' }}
                                         />
                                         <FiCardContent>
-                                          {/* <i
-                                              className='fas fa-trash-alt p-2 border w-100 d-flex justify-content-center  cursor-pointer shadow-sm '
-                                              style={{ height: '100%' }}
-                                              onClick={() => {
-                                                setImagesToRemove(
-                                                  prevImagesToRemove => [
-                                                    ...prevImagesToRemove,
-                                                    url
-                                                  ]
-                                                )
-                                                setPreviewImages(
-                                                  prevPreviewImages =>
-                                                    prevPreviewImages.filter(
-                                                      image => image !== url
-                                                    )
-                                                )
-                                              }}
-                                            ></i> */}
                                           <Box
                                             display={'flex'}
                                             justifyContent={'flex-start'}
