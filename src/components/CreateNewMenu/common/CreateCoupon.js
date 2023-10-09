@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import OnlyHeader from '../../Headers/OnlyHeader'
 import {
   CardContent,
   Card,
@@ -9,7 +8,6 @@ import {
   FormControl,
   FormHelperText,
   OutlinedInput,
-  IconButton,
   Box,
   Button,
   TextField,
@@ -17,7 +15,6 @@ import {
 } from '@mui/material'
 import { ThemeMain } from '../../common/Theme'
 import { Container } from 'reactstrap'
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import { useHistory } from 'react-router-dom'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -27,13 +24,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 // import { v4 as uuidv4 } from 'uuid'
 import { customAlphabet } from 'nanoid'
-import { addNewCoupon } from '../../../store/actions/MenuManagmentActions'
+import {
+  addNewCoupon,
+  updateCoupon
+} from '../../../store/actions/MenuManagmentActions'
+import { toast } from 'react-toastify'
 
-export default function CreateCoupon () {
+export default function CreateCoupon (props) {
   const history = useHistory()
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.auth)
+  const { coupons } = useSelector(state => state.menu)
 
   const [flag, setFlag] = useState(false)
 
@@ -48,6 +50,18 @@ export default function CreateCoupon () {
     const random = nanoid()
     // setCouponName(random)
   }, [])
+
+  useEffect(() => {
+    if (props.selectedID !== '') {
+      const selectedPopup = coupons.filter(
+        coupon => coupon.id === props.selectedID
+      )
+      setCouponName(selectedPopup[0].couponName)
+      setDiscountPercentage(selectedPopup[0].discountPercentage)
+      setMaximumDiscount(selectedPopup[0].maximumDiscount)
+      setMaximumUses(selectedPopup[0].maximumUses)
+    }
+  }, [props])
 
   const handleNewCoupon = () => {
     const newCoupon = {
@@ -64,11 +78,37 @@ export default function CreateCoupon () {
     )
   }
 
+  const handleUpdateCoupon = () => {
+    const newPopup = {
+      couponName,
+      discountPercentage,
+      maximumDiscount,
+      maximumUses,
+      validTill: validTill.$d
+    }
+    dispatch(
+      updateCoupon(user.restaurantID, props.selectedID, newPopup, () => {
+        setCouponName('')
+        setDiscountPercentage('')
+        setMaximumDiscount('')
+        setMaximumUses('')
+        toast.success('You updated current Coupon successfully.', {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        })
+      })
+    )
+  }
+
   return (
     <>
       {/* <OnlyHeader /> */}
       <ThemeProvider theme={ThemeMain}>
         <Container fluid>
+          <Typography textAlign={'left'} fontSize={'20px'} fontWeight={'bold'}>
+            {props.popupStatus === 'create' ? 'New Coupon' : 'Edit Coupon'}
+          </Typography>
           <Card sx={{ boxShadow: 'none' }}>
             <CardContent>
               <Grid container spacing={2}>
@@ -205,10 +245,16 @@ export default function CreateCoupon () {
                       variant='contained'
                       onClick={() => {
                         setFlag(true)
-                        handleNewCoupon()
+                        if (props.popupStatus === 'create') {
+                          handleNewCoupon()
+                        } else {
+                          handleUpdateCoupon()
+                        }
                       }}
                     >
-                      Add Coupon
+                      {props.popupStatus === 'create'
+                        ? 'Add Coupon'
+                        : 'Update Coupon'}
                     </Button>
                   </Box>
                 </Grid>

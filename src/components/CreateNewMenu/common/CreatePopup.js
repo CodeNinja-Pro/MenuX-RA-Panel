@@ -41,8 +41,6 @@ export default function CreatePopup (props) {
 
   useEffect(() => {
     if (props.selectedID !== '') {
-      console.log(props.selectedID)
-      console.log(popups)
       const selectedPopup = popups.filter(
         popup => popup.id === props.selectedID
       )

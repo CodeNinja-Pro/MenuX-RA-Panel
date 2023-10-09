@@ -103,6 +103,41 @@ export const getCoupons = id => async dispatch => {
   }
 }
 
+export const updateCoupon =
+  (id, couponID, newCoupon, onSuccess) => async dispatch => {
+    dispatch({
+      type: 'COUPON_LOADER',
+      payload: true
+    })
+    try {
+      await firebase
+        .firestore()
+        .collection('coupons')
+        .doc(couponID)
+        .update({
+          ...newCoupon,
+          createdAt: firebase.firestore.Timestamp.now()
+        })
+        .then(() => {
+          onSuccess()
+          dispatch({
+            type: 'COUPON_LOADER',
+            payload: false
+          })
+        })
+    } catch (error) {
+      toast.error(error.message, {
+        style: {
+          fontFamily: 'Poppins'
+        }
+      })
+      dispatch({
+        type: 'COUPON_LOADER',
+        payload: false
+      })
+    }
+  }
+
 export const updateStatus =
   (userId, id, couponStatus, onSuccess) => async dispatch => {
     try {

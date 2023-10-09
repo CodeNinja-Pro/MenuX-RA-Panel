@@ -17,6 +17,8 @@ import { Link } from 'react-router-dom'
 
 export default function Coupons () {
   const [addCP, setAddCP] = useState(false)
+  const [popupStatus, setPopupStatus] = useState('')
+  const [selectedID, setSelectedID] = useState('')
 
   return (
     <>
@@ -44,7 +46,11 @@ export default function Coupons () {
                     <Box marginRight={3} marginTop={1}>
                       {!addCP && (
                         <Button
-                          onClick={() => setAddCP(true)}
+                          onClick={() => {
+                            setAddCP(true)
+                            setPopupStatus('create')
+                            setSelectedID('')
+                          }}
                           variant='contained'
                         >
                           Add Coupon
@@ -62,8 +68,19 @@ export default function Coupons () {
                   </Grid>
 
                   <Grid item xs={12} marginTop={2}>
-                    {addCP && <CreateCoupon />}
-                    {!addCP && <CouponsTable />}
+                    {addCP && (
+                      <CreateCoupon
+                        selectedID={selectedID}
+                        popupStatus={popupStatus}
+                      />
+                    )}
+                    {!addCP && (
+                      <CouponsTable
+                        setSelectedID={setSelectedID}
+                        setPopupStatus={setPopupStatus}
+                        setAddCP={setAddCP}
+                      />
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

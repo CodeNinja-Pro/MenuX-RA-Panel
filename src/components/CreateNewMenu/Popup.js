@@ -55,6 +55,7 @@ export default function Popup () {
                           onClick={() => {
                             setAddCP(true)
                             setPopupStatus('create')
+                            setSelectedID('')
                           }}
                           variant='contained'
                         >
