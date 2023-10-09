@@ -8,15 +8,11 @@ import {
   Tab,
   ThemeProvider,
   Typography,
-  TextField,
-  InputAdornment,
   CardContent
 } from '@mui/material'
 import { Container } from 'reactstrap'
 import { addDays } from 'date-fns'
 import ItemStatisticData from '../components/ItemStatistics/ItemStatisticData'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import PickDateRange from './auth/PickDateRange'
 import StatisticsChart from '../components/ItemStatistics/StatisticsChart'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
@@ -55,18 +51,6 @@ export default function ItemStatistical () {
     setTabFlag(newValue)
   }
 
-  const [dateState, setDateState] = useState([
-    {
-      startDate: addDays(new Date(), -31),
-      endDate: new Date(),
-      key: 'selection'
-    }
-  ])
-
-  const handleDateChange = ranges => {
-    setDateState(ranges)
-  }
-
   return (
     <>
       <OnlyHeader />
@@ -86,7 +70,7 @@ export default function ItemStatistical () {
               </Box>
             </Card>
             {tabFlag === 'Table' ? (
-              <Card sx={{ marginTop: '15px' }}>
+              <Card sx={{ marginTop: '15px', boxShadow: 'none' }}>
                 <CardContent>
                   <Typography
                     fontWeight={'bold'}
@@ -103,32 +87,6 @@ export default function ItemStatistical () {
                       user.role === 'staff' && disableOnTrue(sectionPermission)
                     }
                   >
-                    <Box
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <TextField
-                        id='outlined-start-adornment'
-                        sx={{ marginBottom: '15px', width: '40ch' }}
-                        placeholder='Search by ID, name, amount...'
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position='start'>
-                              <SearchOutlinedIcon />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                      <Box width={300}>
-                        <PickDateRange
-                          setDateState={handleDateChange}
-                          datestate={dateState}
-                        />
-                      </Box>
-                    </Box>
                     <ItemStatisticData />
                   </Box>
                 </CardContent>

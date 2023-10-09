@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import OnlyHeader from '../../Headers/OnlyHeader'
 import {
   CardContent,
   Card,
@@ -16,20 +15,21 @@ import {
 } from '@mui/material'
 import { ThemeMain } from '../../common/Theme'
 import { Col, Container, Row, Spinner } from 'reactstrap'
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
-import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
 import CachedIcon from '@mui/icons-material/Cached'
-import { addPopup } from '../../../store/actions/MenuManagmentActions'
+import {
+  addPopup,
+  updatePopup
+} from '../../../store/actions/MenuManagmentActions'
 
-export default function CreatePopup () {
-  const history = useHistory()
+export default function CreatePopup (props) {
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.auth)
   const { popupLoader } = useSelector(state => state.menu)
+  const { popups } = useSelector(state => state.menu)
 
   const [bannerImage, setBannerImage] = useState('')
   const [bannerFile, setBannerFile] = useState([])
@@ -37,6 +37,21 @@ export default function CreatePopup () {
   const [heading, setHeading] = useState('')
   const [text, setText] = useState('')
   const [delay, setDelay] = useState('')
+  const [prevImage, setPrevImage] = useState('')
+
+  useEffect(() => {
+    if (props.selectedID !== '') {
+      console.log(props.selectedID)
+      console.log(popups)
+      const selectedPopup = popups.filter(
+        popup => popup.id === props.selectedID
+      )
+      setHeading(selectedPopup[0].heading)
+      setText(selectedPopup[0].text)
+      setDelay(selectedPopup[0].delay)
+      setPrevImage(selectedPopup[0].bannerImage)
+    }
+  }, [props])
 
   // File Upload
   const onBannerButtonClick = () => {
@@ -127,6 +142,35 @@ export default function CreatePopup () {
     )
   }
 
+  const handleUpdatePopup = () => {
+    const newPopup = {
+      heading,
+      text,
+      delay
+    }
+    dispatch(
+      updatePopup(
+        user.restaurantID,
+        prevImage,
+        props.selectedID,
+        newPopup,
+        bannerFile,
+        () => {
+          setHeading('')
+          setText('')
+          setDelay('')
+          setBannerFile([])
+          setBannerImage('')
+          toast.success('You updated current Popup successfully.', {
+            style: {
+              fontFamily: 'Poppins'
+            }
+          })
+        }
+      )
+    )
+  }
+
   return (
     <>
       <ThemeProvider theme={ThemeMain}>
@@ -134,6 +178,15 @@ export default function CreatePopup () {
           <Grid container spacing={2}>
             <Grid item xs={12} lg={8}>
               <Card sx={{ boxShadow: 'none' }}>
+                <Typography
+                  textAlign={'left'}
+                  fontSize={'20px'}
+                  fontWeight={'bold'}
+                >
+                  {props.popupStatus === 'create'
+                    ? 'New Marketing Banner'
+                    : 'Edit Marketing Banner'}
+                </Typography>
                 <CardContent>
                   <Row>
                     <Col sm='6' lg={{ size: 4 }}>
@@ -197,9 +250,13 @@ export default function CreatePopup () {
                         fullWidth
                         variant='contained'
                         disabled={!heading || !text || !delay || !bannerImage}
-                        onClick={() => {
-                          handlePopup()
-                        }}
+                        onClick={() =>
+                          `${
+                            props.popupStatus === 'create'
+                              ? handlePopup()
+                              : handleUpdatePopup()
+                          }`
+                        }
                       >
                         {popupLoader === true ? (
                           <Spinner
@@ -208,7 +265,9 @@ export default function CreatePopup () {
                             className='mr-2'
                           ></Spinner>
                         ) : (
-                          'Save'
+                          `${
+                            props.popupStatus === 'create' ? 'Save' : 'Update'
+                          }`
                         )}
                       </Button>
                     </Col>

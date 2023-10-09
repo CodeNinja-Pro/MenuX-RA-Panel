@@ -223,6 +223,51 @@ export const addPopup =
     }
   }
 
+export const updatePopup =
+  (id, prevImage, popupID, newPopup, bannerFile, onSuccess) =>
+  async dispatch => {
+    dispatch({
+      type: 'POPUP_LOADER',
+      payload: true
+    })
+    try {
+      await firebase.storage().refFromURL(prevImage).delete()
+
+      const storageRef = firebase.storage().ref()
+
+      const imageFile = storageRef.child('popup_images/' + bannerFile.name)
+      const snapShot = await imageFile.put(bannerFile)
+      const downloadURL = await snapShot.ref.getDownloadURL()
+
+      await firebase
+        .firestore()
+        .collection('popups')
+        .doc(popupID)
+        .update({
+          ...newPopup,
+          bannerImage: downloadURL,
+          createdAt: firebase.firestore.Timestamp.now()
+        })
+        .then(() => {
+          onSuccess()
+          dispatch({
+            type: 'POPUP_LOADER',
+            payload: false
+          })
+        })
+    } catch (error) {
+      toast.error(error.message, {
+        style: {
+          fontFamily: 'Poppins'
+        }
+      })
+      dispatch({
+        type: 'POPUP_LOADER',
+        payload: false
+      })
+    }
+  }
+
 export const getPopups = id => async dispatch => {
   dispatch({
     type: 'POPUP_LOADER',
@@ -1225,7 +1270,7 @@ export const addlabel =
 
     const storageRef = firebase.storage().ref()
 
-    const imageFile = storageRef.child('popup_images/' + image.name)
+    const imageFile = storageRef.child('AttachmentLabels/' + image.name)
     const snapShot = await imageFile.put(image)
     const downloadURL = await snapShot.ref.getDownloadURL()
 

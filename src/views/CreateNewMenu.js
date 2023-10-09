@@ -519,14 +519,14 @@ function CreateNewMenu () {
                     <NavItem
                       className='cursor-pointer mx-3'
                       onClick={() => {
-                        setSelectedTab('Tabs')
+                        setSelectedTab('Tags')
                       }}
                     >
                       <Typography
                         fontWeight={'bold'}
-                        color={selectedTab === 'Tabs' ? '#0074D9' : ''}
+                        color={selectedTab === 'Tags' ? '#0074D9' : ''}
                       >
-                        Tabs{' '}
+                        Tags{' '}
                       </Typography>
                     </NavItem>
                     <NavItem
@@ -1031,7 +1031,7 @@ function CreateNewMenu () {
                 <QRCustomization></QRCustomization>
               </Box>
             )}
-            {selectedTab == 'Tabs' && (
+            {selectedTab == 'Tags' && (
               <Box
                 sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
               >

@@ -27,6 +27,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined'
 
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -53,7 +54,7 @@ const applyPagination = (tableItems, page, limit) => {
   return tableItems && tableItems.slice(page * limit, page * limit + limit)
 }
 
-const PopupTable = () => {
+const PopupTable = props => {
   const dispatch = useDispatch()
   // user definition
   const { user } = useSelector(state => state.auth)
@@ -100,6 +101,12 @@ const PopupTable = () => {
         })
       })
     )
+  }
+
+  const handleEditCoupon = () => {
+    props.setSelectedID(selectedItem)
+    props.setPopupStatus('edit')
+    props.setAddCP(true)
   }
 
   const handleChecked = (id, status) => {
@@ -254,17 +261,17 @@ const PopupTable = () => {
                           <Paper>
                             <ClickAwayListener onClickAway={handleClose}>
                               <MenuList id='split-button-menu'>
-                                {/* <MenuItem
-                              onClick={() => {
-                                handleClose()
-                                handleEditCoupon(tableItem.id)
-                              }}
-                              key={'edit'}
-                            >
-                              <EditOutlinedIcon />
-                              Edit
-                            </MenuItem> */}
-                                {/* <Divider /> */}
+                                <MenuItem
+                                  onClick={() => {
+                                    handleClose()
+                                    handleEditCoupon()
+                                  }}
+                                  key={'edit'}
+                                >
+                                  <ModeEditOutlineOutlinedIcon />
+                                  Edit
+                                </MenuItem>
+                                <Divider />
                                 <MenuItem
                                   onClick={() => {
                                     handleClose()

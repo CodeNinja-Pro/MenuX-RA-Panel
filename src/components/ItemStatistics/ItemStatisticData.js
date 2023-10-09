@@ -68,7 +68,7 @@ export default function ItemStatisticData () {
   return (
     <>
       <div>
-        <ItemStatisticTable tableItems={data ?? []} />
+        <ItemStatisticTable />
       </div>
     </>
   )

@@ -6,18 +6,17 @@ import {
   ThemeProvider,
   Box,
   Typography,
-  TextField,
-  InputAdornment,
   Button
 } from '@mui/material'
 import { ThemeMain } from '../common/Theme'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import PopupTable from './common/PopupTable'
 import CreatePopup from './common/CreatePopup'
-import { Link } from 'react-router-dom'
 
 export default function Popup () {
   const [addCP, setAddCP] = useState(false)
+  const [popupStatus, setPopupStatus] = useState('')
+  const [selectedID, setSelectedID] = useState('')
+
   return (
     <>
       <ThemeProvider theme={ThemeMain}>
@@ -53,7 +52,10 @@ export default function Popup () {
                       )}
                       {!addCP && (
                         <Button
-                          onClick={() => setAddCP(true)}
+                          onClick={() => {
+                            setAddCP(true)
+                            setPopupStatus('create')
+                          }}
                           variant='contained'
                         >
                           Add Marketing Banner
@@ -63,8 +65,19 @@ export default function Popup () {
                   </Grid>
 
                   <Grid item xs={12} marginTop={2}>
-                    {addCP && <CreatePopup />}
-                    {!addCP && <PopupTable />}
+                    {addCP && (
+                      <CreatePopup
+                        selectedID={selectedID}
+                        popupStatus={popupStatus}
+                      />
+                    )}
+                    {!addCP && (
+                      <PopupTable
+                        setSelectedID={setSelectedID}
+                        setPopupStatus={setPopupStatus}
+                        setAddCP={setAddCP}
+                      />
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

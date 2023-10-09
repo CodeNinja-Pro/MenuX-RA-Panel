@@ -1,6 +1,5 @@
 export const reviews = [
   {
-    itemName: 'Pasta',
     itemID: 'ZQbIy5ZANwH2gSEcbdWl',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
@@ -11,7 +10,6 @@ export const reviews = [
     viewTime: '25'
   },
   {
-    itemName: 'Bread',
     itemID: 'ZQbIy5ZAshdjgSEcbdWl',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
@@ -22,7 +20,6 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
     itemID: 'ZQbIyeobfwHfdSEcbdWl',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
@@ -33,7 +30,6 @@ export const reviews = [
     viewTime: '25'
   },
   {
-    itemName: 'Cheese',
     itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
@@ -44,19 +40,7 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdjgSEcbdWl',
+    itemID: 'ZQbIy5Zdlbn2gSEcbdW2',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
@@ -66,18 +50,6 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
     itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
     categoryID: 'ddZdEdoTthv4PHpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
@@ -88,20 +60,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAdcvfgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2gSEcbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -110,20 +70,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeob3424dSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5skdln2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Z3lbn2gSEcbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -132,20 +80,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdeorjhv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAsnkfjgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIydZdlbn2gSEcbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -154,20 +90,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2g1Ecbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -176,20 +100,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdksmEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2hSEcbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -198,20 +110,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIy5ZAshdksmEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5ZAshdksmEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2gSEcbd1l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -220,20 +120,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdjgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbI15Zdlbn2gSEcbd2l',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -242,20 +130,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2gSEcbd2r',
+    categoryID: 'ddZdEdoTthv4PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -264,20 +140,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdjgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2gSE1bd2l',
+    categoryID: 'ddZdEdoTthv2PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -286,20 +150,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQ2Iy5Zdlbn2gSE1bd2l',
+    categoryID: 'ddZdEdoTthv2PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -308,20 +160,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdjgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbgy5Zdlbn2gSE1bd2l',
+    categoryID: 'ddZdEdoTthv2PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -330,20 +170,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy51dlbn2gSE1bd2l',
+    categoryID: 'ddZdEdoTthv2PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',
@@ -352,42 +180,8 @@ export const reviews = [
     viewTime: '45'
   },
   {
-    itemName: 'Pasta',
-    itemID: 'ZQbIy5ZANwH2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'purchase',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Bread',
-    itemID: 'ZQbIy5ZAshdjgSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '20',
-    price: '55',
-    viewTime: '45'
-  },
-  {
-    itemName: 'Fries',
-    itemID: 'ZQbIyeobfwHfdSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
-    parentMenuID: '4flCYyqA43RiUqKqoRxK',
-    restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
-    type: 'view',
-    cost: '80',
-    price: '105',
-    viewTime: '25'
-  },
-  {
-    itemName: 'Cheese',
-    itemID: 'ZQbIy5Zdlbn2gSEcbdWl',
-    categoryID: 'ddZdEdoTthv4PHpmMfB3',
+    itemID: 'ZQbIy5Zdlbn2gSE1gd2l',
+    categoryID: 'ddZdEdoTthv2PdpmMfB3',
     parentMenuID: '4flCYyqA43RiUqKqoRxK',
     restaurantID: 'ISZMcHTk3lRTI6JFpFg7vmogkk73',
     type: 'view',

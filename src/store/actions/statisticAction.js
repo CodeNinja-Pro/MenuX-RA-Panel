@@ -7,6 +7,32 @@ import {
 } from '../../Statistical/generalStatistics'
 import { reviews } from '../../Statistical/reviewData'
 
+export const getAllMenus = userId => async dispatch => {
+  try {
+    let allMenus = []
+
+    const snapShot = await firebase
+      .firestore()
+      .collection('menus')
+      .where('restaurantID', '==', userId)
+      .get()
+
+    snapShot.forEach(doc => {
+      allMenus.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    })
+
+    dispatch({
+      type: 'ALL_MENUS',
+      payload: allMenus
+    })
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
 export const getActiveMerchants = () => async dispatch => {
   try {
     let allUsers = []
@@ -24,25 +50,6 @@ export const getClickSortItems = restaurantID => async dispatch => {
   try {
     const allActivity = reviews
     const sortedItems = await sortItemByView(allActivity)
-
-    // let allItems = []
-    // const querySnapshot = await firebase
-    //   .firestore()
-    //   .collection('reviews')
-    //   .where('restaurantID', '==', restaurantID)
-    //   .where('type', '==', 'view')
-    //   .get()
-    // querySnapshot.forEach(doc => {
-    //   allItems.push({
-    //     itemName: doc.itemName,
-    //     itemID: doc.itemID
-    //   })
-    // })
-    // const sortedItems = await sortItemByView(allItems)
-    // dispatch({
-    //   type: 'CLICK_SORT_ITEMS',
-    //   payload: sortedItems
-    // })
   } catch (error) {
     toast.error(error.message)
   }

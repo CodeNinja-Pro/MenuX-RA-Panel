@@ -1,4 +1,5 @@
 const initState = {
+  allMenus: [],
   clickSortItems: [],
   clickSortCategories: [],
   boughtSortItems: [],
@@ -8,6 +9,11 @@ const initState = {
 const statisticReducer = (state = initState, action) => {
   const { type, payload } = action
   switch (type) {
+    case 'ALL_MENUS':
+      return {
+        ...state,
+        allMenus: payload
+      }
     case 'CLICK_SORT_ITEMS':
       return {
         ...state,

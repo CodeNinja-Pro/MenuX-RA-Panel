@@ -275,6 +275,8 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { addDays } from 'date-fns'
+
 import {
   Divider,
   Box,
@@ -308,6 +310,8 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
+import PickDateRange from '../../views/auth/PickDateRange'
+import { getAllMenus } from '../../store/actions/statisticAction'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -444,8 +448,13 @@ EnhancedTableHead.propTypes = {
 export default function SuperStaffTable () {
   //User definition
   const dispatch = useDispatch()
-  let rows = useSelector(state => state.super.allStaffs)
+  const { user } = useSelector(state => state.auth)
 
+  useEffect(() => {
+    dispatch(getAllMenus(user.restaurantID))
+  }, [])
+
+  const rows = useSelector(state => state.statistic.allMenus)
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
   const [invitationModal, setInvitationModal] = useState(false)
@@ -462,6 +471,18 @@ export default function SuperStaffTable () {
   })
 
   const [emailForInvite, setEmailForInvite] = useState('')
+
+  const [dateState, setDateState] = useState([
+    {
+      startDate: addDays(new Date(), -31),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ])
+
+  const handleDateChange = ranges => {
+    setDateState(ranges)
+  }
 
   useEffect(() => {
     setVisibleRows(rows)
@@ -538,20 +559,35 @@ export default function SuperStaffTable () {
         justifyContent={'start'}
         marginTop={'20px'}
       >
-        <TextField
-          id='outlined-start-adornment'
-          placeholder='Search by Name, Email and Role.'
-          sx={{ width: '400px' }}
-          value={searchValue}
-          onChange={e => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchOutlinedIcon />
-              </InputAdornment>
-            )
+        <Box
+          width={'100%'}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
           }}
-        />
+        >
+          <TextField
+            id='outlined-start-adornment'
+            placeholder='Search by Name, Email and Role.'
+            sx={{ width: '400px' }}
+            value={searchValue}
+            onChange={e => setSearchValue(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchOutlinedIcon />
+                </InputAdornment>
+              )
+            }}
+          />
+          <Box width={300}>
+            <PickDateRange
+              setDateState={handleDateChange}
+              datestate={dateState}
+            />
+          </Box>
+        </Box>
       </Grid>
       <Grid item xs={12} marginTop={2}>
         <Paper sx={{ width: '100%', mb: 2 }}>
@@ -578,7 +614,7 @@ export default function SuperStaffTable () {
                       <TableCell align='center'>{row.email}</TableCell>
                       <TableCell align='center'>{row.role}</TableCell>
                       <TableCell align='center'>
-                        {row.createdAt.toDate().toLocaleString()}
+                        {/* {row.createdAt.toDate().toLocaleString()} */}
                       </TableCell>
                       <TableCell align='center' width={'10%'}>
                         {row.enable === true ? (
