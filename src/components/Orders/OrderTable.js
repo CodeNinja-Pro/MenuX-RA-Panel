@@ -259,22 +259,23 @@ export default function OrderTable () {
   const id = open ? 'simple-popover' : undefined
 
   const columns = [
-    { field: 'tableId', headerName: 'Table ID', width: 100 },
-    { field: 'orderId', headerName: 'Order ID', width: 100 },
-    { field: 'name', headerName: 'Customer Name', width: 150 },
-    { field: 'order', headerName: 'Order', width: 350 },
-    { field: 'comments', headerName: 'Comments', width: 350 },
-    { field: 'payment', headerName: 'Payments', width: 150 },
-    { field: 'amount', headerName: 'Amount', type: 'number', width: 100 },
-    { field: 'actions', headerName: 'Actions', width: 100 }
+    { field: 'tableId', headerName: 'Table ID' },
+    { field: 'orderId', headerName: 'Order ID' },
+    { field: 'name', headerName: 'Customer Name' },
+    { field: 'order', headerName: 'Order' },
+    { field: 'comments', headerName: 'Comments' },
+    { field: 'payment', headerName: 'Payments' },
+    { field: 'amount', headerName: 'Amount', type: 'number' },
+    { field: 'actions', headerName: 'Actions' }
   ]
 
   return (
     <>
       <Grid item xs={12} marginTop={2}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
           <Grid container xs={12}>
             <DataGrid
+              sx={{ width: '100%' }}
               rows={paginatedTableData}
               columns={columns}
               initialState={{

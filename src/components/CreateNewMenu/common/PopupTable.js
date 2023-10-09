@@ -181,7 +181,7 @@ const PopupTable = props => {
                 <TableRow>
                   <TableCell align='left'>Heading</TableCell>
                   <TableCell align='left'>Text</TableCell>
-                  <TableCell align='center'>Delay</TableCell>
+                  <TableCell align='center'>Delay(Seconds)</TableCell>
                   <TableCell align='center'>Status</TableCell>
                   <TableCell align='center'>Actions</TableCell>
                 </TableRow>

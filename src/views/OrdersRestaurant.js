@@ -127,15 +127,14 @@ export default function OrdersRestaurant () {
                     aria-label='wrapped label tabs example'
                   >
                     <Tab value='All' label='All' />
-                    <Tab value='New' label='New' />
-                    <Tab value='Processing' label='Processing' />
-                    <Tab value='Ready' label='Ready' />
-                    <Tab value='Completed' label='Completed' />
+                    <Tab value='Live' label='Live' />
+                    <Tab value='Closed' label='Closed' />
                   </Tabs>
                   {/* </Box> */}
                 </Grid>
               </Grid>
               <Box
+                margin={2}
                 sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
               >
                 <Grid
@@ -217,10 +216,8 @@ export default function OrdersRestaurant () {
             <Grid container spacing={2}>
               <Grid item xs={12} lg={8}>
                 {tabFlag === 'All' && ''}
-                {tabFlag === 'New' && ''}
-                {tabFlag === 'Processing' && ''}
-                {tabFlag === 'Ready' && ''}
-                {tabFlag === 'Completed' && ''}
+                {tabFlag === 'Live' && ''}
+                {tabFlag === 'Closed' && ''}
               </Grid>
             </Grid>
           </Container>

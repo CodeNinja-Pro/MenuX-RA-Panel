@@ -63,29 +63,19 @@ function stableSort (array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'message',
     numeric: false,
-    label: 'Customer Name'
-  },
-  {
-    id: 'email',
-    numeric: false,
-    label: 'Customer Email'
-  },
-  {
-    id: 'role',
-    numeric: false,
-    label: 'Customer Gender'
-  },
-  {
-    id: 'createdAt',
-    numeric: true,
-    label: 'Created Date'
+    label: 'Message'
   },
   {
     id: 'status',
     numeric: false,
     label: 'Status'
+  },
+  {
+    id: 'createdAt',
+    numeric: true,
+    label: 'Created Date'
   }
 ]
 
@@ -246,7 +236,7 @@ export default function RequestsTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email and Gender.'
+          placeholder='Search by Message and Date'
           sx={{ width: '300px' }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
@@ -280,9 +270,7 @@ export default function RequestsTable () {
                       key={labelId}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell align='center'>{row.name}</TableCell>
-                      <TableCell align='center'>{row.email}</TableCell>
-                      <TableCell align='center'>{row.gender}</TableCell>
+                      <TableCell align='center'>{row.message}</TableCell>
                       <TableCell align='center'>
                         {row.createdAt.toDate().toLocaleString()}
                       </TableCell>

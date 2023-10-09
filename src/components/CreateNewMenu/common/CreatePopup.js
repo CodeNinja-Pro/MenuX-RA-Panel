@@ -247,7 +247,7 @@ export default function CreatePopup (props) {
                         sx={{ marginTop: 3 }}
                         fullWidth
                         variant='contained'
-                        disabled={!heading || !text || !delay || !bannerImage}
+                        disabled={!delay}
                         onClick={() =>
                           `${
                             props.popupStatus === 'create'
