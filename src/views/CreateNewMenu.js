@@ -1,4 +1,3 @@
-import ScratchMenu from '../components/CreateNewMenu/ScratchMenu'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

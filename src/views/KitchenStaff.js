@@ -18,20 +18,15 @@ import {
   FormGroup,
   Label,
   Input,
-  CustomInput,
   Col,
   Spinner
 } from 'reactstrap'
 // core components
 import OnlyHeader from '../components/Headers/OnlyHeader.js'
 import { toast } from 'react-toastify'
-// import { addNewUser } from '../store/actions/authActions'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllStaff } from '../store/actions/staffAction'
 import { useEffect } from 'react'
-import { updateStaff } from '../store/actions/staffAction'
 import { deleteStaff } from '../store/actions/staffAction'
-import UserPermissions from '../components/UserPermissions'
 
 const KitchenStaff = () => {
   const dispatch = useDispatch()
@@ -139,7 +134,7 @@ const KitchenStaff = () => {
   const handleInputChange = event => {
     const { name, value } = event.target
     setFormData(prevFormData => ({ ...prevFormData, [name]: value }))
-    if (name == 'role') {
+    if (name === 'role') {
       clearData()
     }
   }
@@ -714,9 +709,9 @@ const KitchenStaff = () => {
                       <option value='kitchen-cook'>Cook</option>
                     </Input>
                   </FormGroup>
-                  {formData.role == 'kitchen-admin' ? (
+                  {formData.role === 'kitchen-admin' ? (
                     <>
-                      <UserPermissions
+                      {/* <UserPermissions
                         menu={menu}
                         setMenu={setMenu}
                         menuOptions={menuOptions}
@@ -765,16 +760,17 @@ const KitchenStaff = () => {
                         setCustomization={setCustomization}
                         customizationOptions={customizationOptions}
                         setCustomizationOptions={setCustomizationOptions}
-                      />
+                      /> */}
                     </>
-                  ) : formData.role == 'kitchen-cook' ? (
-                    <UserPermissions
-                      type='cook'
-                      order={order}
-                      setOrder={setOrder}
-                      orderOptions={orderOptions}
-                      setOrderOptions={setOrderOptions}
-                    />
+                  ) : formData.role === 'kitchen-cook' ? (
+                    // <UserPermissions
+                    //   type='cook'
+                    //   order={order}
+                    //   setOrder={setOrder}
+                    //   orderOptions={orderOptions}
+                    //   setOrderOptions={setOrderOptions}
+                    // />
+                    <></>
                   ) : (
                     ''
                   )}
@@ -832,9 +828,9 @@ const KitchenStaff = () => {
                       <option value='kitchen-cook'>Cook</option>
                     </Input>
                   </FormGroup>
-                  {formData.role == 'kitchen-admin' ? (
+                  {formData.role === 'kitchen-admin' ? (
                     <>
-                      <UserPermissions
+                      {/* <UserPermissions
                         menu={menu}
                         setMenu={setMenu}
                         menuOptions={menuOptions}
@@ -883,16 +879,17 @@ const KitchenStaff = () => {
                         setCustomization={setCustomization}
                         customizationOptions={customizationOptions}
                         setCustomizationOptions={setCustomizationOptions}
-                      />
+                      /> */}
                     </>
-                  ) : formData.role == 'kitchen-cook' ? (
-                    <UserPermissions
-                      type='cook'
-                      order={order}
-                      setOrder={setOrder}
-                      orderOptions={orderOptions}
-                      setOrderOptions={setOrderOptions}
-                    />
+                  ) : formData.role === 'kitchen-cook' ? (
+                    // <UserPermissions
+                    //   type='cook'
+                    //   order={order}
+                    //   setOrder={setOrder}
+                    //   orderOptions={orderOptions}
+                    //   setOrderOptions={setOrderOptions}
+                    // />
+                    <></>
                   ) : (
                     ''
                   )}

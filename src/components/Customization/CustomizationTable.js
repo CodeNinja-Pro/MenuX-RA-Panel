@@ -80,7 +80,7 @@ const CustomizationTable = ({
       <Container fluid>
         <Row>
           <div className='col'>
-            {user?.type == 'kitchen-admin' ? (
+            {user?.type === 'kitchen-admin' ? (
               <>
                 {customizationPermissions?.get ? (
                   <Card className='shadow'>

@@ -392,7 +392,7 @@ const ScratchMenu = ({ menuID }) => {
             </div>
             {/* {show categories on side } */}
             {categoriesAndItems
-              ?.filter(ele => ele.type == 'category')
+              ?.filter(ele => ele.type === 'category')
               .map((ele, index) => {
                 return (
                   <div key={index} className='d-flex align-items-center'>
@@ -1399,13 +1399,13 @@ const ScratchMenu = ({ menuID }) => {
                           <Button
                             className='modal__btn'
                             disabled={
-                              selectedOptions.length == 0 ||
+                              selectedOptions.length === 0 ||
                               !ageFrom ||
                               !ageTo ||
                               !gender
                             }
                             style={
-                              selectedOptions.length == 0 ||
+                              selectedOptions.length === 0 ||
                               !ageFrom ||
                               !ageTo ||
                               !gender

@@ -85,7 +85,7 @@ const HeaderCards = () => {
   useEffect(() => {
     if (user?.type == 'admin') {
       // dispatch(getRestaurantStats())
-    } else if (user?.type == 'restaurant') {
+    } else if (user?.type === 'restaurant') {
       // dispatch(getRestaurantStatsById(user?.restaurantID))
     }
   }, [])

@@ -102,20 +102,20 @@ const headCells = [
     numeric: false,
     label: 'Text'
   },
-  {
-    id: 'sender',
-    numeric: false,
-    label: 'From'
-  },
-  {
-    id: 'destination',
-    numeric: false,
-    label: 'To'
-  },
+  // {
+  //   id: 'sender',
+  //   numeric: false,
+  //   label: 'From'
+  // },
+  // {
+  //   id: 'destination',
+  //   numeric: false,
+  //   label: 'To'
+  // },
   {
     id: 'check',
     numeric: false,
-    label: 'Check?'
+    label: 'Status'
   },
   {
     id: 'createdAt',
@@ -343,7 +343,7 @@ export default function NotificationTable () {
                               key={labelId}
                               sx={{ cursor: 'pointer' }}
                             >
-                              <TableCell align='center'>{index}</TableCell>
+                              <TableCell align='center'>{index + 1}</TableCell>
                               <TableCell align='center'>{row.title}</TableCell>
                               <TableCell
                                 onClick={() => {
@@ -357,10 +357,10 @@ export default function NotificationTable () {
                                   ? row.text.slice(0, 30) + '...'
                                   : row.text}
                               </TableCell>
-                              <TableCell align='center'>{row.sender}</TableCell>
+                              {/* <TableCell align='center'>{row.sender}</TableCell>
                               <TableCell align='center'>
                                 {row.destination}
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell align='center' width={'10%'}>
                                 {row.check === true ? (
                                   <Typography
@@ -371,7 +371,7 @@ export default function NotificationTable () {
                                     }}
                                     color={'rgba(40, 199, 111, 1)'}
                                   >
-                                    Checked
+                                    Opened
                                   </Typography>
                                 ) : (
                                   <Typography
@@ -381,7 +381,7 @@ export default function NotificationTable () {
                                     }}
                                     color={'rgba(241, 65, 108, 1)'}
                                   >
-                                    Unchecked
+                                    Unopened
                                   </Typography>
                                 )}
                               </TableCell>

@@ -182,7 +182,7 @@ export default function FeedbackForm (props) {
         >
           <Button
             fullWidth
-            disabled={score === -1}
+            disabled={score === -1 || !feedback}
             variant='contained'
             style={{ margin: '30px' }}
             onClick={() => {

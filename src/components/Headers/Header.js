@@ -1,6 +1,4 @@
 // reactstrap components
-import AllOrderCardModal from '../Modals/AllOrderCardModal'
-import TotalSalesModal from '../Modals/TotalSalesModal'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
@@ -10,10 +8,6 @@ import {
   Container,
   Col,
   Row,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   CardHeader,
   CardBody,
   Spinner
@@ -891,8 +885,6 @@ const Header = () => {
 
   return (
     <>
-      <AllOrderCardModal toggle={toggle} modal={modal} />
-      <TotalSalesModal toggles={toggles} modal={modals} />
       <Container fluid className='header pb-5 pt-5 pt-md-7'>
         <Container fluid>
           <Row className='my-3 mx-2'>

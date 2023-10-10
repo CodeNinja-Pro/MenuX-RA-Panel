@@ -41,7 +41,6 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined'
 import GTranslateOutlinedIcon from '@mui/icons-material/GTranslateOutlined'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import ChangeLanguageDialog from './common/ChangeLanguageDialog'
 import FeedbackForm from './common/FeedbackForm'
 import { Link } from 'react-router-dom'
@@ -256,7 +255,7 @@ const AdminNavbar = props => {
                     >
                       <Avatar
                         alt='Remy Sharp'
-                        sx={{ width: '65px' }}
+                        sx={{ width: '100%' }}
                         src={bell}
                       />
                     </StyledBadge>
@@ -396,6 +395,16 @@ const AdminNavbar = props => {
                       </DropdownItem>
                     </Link>
                   )}
+                  {
+                    <DropdownItem
+                      onClick={() => {
+                        setSoundSettingModal(true)
+                      }}
+                    >
+                      <VolumeUpOutlinedIcon />
+                      <span>Notification Sound</span>
+                    </DropdownItem>
+                  }
                   {user?.type === 'restaurant' && (
                     <DropdownItem
                       onClick={() => {
@@ -406,16 +415,6 @@ const AdminNavbar = props => {
                       <span>Notifications</span>
                     </DropdownItem>
                   )}
-                  {
-                    <DropdownItem
-                      onClick={() => {
-                        setSoundSettingModal(true)
-                      }}
-                    >
-                      <VolumeUpOutlinedIcon />
-                      <span>Change Sound</span>
-                    </DropdownItem>
-                  }
                   {
                     <DropdownItem
                       onClick={() => {
@@ -433,7 +432,7 @@ const AdminNavbar = props => {
                       }}
                     >
                       <CommentOutlinedIcon />
-                      <span>Feedback</span>
+                      <span>Send Feedback</span>
                     </DropdownItem>
                   )}
 

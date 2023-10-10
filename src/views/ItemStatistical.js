@@ -11,7 +11,6 @@ import {
   CardContent
 } from '@mui/material'
 import { Container } from 'reactstrap'
-import { addDays } from 'date-fns'
 import ItemStatisticData from '../components/ItemStatistics/ItemStatisticData'
 import StatisticsChart from '../components/ItemStatistics/StatisticsChart'
 import { useDispatch, useSelector } from 'react-redux'

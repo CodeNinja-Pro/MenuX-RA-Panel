@@ -8,7 +8,6 @@ import Sidebar from '../components/Sidebar/Sidebar.js'
 import routes from '../routes.js'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CheckoutResponses from '../views/CheckoutResponses'
 import { getRestaurantImages } from '../store/actions/restaurantAction'
 import EditScratchMenu from '../components/CreateNewMenu/EditScratchMenu'
 
@@ -92,10 +91,7 @@ const Super = props => {
           setHide={setHide}
         />
         <Switch>
-          <Route
-            path='/admin/checkout-responses/:id'
-            component={CheckoutResponses}
-          />
+          <Route path='/admin/checkout-responses/:id' />
           <Route path='/admin/edit-menu/:id' component={EditScratchMenu} />
           {getRoutes(routes)}
 

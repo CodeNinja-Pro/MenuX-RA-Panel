@@ -1,10 +1,5 @@
-import CustomizationTable from '../components/Customization/CustomizationTable'
-import AddRestaurantImageModal from '../components/Modals/AddRestaurantImageModal'
-import DeleteRestaurantImageModal from '../components/Modals/DeleteRestaurantImageModal'
-import EditRestaurantImageModal from '../components/Modals/EditRestaurantImageModal'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import React, { useEffect } from 'react'
-import ReactDOM from 'react-dom'
 
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -53,7 +48,7 @@ import { getCurrentRoleDetail } from '../store/actions/staffAction'
 
 function Customize () {
   const dispatch = useDispatch()
-  const { user, uid } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.auth)
   useEffect(() => {
     dispatch(getCustomization(user.restaurantID))
   }, [])
@@ -62,8 +57,8 @@ function Customize () {
   const [addModal, setAddModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
-  const [editData, setEditData] = useState('')
-  const [index, setIndex] = useState('')
+  // const [editData, setEditData] = useState('')
+  // const [index, setIndex] = useState('')
 
   // Status of this section as staff role
   const [sectionPermission, setSectionPermission] = useState(false)

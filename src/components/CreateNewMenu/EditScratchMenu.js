@@ -867,7 +867,7 @@ const EditScratchMenu = () => {
             </Col>
 
             {customOffcanvas &&
-              (selectedOption == 'Categories' ? (
+              (selectedOption === 'Categories' ? (
                 //Add Categories
                 <Col md={6}>
                   <div className='w-100 h-100 bg-white shadow-sm d-flex flex-column justify-content-evenly  side-offcanvas'>

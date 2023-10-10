@@ -243,7 +243,7 @@ const LabelsMenu = () => {
                   alignItems={'center'}
                 ></Box>
               </Box>
-              {user?.type == 'kitchen-admin' ? (
+              {user?.type === 'kitchen-admin' ? (
                 <>
                   {labelPermissions?.get ? (
                     <></>

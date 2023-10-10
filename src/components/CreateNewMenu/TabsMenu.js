@@ -142,7 +142,7 @@ const TabsMenu = () => {
                   </Grid>
                 </Grid>
               </Box>
-              {user?.type == 'kitchen-admin' ? (
+              {user?.type === 'kitchen-admin' ? (
                 <>
                   {tabPermissions?.get ? (
                     <></>

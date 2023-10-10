@@ -10,21 +10,13 @@ import Menus from './views/Menus'
 import KitchenStaff from './views/KitchenStaff'
 import Customers from './views/Customers'
 import CustomerFeedback from './views/CustomerFeedback'
-import Orders from './views/Orders'
 import ForgetPassword from './views/auth/ForgetPassword'
 // import Statistics from './views/Statistics'
 // import Catalog from './views/Catolog'
-import Category from './views/Category'
-import Labels from './views/Labels'
 import SubAdmin from './views/SubAdmin'
 import Requests from './views/Requests'
-import PaymentConnection from './views/PaymentConnection'
-import StoreTimings from './views/StoreTimings'
-import PickupOrDelivery from './views/PickupOrDelivery'
-import PaymentsAndReports from './views/PaymentsAndReports'
 // import Reports from './views/Reports'
 // import Settings from './views/Settings'
-import Holidays from './views/Holidays'
 import OrdersRestaurant from './views/OrdersRestaurant'
 
 import dashboard from './assets/common/sidebar/dashboard_black.png'
@@ -54,10 +46,7 @@ import reportactive from './assets/img/icons/activeIcons/reportactive.svg'
 
 import menuManage from './assets/img/icons/menuManage.svg'
 import AdminLogin from './views/auth/AdminLogin'
-import ClientSettings from './views/ClientSettings'
-import AccountSettings from './views/AccountSettings'
 import SignUp from './views/auth/SignUp'
-import VenueSettings from './views/VenueSettings'
 import Recommendation from './views/Recommendation.js'
 import SettingSection from './views/SettingSection.js'
 import Customize from './views/Customize'
@@ -105,16 +94,6 @@ var routes = [
     type: 'admin',
     layout: '/admin'
   },
-  {
-    path: '/payments-reports',
-    name: 'Payments & Reports',
-    icon: report,
-    activeIcon: reportactive,
-    component: PaymentsAndReports,
-    type: 'admin',
-    layout: '/admin'
-  },
-
   {
     path: '/new-menu',
     name: 'Menu',
@@ -215,117 +194,6 @@ var routes = [
     layout: '/admin'
   },
   {
-    path: '/payment-connection',
-    name: 'Payment Connection',
-    icon: 'fa fa-list text-primary',
-    component: PaymentConnection,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/store-timings',
-    name: 'Store Timings',
-    icon: 'fa fa-list text-primary',
-    component: StoreTimings,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/pickup-or-delivery',
-    name: 'Pickup or Delivery',
-    icon: 'fa fa-list text-primary',
-    component: PickupOrDelivery,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/client-settings',
-    name: 'Client Settings',
-    icon: 'fa fa-list text-primary',
-    component: ClientSettings,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/accout-settings',
-    name: 'Account Settings',
-    icon: 'fa fa-list text-primary',
-    component: AccountSettings,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/venue-settings',
-    name: 'Venue Settings',
-    icon: 'fa fa-list text-primary',
-    component: VenueSettings,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
-    path: '/category',
-    name: 'Categories',
-    icon: 'fas fa-address-card text-primary',
-    component: Category,
-    type: 'restaurant',
-
-    layout: '/admin'
-  },
-  {
-    path: '/labels',
-    name: 'Labels',
-    icon: 'fa fa-tag text-yellow',
-    component: Labels,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-
-  {
-    path: '/orders',
-    name: 'Orders',
-    icon: order,
-    activeIcon: orderactive,
-    component: Orders,
-    type: 'admin',
-    layout: '/admin'
-  },
-  // {
-  //   path: "/catalog",
-  //   name: "Catalog",
-  //   icon: catalog,
-  //   activeIcon: catalogactive,
-  //   component: Catalog,
-  //   type: "restaurant",
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: '/checkoutQuestions',
-  //   name: 'Checkout Question',
-  //   icon: report,
-  //   activeIcon: reportactive,
-  //   component: CheckoutQuestion,
-  //   type: 'restaurant',
-  //   layout: '/admin'
-  // },
-
-  // {
-  //   path: "/notifications",
-  //   name: "Notifcations",
-  //   icon: belldark,
-  //   activeIcon: bellactive,
-  //   component: AllNotifcations,
-  //   type: "restaurant",
-  //   layout: "/admin",
-  // },
-  {
-    path: '/holidays',
-    name: 'Holidays',
-    icon: 'fas fa-cog text-danger',
-    component: Holidays,
-    type: 'restaurant',
-    layout: '/admin'
-  },
-  {
     path: '/login',
     name: 'Login',
     icon: 'ni ni-key-25 text-info',
@@ -395,14 +263,6 @@ var routes = [
     path: '/create-popup',
     name: 'Creaate Popup',
     component: CreatePopup,
-    type: 'restaurant',
-    layout: '/admin',
-    isMenu: false
-  },
-  {
-    path: '/create-role',
-    name: 'Creaate Role',
-    component: CreateRole,
     type: 'restaurant',
     layout: '/admin',
     isMenu: false

@@ -6,8 +6,6 @@ import {
   ThemeProvider,
   Box,
   Typography,
-  TextField,
-  InputAdornment,
   Button,
   Dialog,
   DialogActions,
@@ -25,7 +23,6 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import { ThemeMain } from '../components/common/Theme'
 import StaffTable from '../components/Staff/StaffTable'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getAllStaffInfo,
@@ -34,12 +31,15 @@ import {
   sendNewStaffRequest
 } from '../store/actions/staffAction'
 import { toast } from 'react-toastify'
+import CreateRole from '../components/Staff/CreateRole'
 
 export default function StaffSection () {
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.auth)
   const { staffData } = useSelector(state => state.staff)
+
+  const [flag, setFlag] = useState(false)
 
   // Status of this section as staff role
   const [sectionPermission, setSectionPermission] = useState(false)
@@ -104,65 +104,76 @@ export default function StaffSection () {
       <ThemeProvider theme={ThemeMain}>
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
-            <Card sx={{ boxShadow: 'none' }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Grid
-                    item
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'space-between'}
-                    alignItems={'center'}
-                  >
-                    <Typography
-                      fontWeight={'bold'}
-                      marginTop={'10px'}
-                      fontSize={'25px'}
-                      textAlign={'left'}
-                      marginLeft={2}
-                    >
-                      Total Users
-                    </Typography>
-                    <Box
+            {flag === true ? (
+              <CreateRole setFlag={setFlag} />
+            ) : (
+              <Card sx={{ boxShadow: 'none' }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Grid
+                      item
+                      xs={12}
                       display={'flex'}
+                      justifyContent={'space-between'}
+                      alignItems={'center'}
+                    >
+                      <Typography
+                        fontWeight={'bold'}
+                        marginTop={'10px'}
+                        fontSize={'25px'}
+                        textAlign={'left'}
+                        marginLeft={2}
+                      >
+                        Total Users
+                      </Typography>
+                      <Box
+                        display={'flex'}
+                        sx={
+                          user.role === 'staff' &&
+                          disableOnTrue(sectionPermission)
+                        }
+                      >
+                        <Button
+                          onClick={() => setModalFlag(true)}
+                          sx={{ marginRight: 2 }}
+                          variant='outlined'
+                        >
+                          Assign Role
+                        </Button>
+                        {/* <Link to='/admin/create-role'> */}
+                        <Button
+                          sx={{ marginRight: 2 }}
+                          onClick={() => {
+                            setFlag(true)
+                          }}
+                          variant='contained'
+                        >
+                          <AddOutlinedIcon />
+                          Create Role
+                        </Button>
+                        {/* </Link> */}
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography marginLeft={2} textAlign={'left'}>
+                        Find all of your company's administrator accounts and
+                        their associate Priviligies.
+                      </Typography>
+                    </Grid>
+                    <Box
                       sx={
                         user.role === 'staff' &&
                         disableOnTrue(sectionPermission)
                       }
                     >
-                      <Button
-                        onClick={() => setModalFlag(true)}
-                        sx={{ marginRight: 2 }}
-                        variant='outlined'
-                      >
-                        Assign Role
-                      </Button>
-                      <Link to='/admin/create-role'>
-                        <Button sx={{ marginRight: 2 }} variant='contained'>
-                          <AddOutlinedIcon />
-                          Create Role
-                        </Button>
-                      </Link>
+                      <Grid item xs={12} marginTop={2}>
+                        <StaffTable />
+                      </Grid>
                     </Box>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Typography marginLeft={2} textAlign={'left'}>
-                      Find all of your company's administrator accounts and
-                      their associate Priviligies.
-                    </Typography>
-                  </Grid>
-                  <Box
-                    sx={
-                      user.role === 'staff' && disableOnTrue(sectionPermission)
-                    }
-                  >
-                    <Grid item xs={12} marginTop={2}>
-                      <StaffTable />
-                    </Grid>
-                  </Box>
                 </Grid>
-              </Grid>
-            </Card>
+              </Card>
+            )}
 
             <Dialog
               open={modalFlag}

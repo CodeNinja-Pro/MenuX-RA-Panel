@@ -40,7 +40,7 @@ import {
 } from '../../store/actions/staffAction'
 import { toast } from 'react-toastify'
 
-export default function CreateRole () {
+export default function CreateRole (props) {
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -123,248 +123,312 @@ export default function CreateRole () {
 
   return (
     <>
-      <OnlyHeader />
       <ThemeProvider theme={ThemeMain}>
-        <Container className='mt--9 mb-5' fluid>
-          <Box display={'flex'} alignItems={'center'}>
-            <IconButton
-              color='primary'
-              onClick={() => {
-                history.goBack()
-              }}
-              sx={{
-                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
-                marginBottom: '15px',
-                marginTop: '10px',
-                display: 'flex',
-                justifyContent: 'left',
-                marginLeft: '40px'
-              }}
-            >
-              <ArrowBackIosNewIcon sx={{ marginRight: '3px' }} />
-            </IconButton>
-            <Typography marginLeft={3} fontWeight={'bold'} fontSize={'24px'}>
-              Create Role
-            </Typography>
-          </Box>
-          <Container fluid>
-            <Grid container spacing={2}>
-              <Grid item xs={12} lg={4}>
-                <Card sx={{ boxShadow: 'none', height: '100%' }}>
-                  <CardContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <FormControl fullWidth variant='outlined'>
-                          <FormHelperText
-                            style={{ fontSize: '18px' }}
-                            id='outlined-weight-helper-text'
-                          >
-                            Role Name
-                          </FormHelperText>
-                          <OutlinedInput
-                            id='outlined-adornment-weight'
-                            aria-describedby='outlined-weight-helper-text'
-                            inputProps={{
-                              'aria-label': 'weight'
-                            }}
-                            placeholder='Waiter'
-                            value={roleName}
-                            onChange={e => setRoleName(e.target.value)}
-                          />
-                        </FormControl>
-                        <FormControl fullWidth variant='outlined'>
-                          <FormHelperText
-                            style={{ fontSize: '18px' }}
-                            id='outlined-weight-helper-text'
-                          >
-                            Permission
-                          </FormHelperText>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            value={permission}
-                            onChange={e => setPermission(e.target.value)}
-                          >
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Menu') ? true : false
-                              }
-                              value={'Menu'}
-                            >
-                              Menu
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Orders')
-                                  ? true
-                                  : false
-                              }
-                              value={'Orders'}
-                            >
-                              Orders
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Requests')
-                                  ? true
-                                  : false
-                              }
-                              value={'Requests'}
-                            >
-                              Requests
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Item Statistics')
-                                  ? true
-                                  : false
-                              }
-                              value={'Item Statistics'}
-                            >
-                              Item Statistics
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Recommendations')
-                                  ? true
-                                  : false
-                              }
-                              value={'Recommendations'}
-                            >
-                              Recommendations
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Customer Feedback')
-                                  ? true
-                                  : false
-                              }
-                              value={'Customer Feedback'}
-                            >
-                              Customer Feedback
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Customers')
-                                  ? true
-                                  : false
-                              }
-                              value={'Customers'}
-                            >
-                              Customers
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Staff') ? true : false
-                              }
-                              value={'Staff'}
-                            >
-                              Staff
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Customization')
-                                  ? true
-                                  : false
-                              }
-                              value={'Customization'}
-                            >
-                              Customization
-                            </MenuItem>
-                            <MenuItem
-                              disabled={
-                                selectedSection.includes('Setting')
-                                  ? true
-                                  : false
-                              }
-                              value={'Setting'}
-                            >
-                              Setting
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                        {permission ? (
-                          <>
-                            <Typography
-                              fontWeight={'bold'}
-                              fontSize={'20px'}
-                              textAlign={'left'}
-                              margin={3}
-                            >
-                              {permission}
-                            </Typography>
-                            <Box
-                              display={'flex'}
-                              justifyContent={'space-around'}
-                              alignItems={'center'}
-                            >
-                              <FormControlLabel
-                                control={
-                                  <Switch
-                                    checked={
-                                      allow === 'ViewOnly' ? true : false
-                                    }
-                                    onChange={() => setAllow('ViewOnly')}
-                                  />
-                                }
-                                label='ViewOnly'
-                              />
-                              <FormControlLabel
-                                control={
-                                  <Switch
-                                    checked={
-                                      allow === 'ViewEdit' ? true : false
-                                    }
-                                    onChange={() => setAllow('ViewEdit')}
-                                  />
-                                }
-                                label='View And Edit'
-                              />
-                            </Box>
-                          </>
-                        ) : (
-                          ''
-                        )}
-                        <Button
-                          sx={{ display: 'flex', margin: 3 }}
-                          variant='contained'
-                          disabled={!permission || !allow}
-                          onClick={addRoleForSection}
+        <Grid container spacing={2}>
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ boxShadow: 'none', height: '100%' }}>
+              <CardContent>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth variant='outlined'>
+                      <FormHelperText
+                        style={{ fontSize: '18px' }}
+                        id='outlined-weight-helper-text'
+                      >
+                        Role Name
+                      </FormHelperText>
+                      <OutlinedInput
+                        id='outlined-adornment-weight'
+                        aria-describedby='outlined-weight-helper-text'
+                        inputProps={{
+                          'aria-label': 'weight'
+                        }}
+                        placeholder='Waiter'
+                        value={roleName}
+                        onChange={e => setRoleName(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormControl fullWidth variant='outlined'>
+                      <FormHelperText
+                        style={{ fontSize: '18px' }}
+                        id='outlined-weight-helper-text'
+                      >
+                        Permission
+                      </FormHelperText>
+                      <Select
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        value={permission}
+                        onChange={e => setPermission(e.target.value)}
+                      >
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Menu') ? true : false
+                          }
+                          value={'Menu'}
                         >
-                          <AddIcon />
-                          Add
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} lg={4}>
-                <Card sx={{ boxShadow: 'none', height: '100%' }}>
-                  <CardContent>
-                    <Box
-                      display={'flex'}
-                      flexDirection={'column'}
-                      justifyContent={'space-between'}
-                      alignItems={'center'}
-                    >
-                      {staffRole.length === 0 ? (
-                        <Typography fontWeight={'bold'}>
-                          No Roles Permissions added Yet
+                          Menu
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Orders') ? true : false
+                          }
+                          value={'Orders'}
+                        >
+                          Orders
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Requests') ? true : false
+                          }
+                          value={'Requests'}
+                        >
+                          Requests
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Item Statistics')
+                              ? true
+                              : false
+                          }
+                          value={'Item Statistics'}
+                        >
+                          Item Statistics
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Recommendations')
+                              ? true
+                              : false
+                          }
+                          value={'Recommendations'}
+                        >
+                          Recommendations
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Customer Feedback')
+                              ? true
+                              : false
+                          }
+                          value={'Customer Feedback'}
+                        >
+                          Customer Feedback
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Customers') ? true : false
+                          }
+                          value={'Customers'}
+                        >
+                          Customers
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Staff') ? true : false
+                          }
+                          value={'Staff'}
+                        >
+                          Staff
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Customization')
+                              ? true
+                              : false
+                          }
+                          value={'Customization'}
+                        >
+                          Customization
+                        </MenuItem>
+                        <MenuItem
+                          disabled={
+                            selectedSection.includes('Setting') ? true : false
+                          }
+                          value={'Setting'}
+                        >
+                          Setting
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                    {permission ? (
+                      <>
+                        <Typography
+                          fontWeight={'bold'}
+                          fontSize={'20px'}
+                          textAlign={'left'}
+                          margin={3}
+                        >
+                          {permission}
                         </Typography>
-                      ) : (
-                        ''
-                      )}
-                      {staffRole?.map(item => (
-                        <Box sx={{ width: '100%' }}>
+                        <Box
+                          display={'flex'}
+                          justifyContent={'space-around'}
+                          alignItems={'center'}
+                        >
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={allow === 'ViewOnly' ? true : false}
+                                onChange={() => setAllow('ViewOnly')}
+                              />
+                            }
+                            label='ViewOnly'
+                          />
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={allow === 'ViewEdit' ? true : false}
+                                onChange={() => setAllow('ViewEdit')}
+                              />
+                            }
+                            label='View And Edit'
+                          />
+                        </Box>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                    <Button
+                      sx={{ display: 'flex', margin: 3 }}
+                      variant='contained'
+                      disabled={!permission || !allow}
+                      onClick={addRoleForSection}
+                    >
+                      <AddIcon />
+                      Add
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ boxShadow: 'none', height: '100%' }}>
+              <CardContent>
+                <Box
+                  display={'flex'}
+                  flexDirection={'column'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                >
+                  {staffRole.length === 0 ? (
+                    <Typography fontWeight={'bold'}>
+                      No Roles Permissions added Yet
+                    </Typography>
+                  ) : (
+                    ''
+                  )}
+                  {staffRole?.map(item => (
+                    <Box sx={{ width: '100%' }}>
+                      <Typography
+                        fontWeight={'bold'}
+                        fontSize={'20px'}
+                        textAlign={'left'}
+                        margin={1}
+                        marginLeft={10}
+                      >
+                        {item.permission}
+                      </Typography>
+                      <Box display={'flex'} justifyContent={'space-around'}>
+                        <FormControlLabel
+                          control={<Checkbox checked={true} />}
+                          label='View'
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={item.allow === 'ViewOnly' ? false : true}
+                            />
+                          }
+                          label='Edit'
+                        />
+                        <IconButton
+                          color='error'
+                          onClick={() => {
+                            removeAllow(item.permission)
+                          }}
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Box>
+                      <Divider />
+                    </Box>
+                  ))}
+                  <Box marginTop={5}>
+                    <Button
+                      variant='outlined'
+                      sx={{ marginRight: 3 }}
+                      onClick={() => {
+                        props.setFlag(false)
+                      }}
+                    >
+                      Discard
+                    </Button>
+                    <Button
+                      variant='contained'
+                      disabled={isLoading || !staffRole || !roleName}
+                      onClick={() => {
+                        createNewRole()
+                      }}
+                    >
+                      Create Role
+                    </Button>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} lg={4}>
+            <Card sx={{ boxShadow: 'none', height: '100%' }}>
+              <CardContent>
+                <Typography
+                  marginBottom={2}
+                  fontWeight={'bold'}
+                  fontSize={'20px'}
+                >
+                  All Staff Roles
+                </Typography>
+
+                {allStaffInfo?.map((item, index) => (
+                  <Accordion key={index}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls='panel1a-content'
+                      id='panel1a-header'
+                    >
+                      <Box
+                        sx={{ width: '100%' }}
+                        display={'flex'}
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                      >
+                        <Typography fontSize={'20px'}>
+                          {item.roleName}
+                        </Typography>
+                        <IconButton
+                          onClick={() => {
+                            deleteRole(item.id)
+                          }}
+                        >
+                          <DeleteOutlineOutlinedIcon
+                            color='error'
+                            fontSize='medium'
+                          />
+                        </IconButton>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {item.role?.map((role, index) => (
+                        <Box key={index}>
                           <Typography
-                            fontWeight={'bold'}
-                            fontSize={'20px'}
                             textAlign={'left'}
-                            margin={1}
-                            marginLeft={10}
+                            fontWeight={'bold'}
+                            fontSize={'18px'}
+                            marginLeft={2}
+                            marginBottom={1}
                           >
-                            {item.permission}
+                            {role.permission}
                           </Typography>
                           <Box display={'flex'} justifyContent={'space-around'}>
                             <FormControlLabel
@@ -375,129 +439,22 @@ export default function CreateRole () {
                               control={
                                 <Checkbox
                                   checked={
-                                    item.allow === 'ViewOnly' ? false : true
+                                    role.allow === 'ViewOnly' ? false : true
                                   }
                                 />
                               }
                               label='Edit'
                             />
-                            <IconButton
-                              color='error'
-                              onClick={() => {
-                                removeAllow(item.permission)
-                              }}
-                            >
-                              <RemoveCircleOutlineIcon />
-                            </IconButton>
                           </Box>
-                          <Divider />
                         </Box>
                       ))}
-                      <Box marginTop={5}>
-                        <Button
-                          variant='outlined'
-                          sx={{ marginRight: 3 }}
-                          onClick={() => {
-                            history.goBack()
-                          }}
-                        >
-                          Discard
-                        </Button>
-                        <Button
-                          variant='contained'
-                          disabled={isLoading || !staffRole || !roleName}
-                          onClick={() => {
-                            createNewRole()
-                          }}
-                        >
-                          Create Role
-                        </Button>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} lg={4}>
-                <Card sx={{ boxShadow: 'none', height: '100%' }}>
-                  <CardContent>
-                    <Typography
-                      marginBottom={2}
-                      fontWeight={'bold'}
-                      fontSize={'20px'}
-                    >
-                      All Staff Roles
-                    </Typography>
-
-                    {allStaffInfo?.map((item, index) => (
-                      <Accordion key={index}>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls='panel1a-content'
-                          id='panel1a-header'
-                        >
-                          <Box
-                            sx={{ width: '100%' }}
-                            display={'flex'}
-                            justifyContent={'space-between'}
-                            alignItems={'center'}
-                          >
-                            <Typography fontSize={'20px'}>
-                              {item.roleName}
-                            </Typography>
-                            <IconButton
-                              onClick={() => {
-                                deleteRole(item.id)
-                              }}
-                            >
-                              <DeleteOutlineOutlinedIcon
-                                color='error'
-                                fontSize='medium'
-                              />
-                            </IconButton>
-                          </Box>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          {item.role?.map((role, index) => (
-                            <Box key={index}>
-                              <Typography
-                                textAlign={'left'}
-                                fontWeight={'bold'}
-                                fontSize={'18px'}
-                                marginLeft={2}
-                                marginBottom={1}
-                              >
-                                {role.permission}
-                              </Typography>
-                              <Box
-                                display={'flex'}
-                                justifyContent={'space-around'}
-                              >
-                                <FormControlLabel
-                                  control={<Checkbox checked={true} />}
-                                  label='View'
-                                />
-                                <FormControlLabel
-                                  control={
-                                    <Checkbox
-                                      checked={
-                                        role.allow === 'ViewOnly' ? false : true
-                                      }
-                                    />
-                                  }
-                                  label='Edit'
-                                />
-                              </Box>
-                            </Box>
-                          ))}
-                        </AccordionDetails>
-                      </Accordion>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </Container>
-        </Container>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </ThemeProvider>
     </>
   )
