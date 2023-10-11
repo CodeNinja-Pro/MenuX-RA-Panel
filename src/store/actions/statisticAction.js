@@ -26,7 +26,7 @@ export const getAllMenus = userId => async dispatch => {
 
     dispatch({
       type: 'ALL_MENUS',
-      payload: allMenus
+      payload: reviews
     })
   } catch (error) {
     toast.error(error.message)

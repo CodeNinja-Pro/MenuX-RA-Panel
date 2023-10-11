@@ -97,18 +97,36 @@ function Customize () {
   }
 
   const history = useHistory()
+
+  const redirectHandle = () => {
+    return true
+  }
+
+  const redirectCancelHandle = () => {
+    return false
+  }
+
   useEffect(() => {
     const unlisten = history.block((location, action) => {
+      // action === 'POP' &&
+      //   alertify.confirm(
+      //     'Attention',
+      //     () => {
+      //       return true
+      //     },
+      //     () => {
+      //       return false
+      //     }
+      //   )
       if (
-        action === 'PUSH' &&
-        alertify.confirm('Message', function (e) {
-          if (e) {
-            return true
-          } else {
-            return false
-          }
-        })
+        action === 'POP' ||
+        window.confirm(
+          'You have unsaved changes.Are you sure you want to leave this page?'
+        )
       ) {
+        return true
+      } else {
+        return false
       }
     })
 
@@ -1027,7 +1045,7 @@ function Customize () {
                                   </Grid>
                                   <Grid item xl={5} md={5} xs={12}>
                                     <ColorPickerCP
-                                      title={'Item Color'}
+                                      title={'Item Background Color'}
                                       currentColor={backgroundColor}
                                       setColor={setBackgroundColor}
                                       colorChange={backgroundColorChange}
@@ -1035,7 +1053,7 @@ function Customize () {
                                   </Grid>
                                   <Grid item xl={5} md={5} xs={12}>
                                     <ColorPickerCP
-                                      title={'Entire Color'}
+                                      title={'Background Color'}
                                       currentColor={entireColor}
                                       setColor={setEntireColor}
                                       colorChange={entireColorChange}
@@ -1050,7 +1068,7 @@ function Customize () {
                                         marginTop={'10px'}
                                         marginLeft={'30px'}
                                       >
-                                        Header Theme
+                                        Header(Light/Dark)
                                       </Typography>
                                       <FormControlLabel
                                         onClick={onSelectColorMode}
@@ -1087,7 +1105,7 @@ function Customize () {
                                 >
                                   <Grid item xl={5} md={5} xs={12}>
                                     <FontSizeCP
-                                      title='Header Font Size'
+                                      title='Primary Text Font(menu/category/item)'
                                       size={fontSize}
                                       setSize={onFontSizeChange}
                                     />
@@ -1098,7 +1116,7 @@ function Customize () {
                                     size={secondaryFontSize}
                                     setSize={onSecondaryFontSizeChange}
                                   /> */}
-                                    <Typography>Text Font Weight</Typography>
+                                    <Typography>Primary Text Weight</Typography>
                                     <Switch
                                       value={fontWeight}
                                       onChange={onFontWeightChange}
@@ -1116,7 +1134,9 @@ function Customize () {
                                 >
                                   <Grid item xl={5} md={5} xs={12}>
                                     <FontCP
-                                      title={'Header Font Size'}
+                                      title={
+                                        'Primary Text Font(menu/category/item name)'
+                                      }
                                       fontFamily={mainFont}
                                       setFontFamily={setMainFont}
                                     />

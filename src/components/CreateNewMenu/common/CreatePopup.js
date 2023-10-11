@@ -354,11 +354,9 @@ export default function CreatePopup (props) {
                 <CardContent>
                   <Box marginTop={1}>
                     <Typography fontWeight={'bold'} fontSize={'20px'}>
-                      Heading
+                      {heading}
                     </Typography>
-                    <Typography marginBottom={1}>
-                      get 30% off on entire menu
-                    </Typography>
+                    <Typography marginBottom={1}>{text}</Typography>
                     <Box display={'flex'} justifyContent={'center'}>
                       <Box
                         width={'80%'}

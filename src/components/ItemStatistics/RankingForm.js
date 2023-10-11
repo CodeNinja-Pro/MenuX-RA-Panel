@@ -23,11 +23,9 @@ export default function RankingForm (props) {
               fontWeight={'bold'}
               textAlign={'left'}
             >
-              Top Menu Items Clicks
+              {props.title}
             </Typography>
-            <Typography textAlign={'left'}>
-              Menu Items customers visit more often.
-            </Typography>
+            <Typography textAlign={'left'}>{props.description}</Typography>
           </Grid>
           <Grid item xs={3}>
             <ButtonGroup

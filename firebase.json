@@ -28,5 +28,17 @@
   "extensions": {
     "make-payment": "google-pay/make-payment@0.1.3",
     "make-payment-ajow": "google-pay/make-payment@0.1.3"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true,
+    "hosting": {
+      "port": 5000
+    }
   }
 }

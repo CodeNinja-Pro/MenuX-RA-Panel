@@ -1314,6 +1314,7 @@ export const addlabel =
       .collection('labels')
       .add({
         ...payload,
+        type: 'custom',
         labelIcon: downloadURL,
         createdAt: firebase.firestore.Timestamp.now()
       })

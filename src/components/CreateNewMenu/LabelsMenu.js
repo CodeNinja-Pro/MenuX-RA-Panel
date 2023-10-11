@@ -19,7 +19,10 @@ import {
   Divider,
   DialogContentText,
   Grid,
-  IconButton
+  IconButton,
+  Select,
+  MenuItem,
+  InputLabel
 } from '@mui/material'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -51,7 +54,20 @@ const LabelsMenu = () => {
   const [labelImage, setLabelImage] = useState('')
   const [labelImageFile, setLabelImageFile] = useState([])
 
+  const [filter, setFilter] = useState('all')
+
   const labelPermissions = userPermissions?.labels
+
+  const [allLabels, setAllLabels] = useState([])
+
+  useEffect(() => {
+    if (filter === 'all') {
+      setAllLabels(labelsData)
+    } else {
+      const filtered = labelsData?.filter(label => label.type === filter)
+      setAllLabels(filtered)
+    }
+  }, [filter])
 
   const addtoggle = () => {
     setAddModal(!addModal)
@@ -194,7 +210,7 @@ const LabelsMenu = () => {
                 alignItems={'center'}
               >
                 <Grid container>
-                  <Grid item xs={6} lg={7}>
+                  <Grid item xs={4} lg={5}>
                     <Typography
                       textAlign={'left'}
                       marginLeft={2}
@@ -204,9 +220,28 @@ const LabelsMenu = () => {
                       Labels
                     </Typography>
                   </Grid>
+                  <Grid item xs={4} lg={2}>
+                    <FormControl sx={{ width: '150px' }}>
+                      <InputLabel id='demo-simple-select-autowidth-label'>
+                        Filter
+                      </InputLabel>
+                      <Select
+                        labelId='demo-simple-select-autowidth-label'
+                        id='demo-simple-select-autowidth'
+                        value={filter}
+                        onChange={e => setFilter(e.target.value)}
+                        autoWidth
+                        label='Filter'
+                      >
+                        <MenuItem value={'all'}>All</MenuItem>
+                        <MenuItem value={'default'}>Default</MenuItem>
+                        <MenuItem value={'custom'}>Custom</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   <Grid
                     item
-                    xs={6}
+                    xs={4}
                     lg={2}
                     display={'flex'}
                     alignItems={'center'}
@@ -255,7 +290,7 @@ const LabelsMenu = () => {
                 </>
               ) : (
                 <LabelDataTable
-                  tableItems={labelsData}
+                  tableItems={allLabels}
                   edittoggle={edittoggle}
                   deleteLabel={deleteLabel}
                 />

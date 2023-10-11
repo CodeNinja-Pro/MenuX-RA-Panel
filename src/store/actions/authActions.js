@@ -567,6 +567,7 @@ export const setupRestaurant =
         firebase.firestore().collection('labels').add({
           labelName: label.name,
           labelIcon: label.url,
+          type: 'default',
           restaurantID: id
         })
       })

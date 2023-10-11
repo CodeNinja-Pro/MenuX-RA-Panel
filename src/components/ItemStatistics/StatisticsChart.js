@@ -386,10 +386,18 @@ export default function StatisticsChart () {
       <ThemeProvider theme={ThemeMain}>
         <Grid container marginTop={'10px'}>
           <Grid item xs={12} md={6}>
-            <RankingForm items={items} />
+            <RankingForm
+              title='Top Menu Items Clicks'
+              description='Menu Items customers visit more often.'
+              items={items}
+            />
           </Grid>
           <Grid item xs={12} md={6}>
-            <RankingForm items={items} />
+            <RankingForm
+              title='Top Categories Clicks'
+              description='Categories customers visit more often.'
+              items={items}
+            />
           </Grid>
           <Grid item xs={12}>
             <Card sx={{ margin: '5px' }}>
