@@ -615,3 +615,7 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [debug] [2023-10-11T17:28:55.200Z] Found firebase-functions binary at 'E:\MenuX_RA_Panel\functions\node_modules\.bin\firebase-functions'
 [info] Serving at port 8254
 
+[debug] [2023-10-11T17:29:02.971Z] Got response from /__/functions.yaml {"endpoints":{"app":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"app"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] +  functions: Loaded functions definitions from source: app. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: app."}}
