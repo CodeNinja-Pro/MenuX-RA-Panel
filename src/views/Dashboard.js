@@ -19,7 +19,7 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 
 import {
   BarChart,
-  // Bar,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -38,19 +38,25 @@ import BarChartForm from '../components/Charts/BarChart'
 import { getAllMenus } from '../store/actions/statisticAction'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import Bar from 'react-apexcharts'
 
 import {
+  sortItemByConversionRate,
   sortItemByPurchase,
+  sortItemByRevenue,
   sortItemByView
 } from '../Statistical/generalStatistics'
 
 export default function Dashboard () {
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
-  const { allMenus, viewSortItems, purchaseSortItems } = useSelector(
-    state => state.statistic
-  )
+  const {
+    allMenus,
+    viewSortItems,
+    purchaseSortItems,
+    conversionRateSortItems,
+    revenueSortItems,
+    totalRevenue
+  } = useSelector(state => state.statistic)
 
   const [mostViewedItems, setMostViewedItems] = useState([])
   const [leastViewedItems, setLeastViewedItems] = useState([])
@@ -62,6 +68,9 @@ export default function Dashboard () {
   let x_leastViewedItems = []
   let x_bestSellers = []
   let x_worstSellers = []
+  let revenueArray = []
+
+  let topRevenue = 0
 
   useEffect(() => {
     dispatch(getAllMenus(user.restaurantID))
@@ -70,10 +79,18 @@ export default function Dashboard () {
   useEffect(() => {
     dispatch(sortItemByView(allMenus))
     dispatch(sortItemByPurchase(allMenus))
+    dispatch(sortItemByConversionRate(allMenus))
+    dispatch(sortItemByRevenue(allMenus))
   }, [allMenus])
 
-  const revenueByItems = {
-    labels: ['Pizza', 'Burger', 'Bread', 'Cheese', 'Fries', 'Chicken'],
+  let revenueByItems = {
+    labels: revenueSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        return item.name
+      }),
     colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
     options: {
       chart: { type: 'donut' },
@@ -106,9 +123,9 @@ export default function Dashboard () {
               total: {
                 show: true,
                 formatter: function (w) {
-                  const totals = w.globals.seriesTotals
+                  let totals = w.globals.seriesTotals
                   const result = totals.reduce((a, b) => a + b, 0)
-                  return result
+                  return '$' + result
                 }
               }
             }
@@ -116,10 +133,19 @@ export default function Dashboard () {
         }
       }
     },
-    series: [44, 55, 41, 17, 15, 32]
+    series: revenueSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        let revenue =
+          (Number(item.price) - Number(item.totalPrice)) * Number(item.purchase)
+        topRevenue += revenue
+        return revenue
+      })
   }
 
-  const chartData = [
+  let chartData = [
     {
       name: 'Cheesy',
       rate: 80.6
@@ -187,7 +213,7 @@ export default function Dashboard () {
             {
               from: 0,
               to: 100000000,
-              color: '#0074D9' // Blue shade
+              color: '#FF9920' // Blue shade
             }
           ],
           backgroundBarColors: [],
@@ -268,7 +294,7 @@ export default function Dashboard () {
             {
               from: 0,
               to: 100000000,
-              color: '#0074D9' // Blue shade
+              color: '#7239EA' // Blue shade
             }
           ],
           backgroundBarColors: [],
@@ -299,7 +325,7 @@ export default function Dashboard () {
     }
   }
 
-  const leastClickItemsSeries = [
+  let leastClickItemsSeries = [
     {
       name: 'Clicked',
       data: viewSortItems.slice(0, 5)?.map(item => {
@@ -380,7 +406,7 @@ export default function Dashboard () {
     }
   }
 
-  const bestSellerItemsSeries = [
+  let bestSellerItemsSeries = [
     {
       name: 'Clicked',
       data: purchaseSortItems
@@ -430,7 +456,7 @@ export default function Dashboard () {
             {
               from: 0,
               to: 100000000,
-              color: '#0074D9' // Blue shade
+              color: '#FF5959' // Blue shade
             }
           ],
           backgroundBarColors: [],
@@ -461,7 +487,7 @@ export default function Dashboard () {
     }
   }
 
-  const worstSellerItemsSeries = [
+  let worstSellerItemsSeries = [
     {
       name: 'Clicked',
       data: purchaseSortItems.slice(0, 5)?.map(item => {
@@ -483,7 +509,7 @@ export default function Dashboard () {
           fontSize: '12px'
         }
       },
-      categories: purchaseSortItems.slice(0, 5)?.map(item => {
+      categories: conversionRateSortItems.slice(0, 5)?.map(item => {
         return item?.name
       })
     },
@@ -538,16 +564,19 @@ export default function Dashboard () {
     }
   }
 
-  const topConversionRateSeries = [
+  let topConversionRateSeries = [
     {
       name: 'Clicked',
-      data: purchaseSortItems.slice(0, 5)?.map(item => {
-        return item?.purchase
+      data: conversionRateSortItems.slice(0, 5)?.map(item => {
+        let number = Number(item?.purchase) / Number(item?.views)
+        return new Intl.NumberFormat('en-IN', {
+          maximumSignificantDigits: 2
+        }).format(number)
       })
     }
   ]
 
-  const data = [
+  let data = [
     {
       name: 'Page A',
       uv: 4000,
@@ -598,8 +627,8 @@ export default function Dashboard () {
       <ThemeProvider theme={ThemeMain}>
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
-            {/* <Card sx={{ boxShadow: 'none' }}>
-              <CardContent>
+            <Card sx={{ boxShadow: 'none' }}>
+              {/* <CardContent>
                 <Grid container spacing={2} columns={10}>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
@@ -693,7 +722,7 @@ export default function Dashboard () {
                     />
                   </Grid>
                 </Grid>
-              </CardContent>
+              </CardContent> */}
             </Card>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={8}>
@@ -727,28 +756,37 @@ export default function Dashboard () {
                 <Card
                   sx={{ boxShadow: 'none', marginTop: '20px', height: '100%' }}
                 >
-                  <CardContent>
+                  <CardContent
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      flexDirection: 'column'
+                    }}
+                  >
                     <Typography fontWeight={'bold'} fontSize={'20px'}>
-                      Revenue Breakdown
+                      Top Revenue Items
                     </Typography>
-                    <Typography fontWeight={'bold'}>$2540000</Typography>
+                    <Typography fontWeight={'bold'}>
+                      ${topRevenue}/${totalRevenue}
+                    </Typography>
                     <Box sx={{ width: '100%' }}>
                       <DonutChart
                         options={revenueByItems.options}
                         series={revenueByItems.series}
                       />
                     </Box>
-                    <Box marginLeft={1}>
+                    <Box marginLeft={5}>
                       <SidebarDonut
                         options={revenueByItems.labels}
                         series={revenueByItems.series}
                         colors={revenueByItems.colors}
+                        totalRevenue={topRevenue}
                       />
                     </Box>
                   </CardContent>
                 </Card>
               </Grid>
-            </Grid> */}
+            </Grid>
             <Grid container spacing={2} marginTop={3}>
               <Grid item xs={12} md={6}>
                 <Card sx={{ boxShadow: 'none' }}>

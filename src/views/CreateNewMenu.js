@@ -633,6 +633,7 @@ function CreateNewMenu () {
                                               marginLeft: '20px',
                                               marginRight: '20px'
                                             }}
+                                            disabled={addMenuLoader}
                                             variant='contained'
                                             onClick={event => {
                                               setSelectedEdit(ele.id)

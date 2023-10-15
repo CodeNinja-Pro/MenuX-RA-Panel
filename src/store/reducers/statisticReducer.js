@@ -2,6 +2,9 @@ const initState = {
   allMenus: [],
   viewSortItems: [],
   purchaseSortItems: [],
+  conversionRateSortItems: [],
+  revenueSortItems: [],
+  totalRevenue: '',
   clickSortCategories: [],
   boughtSortItems: [],
   peaktimeOrderSortItems: [],
@@ -24,6 +27,17 @@ const statisticReducer = (state = initState, action) => {
       return {
         ...state,
         purchaseSortItems: payload
+      }
+    case 'CONVERSION_SORT_ITEMS':
+      return {
+        ...state,
+        conversionRateSortItems: payload
+      }
+    case 'REVENUE_SORT_ITEMS':
+      return {
+        ...state,
+        revenueSortItems: payload.sortedArray,
+        totalRevenue: payload.totalRevenue
       }
     case 'CLICK_SORT_CATEGORIES':
       return {

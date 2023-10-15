@@ -32,7 +32,14 @@ export default function SidebarDonut (props) {
                     }}
                   ></Paper>
                 </Box>
-                <Typography>{series[index] + '%'}</Typography>
+                <Typography>
+                  {new Intl.NumberFormat('en-IN', {
+                    maximumSignificantDigits: 3
+                  }).format(
+                    (Number(series[index]) * 100) / Number(props.totalRevenue)
+                  )}
+                  {'%'}
+                </Typography>
               </Box>
             </Grid>
           </Grid>

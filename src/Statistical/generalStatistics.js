@@ -7,8 +7,6 @@ export const sortItemByView = array => async dispatch => {
     }
   ])
 
-  
-
   dispatch({
     type: 'VIEW_SORT_ITEMS',
     payload: sortedArray
@@ -27,6 +25,45 @@ export const sortItemByPurchase = array => async dispatch => {
   dispatch({
     type: 'PURCHASE_SORT_ITEMS',
     payload: sortedArray
+  })
+
+  return sortedArray
+}
+
+export const sortItemByConversionRate = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return Number(o.purchase) / Number(o.views)
+    }
+  ])
+
+  dispatch({
+    type: 'CONVERSION_SORT_ITEMS',
+    payload: sortedArray
+  })
+
+  return sortedArray
+}
+
+export const sortItemByRevenue = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return (Number(o.price) - Number(o.totalPrice)) * Number(o.purchase)
+    }
+  ])
+
+  let totalRevenue = 0
+  array.map(item => {
+    totalRevenue +=
+      (Number(item.price) - Number(item.totalPrice)) * Number(item.purchase)
+  })
+
+  dispatch({
+    type: 'REVENUE_SORT_ITEMS',
+    payload: {
+      sortedArray,
+      totalRevenue
+    }
   })
 
   return sortedArray

@@ -262,7 +262,7 @@ const EditScratchMenu = () => {
       order: menuItemCount,
       item: item,
       description: description,
-      price: price,
+      price: Number(price),
       images: images || [],
       labels: labels,
       tabs: tabs,
@@ -273,7 +273,7 @@ const EditScratchMenu = () => {
       mandatoryOption: mandatoryOption,
       priceOptions: priceOptions,
       costOfGoods: costOfGoods,
-      totalPrice: totalPrice
+      totalPrice: Number(totalPrice)
     }
 
     // Dispatch addMenu action here...
