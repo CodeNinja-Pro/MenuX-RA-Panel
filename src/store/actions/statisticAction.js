@@ -20,13 +20,18 @@ export const getAllMenus = userId => async dispatch => {
     snapShot.forEach(doc => {
       allMenus.push({
         id: doc.id,
-        ...doc.data()
+        name: doc.data().item,
+        categoryID: doc.data().categoriesID,
+        views: doc.data().views,
+        purchase: doc.data().purchase,
+        totalPrice: doc.data().totalPrice,
+        price: doc.data().price
       })
     })
 
     dispatch({
       type: 'ALL_MENUS',
-      payload: reviews
+      payload: allMenus
     })
   } catch (error) {
     toast.error(error.message)

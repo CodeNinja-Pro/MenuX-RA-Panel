@@ -68,9 +68,7 @@ export default function DashboardStatisticItem (props) {
 
   let color = props.color
 
-  useEffect(() => {
-    console.log(props.color)
-  }, [props])
+  useEffect(() => {}, [props])
 
   return (
     <>

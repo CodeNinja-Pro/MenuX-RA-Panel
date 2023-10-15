@@ -1,26 +1,35 @@
 var _ = require('lodash')
 
-export const sortItemByView = array => {
-  let countArray = {}
-
-  for (let i = 0; i < array.length; i++) {
-    const value = array[i].itemID + '-' + array[i].itemName
-
-    if (countArray[value]) {
-      countArray[value]++
-    } else {
-      countArray[value] = 1
+export const sortItemByView = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return o.views
     }
-  }
+  ])
 
-  const arr = _.toPairs(countArray)
-  const sortedArray = _.sortBy(arr, pair => -pair[1])
-  const sortedObj = _.fromPairs(sortedArray)
+  
 
-  const clickViewItems = {
-    allItemName: Object.keys(sortedObj),
-    allItemView: Object.values(sortedObj)
-  }
+  dispatch({
+    type: 'VIEW_SORT_ITEMS',
+    payload: sortedArray
+  })
+
+  return sortedArray
+}
+
+export const sortItemByPurchase = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return o.purchase
+    }
+  ])
+
+  dispatch({
+    type: 'PURCHASE_SORT_ITEMS',
+    payload: sortedArray
+  })
+
+  return sortedArray
 }
 
 export const sortCategoryByView = array => {

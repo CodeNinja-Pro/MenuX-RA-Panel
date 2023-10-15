@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeMain } from '../components/common/Theme'
 import OnlyHeader from '../components/Headers/OnlyHeader'
 import {
@@ -19,7 +19,7 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 
 import {
   BarChart,
-  Bar,
+  // Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -35,8 +35,43 @@ import SidebarDonut from './common/SidebarDonut'
 
 // Chart load
 import BarChartForm from '../components/Charts/BarChart'
+import { getAllMenus } from '../store/actions/statisticAction'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import Bar from 'react-apexcharts'
+
+import {
+  sortItemByPurchase,
+  sortItemByView
+} from '../Statistical/generalStatistics'
 
 export default function Dashboard () {
+  const dispatch = useDispatch()
+  const { user } = useSelector(state => state.auth)
+  const { allMenus, viewSortItems, purchaseSortItems } = useSelector(
+    state => state.statistic
+  )
+
+  const [mostViewedItems, setMostViewedItems] = useState([])
+  const [leastViewedItems, setLeastViewedItems] = useState([])
+  const [bestSellers, setBestSellers] = useState([])
+  const [worstSellers, setWorstSellers] = useState([])
+  const [coversionRate, setConversionRate] = useState([])
+
+  let x_mostViewedItems = []
+  let x_leastViewedItems = []
+  let x_bestSellers = []
+  let x_worstSellers = []
+
+  useEffect(() => {
+    dispatch(getAllMenus(user.restaurantID))
+  }, [])
+
+  useEffect(() => {
+    dispatch(sortItemByView(allMenus))
+    dispatch(sortItemByPurchase(allMenus))
+  }, [allMenus])
+
   const revenueByItems = {
     labels: ['Pizza', 'Burger', 'Bread', 'Cheese', 'Fries', 'Chicken'],
     colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
@@ -111,7 +146,7 @@ export default function Dashboard () {
     }
   ]
 
-  const [mostClickItems, setMostClickItems] = useState({
+  let mostClickItems = {
     chart: {
       type: 'bar',
       stacked: true
@@ -124,7 +159,92 @@ export default function Dashboard () {
           fontSize: '12px'
         }
       },
-      categories: chartData?.map(item => {
+      categories: viewSortItems
+        .slice()
+        .reverse()
+        .slice(0, 5)
+        ?.map(item => {
+          return item?.name
+        })
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins'
+        }
+      }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        endingShape: 'flat',
+        columnWidth: '30%',
+        barHeight: '70%',
+        distributed: false,
+        colors: {
+          ranges: [
+            {
+              from: 0,
+              to: 100000000,
+              color: '#0074D9' // Blue shade
+            }
+          ],
+          backgroundBarColors: [],
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 0
+        },
+        dataLabels: {
+          position: 'top',
+          offsetY: -10,
+          style: {
+            fontSize: '18px',
+            colors: []
+          }
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val
+      },
+      offsetY: -55,
+      style: {
+        fontSize: '18px',
+        fontFamily: 'Poppins',
+        colors: []
+      }
+    }
+  }
+
+  let mostClickItemsSeries = [
+    {
+      name: 'Clicked',
+      data: viewSortItems
+        .slice()
+        .reverse()
+        .slice(0, 5)
+        ?.map(item => {
+          return item?.views
+        })
+    }
+  ]
+
+  let leastClickItems = {
+    chart: {
+      type: 'bar',
+      stacked: true
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins',
+          fontSize: '12px'
+        }
+      },
+      categories: viewSortItems.slice(0, 5)?.map(item => {
         return item?.name
       })
     },
@@ -177,13 +297,252 @@ export default function Dashboard () {
         colors: []
       }
     }
-  })
+  }
 
-  const mostClickItemsSeries = [
+  const leastClickItemsSeries = [
     {
       name: 'Clicked',
-      data: chartData?.map(item => {
-        return item?.rate
+      data: viewSortItems.slice(0, 5)?.map(item => {
+        return item?.views
+      })
+    }
+  ]
+
+  let bestSellerItems = {
+    chart: {
+      type: 'bar',
+      stacked: true
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins',
+          fontSize: '12px'
+        }
+      },
+      categories: purchaseSortItems
+        .slice()
+        .reverse()
+        .slice(0, 5)
+        ?.map(item => {
+          return item?.name
+        })
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins'
+        }
+      }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        endingShape: 'flat',
+        columnWidth: '30%',
+        barHeight: '70%',
+        distributed: false,
+        colors: {
+          ranges: [
+            {
+              from: 0,
+              to: 100000000,
+              color: '#0074D9' // Blue shade
+            }
+          ],
+          backgroundBarColors: [],
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 0
+        },
+        dataLabels: {
+          position: 'top',
+          offsetY: -10,
+          style: {
+            fontSize: '18px',
+            colors: []
+          }
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val
+      },
+      offsetY: -55,
+      style: {
+        fontSize: '18px',
+        fontFamily: 'Poppins',
+        colors: []
+      }
+    }
+  }
+
+  const bestSellerItemsSeries = [
+    {
+      name: 'Clicked',
+      data: purchaseSortItems
+        .slice()
+        .reverse()
+        .slice(0, 5)
+        ?.map(item => {
+          return item?.purchase
+        })
+    }
+  ]
+
+  let worstSellerItems = {
+    chart: {
+      type: 'bar',
+      stacked: true
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins',
+          fontSize: '12px'
+        }
+      },
+      categories: purchaseSortItems.slice(0, 5)?.map(item => {
+        return item?.name
+      })
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins'
+        }
+      }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        endingShape: 'flat',
+        columnWidth: '30%',
+        barHeight: '70%',
+        distributed: false,
+        colors: {
+          ranges: [
+            {
+              from: 0,
+              to: 100000000,
+              color: '#0074D9' // Blue shade
+            }
+          ],
+          backgroundBarColors: [],
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 0
+        },
+        dataLabels: {
+          position: 'top',
+          offsetY: -10,
+          style: {
+            fontSize: '18px',
+            colors: []
+          }
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val
+      },
+      offsetY: -55,
+      style: {
+        fontSize: '18px',
+        fontFamily: 'Poppins',
+        colors: []
+      }
+    }
+  }
+
+  const worstSellerItemsSeries = [
+    {
+      name: 'Clicked',
+      data: purchaseSortItems.slice(0, 5)?.map(item => {
+        return item?.purchase
+      })
+    }
+  ]
+
+  let topCoversionRate = {
+    chart: {
+      type: 'bar',
+      stacked: true
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins',
+          fontSize: '12px'
+        }
+      },
+      categories: purchaseSortItems.slice(0, 5)?.map(item => {
+        return item?.name
+      })
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#6E6B7B',
+          fontFamily: 'Poppins'
+        }
+      }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        endingShape: 'flat',
+        columnWidth: '30%',
+        barHeight: '70%',
+        distributed: false,
+        colors: {
+          ranges: [
+            {
+              from: 0,
+              to: 100000000,
+              color: '#0074D9' // Blue shade
+            }
+          ],
+          backgroundBarColors: [],
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 0
+        },
+        dataLabels: {
+          position: 'top',
+          offsetY: -10,
+          style: {
+            fontSize: '18px',
+            colors: []
+          }
+        }
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val
+      },
+      offsetY: -55,
+      style: {
+        fontSize: '18px',
+        fontFamily: 'Poppins',
+        colors: []
+      }
+    }
+  }
+
+  const topConversionRateSeries = [
+    {
+      name: 'Clicked',
+      data: purchaseSortItems.slice(0, 5)?.map(item => {
+        return item?.purchase
       })
     }
   ]
@@ -239,7 +598,7 @@ export default function Dashboard () {
       <ThemeProvider theme={ThemeMain}>
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
-            <Card sx={{ boxShadow: 'none' }}>
+            {/* <Card sx={{ boxShadow: 'none' }}>
               <CardContent>
                 <Grid container spacing={2} columns={10}>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -389,7 +748,7 @@ export default function Dashboard () {
                   </CardContent>
                 </Card>
               </Grid>
-            </Grid>
+            </Grid> */}
             <Grid container spacing={2} marginTop={3}>
               <Grid item xs={12} md={6}>
                 <Card sx={{ boxShadow: 'none' }}>
@@ -400,7 +759,7 @@ export default function Dashboard () {
                       textAlign={'left'}
                       fontSize={'20px'}
                     >
-                      Most Viewd Items
+                      Most Viewed Items
                     </Typography>
                     <BarChartForm
                       options={mostClickItems}
@@ -418,11 +777,11 @@ export default function Dashboard () {
                       textAlign={'left'}
                       fontSize={'20px'}
                     >
-                      Least Viewd Items
+                      Least Viewed Items
                     </Typography>
                     <BarChartForm
-                      options={mostClickItems}
-                      series={mostClickItemsSeries}
+                      options={leastClickItems}
+                      series={leastClickItemsSeries}
                     />
                   </CardContent>
                 </Card>
@@ -439,8 +798,8 @@ export default function Dashboard () {
                       Best Sellers
                     </Typography>
                     <BarChartForm
-                      options={mostClickItems}
-                      series={mostClickItemsSeries}
+                      options={bestSellerItems}
+                      series={bestSellerItemsSeries}
                     />
                   </CardContent>
                 </Card>
@@ -457,8 +816,8 @@ export default function Dashboard () {
                       Worst Sellers
                     </Typography>
                     <BarChartForm
-                      options={mostClickItems}
-                      series={mostClickItemsSeries}
+                      options={worstSellerItems}
+                      series={worstSellerItemsSeries}
                     />
                   </CardContent>
                 </Card>
@@ -475,13 +834,13 @@ export default function Dashboard () {
                       Top Performing Items - Conversion Rate
                     </Typography>
                     <BarChartForm
-                      options={mostClickItems}
-                      series={mostClickItemsSeries}
+                      options={topCoversionRate}
+                      series={topConversionRateSeries}
                     />
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <Card sx={{ boxShadow: 'none', height: '100%' }}>
                   <CardContent>
                     <Box
@@ -554,7 +913,7 @@ export default function Dashboard () {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Container>
         </Container>

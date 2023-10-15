@@ -7,14 +7,14 @@ exports.sortByItemViews = asyncHandler(async (req, res) => {
   try {
     const itemHistory = await admin
       .firestore()
-      .collection('reviews')
+      .collection('views')
       .where('restaurantID', '==', req.query.restaurantID)
       .get()
 
     let itemByViews = {}
 
     itemHistory?.docs?.forEach(item => {
-      const itemID = item?.itemID
+      const itemID = item?.data()?.itemID
       if (!itemByViews[itemID]) {
         itemByViews[itemID] = 1
       }
