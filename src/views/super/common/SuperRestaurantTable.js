@@ -315,12 +315,7 @@ export default function SuperRestaurantTable () {
   }
 
   useEffect(() => {
-    setVisibleRows(
-      stableSort(rows, getComparator(order, orderBy))?.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-    )
+    setVisibleRows(stableSort(rows, getComparator(order, orderBy)))
   }, [order, orderBy, page, rowsPerPage])
 
   const filteredTableItems = applyFilters(visibleRows, filters)

@@ -45,6 +45,7 @@ export const sortCategoryByView = (menus, categories) => async dispatch => {
       category => category.id === item[0]
     )
     sortedArray.push({
+      id: filteredCategory[0].id,
       name: filteredCategory[0].name,
       views: item[1]
     })
@@ -52,7 +53,7 @@ export const sortCategoryByView = (menus, categories) => async dispatch => {
 
   dispatch({
     type: 'VIEW_SORT_CATEGORIES',
-    payload: sortedArray
+    payload: sortedArray.reverse()
   })
 }
 

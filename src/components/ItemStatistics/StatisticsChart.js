@@ -642,48 +642,53 @@ export default function StatisticsChart () {
     <>
       <ThemeProvider theme={ThemeMain}>
         <Grid container marginTop={'10px'}>
-          <Grid item xs={12} md={6}>
-            <RankingForm
-              title='Top Menu Items Clicks'
-              description='Menu Items customers visit more often.'
-              items={sortedItemByView}
-            />
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6}>
+              <RankingForm
+                title='Top Menu Items Clicks'
+                description='Menu Items customers visit more often.'
+                items={viewSortItems}
+                totalViews={totalViews}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <RankingForm
+                title='Top Categories Clicks'
+                description='Categories customers visit more often.'
+                items={viewSortCategories}
+                totalViews={totalViews}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <RankingForm
-              title='Top Categories Clicks'
-              description='Categories customers visit more often.'
-              items={items}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                >
-                  <Box>
-                    <Typography
-                      fontWeight={'bold'}
-                      fontSize={'20px'}
-                      textAlign={'left'}
-                    >
-                      Items
-                    </Typography>
-                    <Typography>Most Clicked Items</Typography>
-                  </Box>
-                  <Box>
-                    <ButtonGroup
-                      disableElevation
-                      variant='contained'
-                      aria-label='Disabled elevation buttons'
-                    >
-                      <Button>Most</Button>
-                      <Button>Least</Button>
-                    </ButtonGroup>
-                    <ButtonGroup
+          <Grid container spacing={1} marginTop={1}>
+            <Grid item xs={12}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                  >
+                    <Box>
+                      <Typography
+                        fontWeight={'bold'}
+                        fontSize={'20px'}
+                        textAlign={'left'}
+                      >
+                        Items
+                      </Typography>
+                      <Typography>Most Clicked Items</Typography>
+                    </Box>
+                    <Box>
+                      <ButtonGroup
+                        disableElevation
+                        variant='contained'
+                        aria-label='Disabled elevation buttons'
+                      >
+                        <Button>Most</Button>
+                        <Button>Least</Button>
+                      </ButtonGroup>
+                      {/* <ButtonGroup
                       sx={{ marginLeft: '50px' }}
                       disableElevation
                       variant='contained'
@@ -691,194 +696,191 @@ export default function StatisticsChart () {
                     >
                       <Button>Clicks</Button>
                       <Button>Views</Button>
-                    </ButtonGroup>
+                    </ButtonGroup> */}
+                    </Box>
                   </Box>
-                </Box>
-                <BarChart
-                  options={mostClickItems}
-                  series={mostClickItemsSeries}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                >
-                  <Box>
-                    <Typography
-                      fontWeight={'bold'}
-                      fontSize={'20px'}
-                      textAlign={'left'}
-                    >
-                      Items Bought
-                    </Typography>
-                    <Typography>Most Bought Items</Typography>
+                  <BarChart
+                    options={mostClickItems}
+                    series={mostClickItemsSeries}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                  >
+                    <Box>
+                      <Typography
+                        fontWeight={'bold'}
+                        fontSize={'20px'}
+                        textAlign={'left'}
+                      >
+                        Items Bought
+                      </Typography>
+                      <Typography>Most Bought Items</Typography>
+                    </Box>
+                    <Box>
+                      <ButtonGroup
+                        disableElevation
+                        variant='contained'
+                        aria-label='Disabled elevation buttons'
+                      >
+                        <Button>Most</Button>
+                        <Button>Least</Button>
+                      </ButtonGroup>
+                    </Box>
                   </Box>
-                  <Box>
-                    <ButtonGroup
-                      disableElevation
-                      variant='contained'
-                      aria-label='Disabled elevation buttons'
-                    >
-                      <Button>Most</Button>
-                      <Button>Least</Button>
-                    </ButtonGroup>
+                  <BarChart
+                    options={mostBoughtItems}
+                    series={mostBoughtItemsSeries}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                  >
+                    <Box>
+                      <Typography
+                        fontWeight={'bold'}
+                        fontSize={'20px'}
+                        textAlign={'left'}
+                      >
+                        Peak Hours
+                      </Typography>
+                      <Typography>Check the order peak time</Typography>
+                    </Box>
+                    <Box>
+                      <Typography fontWeight={'bold'} marginRight={'50px'}>
+                        Best Peak Hour: 12PM-1PM
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-                <BarChart
-                  options={mostBoughtItems}
-                  series={mostBoughtItemsSeries}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                >
-                  <Box>
-                    <Typography
-                      fontWeight={'bold'}
-                      fontSize={'20px'}
-                      textAlign={'left'}
-                    >
-                      Peak Hours
-                    </Typography>
-                    <Typography>Check the order peak time</Typography>
+                  <BarChart
+                    options={orderPeakTime}
+                    series={orderPeakTimeSeries}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Typography fontWeight={'bold'} fontSize={'20px'}>
+                    Revenue Share by Top Menu Items
+                  </Typography>
+                  <Typography fontWeight={'bold'} marginTop={1}>
+                    Total : ${totalRevenue}
+                  </Typography>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-around'}
+                    alignItems={'center'}
+                  >
+                    <DonutChart
+                      options={revenueByItems.options}
+                      series={revenueByItems.series}
+                    />
+                    <SidebarForDonutChart
+                      options={revenueByItems.labels}
+                      series={revenueByItems.series}
+                      colors={revenueByItems.colors}
+                    />
                   </Box>
-                  <Box>
-                    <Typography fontWeight={'bold'} marginRight={'50px'}>
-                      Best Peak Hour: 12PM-1PM
-                    </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Typography fontWeight={'bold'} fontSize={'20px'}>
+                    Revenue Share by Top Categories
+                  </Typography>
+                  <Typography fontWeight={'bold'} marginTop={1}>
+                    Total : ${totalRevenue}
+                  </Typography>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-around'}
+                    alignItems={'center'}
+                  >
+                    <DonutChart
+                      options={revenueByCategories.options}
+                      series={revenueByCategories.series}
+                    />
+                    <SidebarForDonutChart
+                      options={revenueByCategories.labels}
+                      series={revenueByCategories.series}
+                      colors={revenueByCategories.colors}
+                    />
                   </Box>
-                </Box>
-                <BarChart
-                  options={orderPeakTime}
-                  series={orderPeakTimeSeries}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Revenue Share by Top Menu Items
-                </Typography>
-                <Typography fontWeight={'bold'} marginTop={1}>
-                  Total : ${totalRevenue}
-                </Typography>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-around'}
-                  alignItems={'center'}
-                >
-                  <DonutChart
-                    options={revenueByItems.options}
-                    series={revenueByItems.series}
-                  />
-                  <SidebarForDonutChart
-                    totalRevenue={totalRevenue}
-                    options={revenueByItems.labels}
-                    series={revenueByItems.series}
-                    colors={revenueByItems.colors}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Revenue Share by Top Categories
-                </Typography>
-                <Typography fontWeight={'bold'} marginTop={1}>
-                  Total : ${totalRevenue}
-                </Typography>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-around'}
-                  alignItems={'center'}
-                >
-                  <DonutChart
-                    options={revenueByCategories.options}
-                    series={revenueByCategories.series}
-                  />
-                  <SidebarForDonutChart
-                    totalRevenue={totalRevenue}
-                    options={revenueByCategories.labels}
-                    series={revenueByCategories.series}
-                    colors={revenueByCategories.colors}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Click Share by Top Menu Items
-                </Typography>
-                <Typography marginTop={1} fontWeight={'bold'}>
-                  Total Clicks : {totalViews}
-                </Typography>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-around'}
-                  alignItems={'center'}
-                >
-                  <DonutChart
-                    options={viewsByItems.options}
-                    series={viewsByItems.series}
-                  />
-                  <SidebarForDonutChart
-                    totalView={totalViews}
-                    options={viewsByItems.labels}
-                    series={viewsByItems.series}
-                    colors={viewsByItems.colors}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Card sx={{ margin: '5px' }}>
-              <CardContent>
-                <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Click Share by Top Categories
-                </Typography>
-                <Typography marginTop={1} fontWeight={'bold'}>
-                  Total Clicks : {totalViews}
-                </Typography>
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-around'}
-                  alignItems={'center'}
-                >
-                  <DonutChart
-                    options={viewsByCategory.options}
-                    series={viewsByCategory.series}
-                  />
-                  <SidebarForDonutChart
-                    totalView={totalViews}
-                    options={viewsByCategory.labels}
-                    series={viewsByCategory.series}
-                    colors={viewsByCategory.colors}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Typography fontWeight={'bold'} fontSize={'20px'}>
+                    Click Share by Top Menu Items
+                  </Typography>
+                  <Typography marginTop={1} fontWeight={'bold'}>
+                    Total Clicks : {totalViews}
+                  </Typography>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-around'}
+                    alignItems={'center'}
+                  >
+                    <DonutChart
+                      options={viewsByItems.options}
+                      series={viewsByItems.series}
+                    />
+                    <SidebarForDonutChart
+                      options={viewsByItems.labels}
+                      series={viewsByItems.series}
+                      colors={viewsByItems.colors}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Card sx={{ height: '100%', boxShadow: 'none' }}>
+                <CardContent>
+                  <Typography fontWeight={'bold'} fontSize={'20px'}>
+                    Click Share by Top Categories
+                  </Typography>
+                  <Typography marginTop={1} fontWeight={'bold'}>
+                    Total Clicks : {totalViews}
+                  </Typography>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'space-around'}
+                    alignItems={'center'}
+                  >
+                    <DonutChart
+                      options={viewsByCategory.options}
+                      series={viewsByCategory.series}
+                    />
+                    <SidebarForDonutChart
+                      options={viewsByCategory.labels}
+                      series={viewsByCategory.series}
+                      colors={viewsByCategory.colors}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
       </ThemeProvider>

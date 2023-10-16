@@ -8,7 +8,7 @@ const Donut = props => {
         options={props.options}
         series={props.series}
         type='donut'
-        width='500'
+        width={'100%'}
       />
     </div>
   )

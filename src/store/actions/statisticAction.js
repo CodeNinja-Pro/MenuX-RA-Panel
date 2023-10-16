@@ -24,8 +24,12 @@ export const getAllMenus = userId => async dispatch => {
         categoryID: doc.data().categoriesID,
         views: doc.data().views,
         purchase: doc.data().purchase,
+        price: doc.data().price,
         totalPrice: doc.data().totalPrice,
-        price: doc.data().price
+        conversionRate: doc.data().purchase / doc.data().views,
+        profitMarginSharp: doc.data().price - doc.data().totalPrice,
+        profitMarginPercent:
+          ((doc.data().price - doc.data().totalPrice) / doc.data().price) * 100
       })
     })
 

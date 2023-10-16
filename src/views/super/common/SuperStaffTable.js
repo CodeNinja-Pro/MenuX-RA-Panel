@@ -192,7 +192,7 @@ export default function SuperStaffTable () {
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('')
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [filters, setFilters] = useState({
     status: null
   })
@@ -253,12 +253,7 @@ export default function SuperStaffTable () {
   }
 
   useEffect(() => {
-    setVisibleRows(
-      stableSort(rows, getComparator(order, orderBy))?.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-    )
+    setVisibleRows(stableSort(rows, getComparator(order, orderBy)))
   }, [order, orderBy, page, rowsPerPage])
 
   const filteredTableItems = applyFilters(visibleRows, filters)
