@@ -7,12 +7,53 @@ export const sortItemByView = array => async dispatch => {
     }
   ])
 
-  dispatch({
-    type: 'VIEW_SORT_ITEMS',
-    payload: sortedArray
+  let totalViews = 0
+  array.map(item => {
+    totalViews += item.views
   })
 
-  return sortedArray
+  dispatch({
+    type: 'VIEW_SORT_ITEMS',
+    payload: {
+      sortedArray,
+      totalViews
+    }
+  })
+}
+
+export const sortCategoryByView = (menus, categories) => async dispatch => {
+  let countArray = {}
+
+  for (let i = 0; i < categories.length; i++) {
+    for (let j = 0; j < menus.length; j++) {
+      if (categories[i].id === menus[j].categoryID) {
+        if (countArray[categories[i].id]) {
+          countArray[categories[i].id] += menus[j].views
+        } else {
+          countArray[categories[i].id] = menus[j].views
+        }
+      }
+    }
+  }
+
+  let sortedArray = []
+  const arr = _.toPairs(countArray)
+  const sorted = _.sortBy(arr, pair => -pair[1])
+
+  sorted.map(item => {
+    let filteredCategory = categories.filter(
+      category => category.id === item[0]
+    )
+    sortedArray.push({
+      name: filteredCategory[0].name,
+      views: item[1]
+    })
+  })
+
+  dispatch({
+    type: 'VIEW_SORT_CATEGORIES',
+    payload: sortedArray
+  })
 }
 
 export const sortItemByPurchase = array => async dispatch => {
@@ -24,6 +65,21 @@ export const sortItemByPurchase = array => async dispatch => {
 
   dispatch({
     type: 'PURCHASE_SORT_ITEMS',
+    payload: sortedArray
+  })
+
+  return sortedArray
+}
+
+export const sortCategoryByPurchase = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return o.purchase
+    }
+  ])
+
+  dispatch({
+    type: 'PURCHASE_SORT_CATEGORIES',
     payload: sortedArray
   })
 
@@ -69,29 +125,41 @@ export const sortItemByRevenue = array => async dispatch => {
   return sortedArray
 }
 
-export const sortCategoryByView = array => {
+export const sortCategoryByRevenue = (menus, categories) => async dispatch => {
   let countArray = {}
 
-  for (let i = 0; i < array.length; i++) {
-    const value = array[i].categoryID + '-' + array[i].categoryName
-
-    if (countArray[value]) {
-      countArray[value]++
-    } else {
-      countArray[value] = 1
+  for (let i = 0; i < categories.length; i++) {
+    for (let j = 0; j < menus.length; j++) {
+      if (categories[i].id === menus[j].categoryID) {
+        if (countArray[categories[i].id]) {
+          countArray[categories[i].id] +=
+            (menus[j].price - menus[j].totalPrice) * menus[j].purchase
+        } else {
+          countArray[categories[i].id] =
+            (menus[j].price - menus[j].totalPrice) * menus[j].purchase
+        }
+      }
     }
   }
 
+  let sortedArray = []
   const arr = _.toPairs(countArray)
-  const sortedArray = _.sortBy(arr, pair => -pair[1])
-  const sortedObj = _.fromPairs(sortedArray)
+  const sorted = _.sortBy(arr, pair => -pair[1])
 
-  const clickViewCategory = {
-    allItemName: Object.keys(sortedObj),
-    allItemView: Object.values(sortedObj)
-  }
+  sorted.map(item => {
+    let filteredCategory = categories.filter(
+      category => category.id === item[0]
+    )
+    sortedArray.push({
+      name: filteredCategory[0].name,
+      revenue: item[1]
+    })
+  })
 
-  // console.log('All category names', clickViewCategory)
+  dispatch({
+    type: 'REVENUE_SORT_CATEGORIES',
+    payload: sortedArray
+  })
 }
 
 export const boughtSortItems = array => {

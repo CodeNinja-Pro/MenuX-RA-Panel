@@ -25,7 +25,7 @@ export default function SidebarForDonutChart (props) {
                   }}
                 ></Paper>
               </Box>
-              <Typography>{series[index] + '%'}</Typography>
+              <Typography>{series[index]}</Typography>
             </Box>
           </>
         ))}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Grid,
   Card,
@@ -7,12 +7,25 @@ import {
   Box,
   ButtonGroup,
   Button,
-  CircularProgress
+  CircularProgress,
+  circularProgressClasses
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 export default function RankingForm (props) {
-  const items = props.items
+  const [arrange, setArrange] = useState('most')
+  const [itemList, setItemList] = useState([
+    ...props.items.slice().reverse().slice(0, 10)
+  ])
+
+  useEffect(() => {
+    if (arrange === 'most') {
+      setItemList(props.items.slice().reverse().slice(0, 10))
+    } else {
+      setItemList(props.items.slice(0, 10))
+    }
+  }, [arrange])
+
   return (
     <Card sx={{ margin: '5px' }}>
       <CardContent>
@@ -33,11 +46,21 @@ export default function RankingForm (props) {
               variant='contained'
               aria-label='Disabled elevation buttons'
             >
-              <Button>Most</Button>
-              <Button>Least</Button>
+              <Button
+                disabled={arrange === 'most'}
+                onClick={() => setArrange('most')}
+              >
+                Most
+              </Button>
+              <Button
+                disabled={arrange === 'least'}
+                onClick={() => setArrange('least')}
+              >
+                Least
+              </Button>
             </ButtonGroup>
           </Grid>
-          {items.map(item => (
+          {itemList.map(item => (
             <>
               <Grid
                 xs={9}

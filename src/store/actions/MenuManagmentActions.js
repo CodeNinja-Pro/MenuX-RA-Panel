@@ -899,52 +899,6 @@ export const getCategories =
     // 	});
   }
 
-// export const addCategory =
-//   (payload, onSuccess = () => {}) =>
-//   async (dispatch) => {
-//     dispatch({
-//       type: "CATEGORY_LOADER", // Updated action type
-//       payload: true,
-//     });
-
-//     const image = payload?.imageURL;
-
-//     if (image) {
-//       let fileName = image?.name;
-//       let fileName1 = fileName.slice(fileName.lastIndexOf("."));
-//       let fileName2 = uuidv4() + fileName1.toLowerCase();
-//       let storageRef = await firebase
-//         .storage()
-//         .ref("categories_images/" + fileName2)
-//         .put(image);
-//       let url = await storageRef.ref.getDownloadURL();
-
-//       payload.imageURL = url;
-//     }
-//     let categoryId = "";
-//     firebase
-//       .firestore()
-//       .collection("categories")
-//       .add({
-//         ...payload,
-//       })
-//       .then((doc) => {
-//         categoryId = doc.id;
-//         dispatch({
-//           type: "CATEGORY_LOADER", // Update loading state to false
-//           payload: false,
-//         });
-//         dispatch({
-//           type: "ADDED_CATEGORY", // Dispatch the new action
-//           payload: {
-//             id: doc.id,
-//             ...payload,
-//           },
-//         });
-//         onSuccess(categoryId);
-//         toast.success("Category added");
-//       });
-//   };
 export const addCategory =
   (payload, onSuccess = () => {}, categoryID) =>
   async dispatch => {
@@ -952,7 +906,7 @@ export const addCategory =
       type: 'CATEGORY_LOADER',
       payload: true
     })
-    const imageFile = payload?.imageURL
+    // const imageFile = payload?.imageURL
 
     // if (image instanceof File) {
     //   let fileName = image?.name;
@@ -966,18 +920,18 @@ export const addCategory =
 
     //   payload.imageURL = url;
     // }
-    if (imageFile) {
-      const fileName = imageFile.name
-      const fileExtension = fileName.slice(fileName.lastIndexOf('.'))
-      const fileNameWithExtension = uuidv4() + fileExtension.toLowerCase()
-      const storageRef = firebase
-        .storage()
-        .ref('categories_images/' + fileNameWithExtension)
-      const uploadTaskSnapshot = await storageRef.put(imageFile)
-      const downloadURL = await uploadTaskSnapshot.ref.getDownloadURL()
+    // if (imageFile) {
+    //   const fileName = imageFile.name
+    //   const fileExtension = fileName.slice(fileName.lastIndexOf('.'))
+    //   const fileNameWithExtension = uuidv4() + fileExtension.toLowerCase()
+    //   const storageRef = firebase
+    //     .storage()
+    //     .ref('categories_images/' + fileNameWithExtension)
+    //   const uploadTaskSnapshot = await storageRef.put(imageFile)
+    //   const downloadURL = await uploadTaskSnapshot.ref.getDownloadURL()
 
-      payload.imageURL = downloadURL
-    }
+    //   payload.imageURL = downloadURL
+    // }
 
     return new Promise((resolve, reject) => {
       firebase
@@ -1000,11 +954,6 @@ export const addCategory =
             }
           })
           onSuccess(categoryId)
-          // toast.success('Category added Successfully', {
-          //   style: {
-          //     fontFamily: 'Poppins'
-          //   }
-          // })
           resolve(categoryId) // Resolve the promise with categoryId
         })
         .catch(error => {

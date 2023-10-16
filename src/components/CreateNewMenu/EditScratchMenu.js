@@ -213,21 +213,13 @@ const EditScratchMenu = () => {
       addCategory(
         {
           categoryName: name,
-          imageURL: categoryImage,
+          views: 0,
+          purchase: 0,
           menuID,
           order: editMenuData.length,
           restaurantID: user.restaurantID
         },
         categoriesID => {
-          const obj = {
-            type: 'category',
-            categoryName: name,
-            imageURL: categoryImage,
-            items: [],
-            add: false,
-            categoriesID
-          }
-          // setCategoriesAndItems(prevCategories => [...prevCategories, obj]) // add the new object to the existing array of categories
           if (saveAndAddMore) {
             setCategoryImage('')
             setName('')

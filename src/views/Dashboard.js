@@ -11,10 +11,11 @@ import {
   Paper
 } from '@mui/material'
 import { Container } from 'reactstrap'
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
-import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined'
+
+import UserIcon from '../assets/common/dashboard/UserIcon.png'
+import CheckIcon from '../assets/common/dashboard/CheckIcon.png'
+import BackIcon from '../assets/common/dashboard/BackIcon.png'
+import BucketIcon from '../assets/common/dashboard/BucketIcon.png'
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 
 import {
@@ -57,18 +58,6 @@ export default function Dashboard () {
     revenueSortItems,
     totalRevenue
   } = useSelector(state => state.statistic)
-
-  const [mostViewedItems, setMostViewedItems] = useState([])
-  const [leastViewedItems, setLeastViewedItems] = useState([])
-  const [bestSellers, setBestSellers] = useState([])
-  const [worstSellers, setWorstSellers] = useState([])
-  const [coversionRate, setConversionRate] = useState([])
-
-  let x_mostViewedItems = []
-  let x_leastViewedItems = []
-  let x_bestSellers = []
-  let x_worstSellers = []
-  let revenueArray = []
 
   let topRevenue = 0
 
@@ -144,33 +133,6 @@ export default function Dashboard () {
         return revenue
       })
   }
-
-  let chartData = [
-    {
-      name: 'Cheesy',
-      rate: 80.6
-    },
-    {
-      name: 'Cheesy ',
-      rate: 76.5
-    },
-    {
-      name: 'Thin Pizza',
-      rate: 68.4
-    },
-    {
-      name: 'Crunch Pasta',
-      rate: 56.3
-    },
-    {
-      name: 'House',
-      rate: 45.3
-    },
-    {
-      name: 'Creamy Pasta',
-      rate: 36.2
-    }
-  ]
 
   let mostClickItems = {
     chart: {
@@ -628,7 +590,7 @@ export default function Dashboard () {
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
             <Card sx={{ boxShadow: 'none' }}>
-              {/* <CardContent>
+              <CardContent>
                 <Grid container spacing={2} columns={10}>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
@@ -638,15 +600,7 @@ export default function Dashboard () {
                       color='#0074D9'
                       id={'chart1'}
                       background={'#0074d91f'}
-                      revenueComponent={
-                        <GroupOutlinedIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#0074D9'
-                          }}
-                        />
-                      }
+                      revenueComponent={UserIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -656,15 +610,7 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      revenueComponent={
-                        <ShoppingCartOutlinedIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#09BD3B'
-                          }}
-                        />
-                      }
+                      revenueComponent={BucketIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -674,15 +620,7 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#FF8A00'
                       id={'chart3'}
-                      revenueComponent={
-                        <TaskAltOutlinedIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#FF8A00'
-                          }}
-                        />
-                      }
+                      revenueComponent={CheckIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -692,15 +630,7 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color='#FF0000'
                       id={'chart4'}
-                      revenueComponent={
-                        <RefreshOutlinedIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#FF0000'
-                          }}
-                        />
-                      }
+                      revenueComponent={BackIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -710,19 +640,11 @@ export default function Dashboard () {
                       stat={'7.2%'}
                       color={'#7534FF'}
                       id={'chart5'}
-                      revenueComponent={
-                        <EmojiEventsOutlinedIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#7534FF'
-                          }}
-                        />
-                      }
+                      revenueComponent={UserIcon}
                     />
                   </Grid>
                 </Grid>
-              </CardContent> */}
+              </CardContent>
             </Card>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={8}>
@@ -878,7 +800,7 @@ export default function Dashboard () {
                   </CardContent>
                 </Card>
               </Grid>
-              {/* <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Card sx={{ boxShadow: 'none', height: '100%' }}>
                   <CardContent>
                     <Box
@@ -951,7 +873,7 @@ export default function Dashboard () {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Container>
         </Container>

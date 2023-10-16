@@ -38,6 +38,35 @@ export const getAllMenus = userId => async dispatch => {
   }
 }
 
+export const getAllCategories = userId => async dispatch => {
+  try {
+    let allCategories = []
+
+    const snapShot = await firebase
+      .firestore()
+      .collection('categories')
+      .where('restaurantID', '==', userId)
+      .get()
+
+    snapShot.forEach(doc => {
+      allCategories.push({
+        id: doc.id,
+        name: doc.data().categoryName,
+        menuID: doc.data().menuID,
+        views: doc.data().views,
+        purchase: doc.data().purchase
+      })
+    })
+
+    dispatch({
+      type: 'ALL_CATEGORIES',
+      payload: allCategories
+    })
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
 export const getActiveMerchants = () => async dispatch => {
   try {
     let allUsers = []

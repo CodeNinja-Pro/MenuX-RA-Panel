@@ -7,8 +7,7 @@ import {
   Typography,
   Box,
   ButtonGroup,
-  Button,
-  LinearProgress
+  Button
 } from '@mui/material'
 import RankingForm from './RankingForm'
 import BarChart from '../Charts/BarChart'
@@ -16,22 +15,61 @@ import DonutChart from '../Charts/DonutChart'
 import { ThemeMain } from '../common/Theme'
 import SidebarForDonutChart from './SidebarForDonutChart'
 import {
-  getClickSortItems,
-  getClickSortCategories,
-  getBoughtSortItems
+  getAllMenus,
+  getAllCategories
 } from '../../store/actions/statisticAction'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import {
+  sortCategoryByPurchase,
+  sortCategoryByRevenue,
+  sortCategoryByView,
+  sortItemByPurchase,
+  sortItemByRevenue,
+  sortItemByView
+} from '../../Statistical/generalStatistics'
 
 export default function StatisticsChart () {
-  const { user } = useSelector(state => state.auth)
   const dispatch = useDispatch()
+  const { user } = useSelector(state => state.auth)
+
+  const {
+    allMenus,
+    allCategories,
+    viewSortItems,
+    viewSortCategories,
+    purchaseSortItems,
+    revenueSortItems,
+    revenueSortCategories,
+    totalRevenue,
+    totalViews
+  } = useSelector(state => state.statistic)
+
+  let sortedItemByView = []
 
   useEffect(() => {
-    dispatch(getClickSortItems(user.restaurantID))
-    dispatch(getClickSortCategories(user.restaurantID))
-    dispatch(getBoughtSortItems(user.restaurantID))
+    dispatch(getAllMenus(user.restaurantID))
+    dispatch(getAllCategories(user.restaurantID))
   }, [])
+
+  useEffect(() => {
+    dispatch(sortItemByView(allMenus))
+    dispatch(sortCategoryByView(allMenus, allCategories))
+    dispatch(sortItemByPurchase(allMenus))
+    dispatch(sortCategoryByPurchase(allMenus, allCategories))
+    dispatch(sortItemByRevenue(allMenus))
+    dispatch(sortCategoryByRevenue(allMenus, allCategories))
+    sortCategoryByView(allMenus)
+  }, [allMenus, allCategories])
+
+  useEffect(() => {
+    viewSortItems.map(item => {
+      sortedItemByView.push({
+        name: item.name,
+        rate: item.views
+      })
+    })
+  }, [viewSortItems])
 
   const items = [
     {
@@ -87,23 +125,23 @@ export default function StatisticsChart () {
     },
     {
       name: 'burger',
-      rate: 80.6
+      rate: 20.1
     },
     {
       name: 'Bread',
-      rate: 76.5
+      rate: 19.3
     },
     {
       name: 'Crust Pizza',
-      rate: 68.4
+      rate: 13
     },
     {
       name: 'Pasta',
-      rate: 56.3
+      rate: 10
     }
   ]
 
-  const [mostClickItems, setMostClickItems] = useState({
+  let mostClickItems = {
     chart: {
       type: 'bar',
       stacked: true
@@ -116,9 +154,13 @@ export default function StatisticsChart () {
           fontSize: '12px'
         }
       },
-      categories: chartData?.map(item => {
-        return item?.name
-      })
+      categories: viewSortItems
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        ?.map(item => {
+          return item?.name
+        })
     },
     yaxis: {
       labels: {
@@ -169,18 +211,22 @@ export default function StatisticsChart () {
         colors: []
       }
     }
-  })
+  }
 
   const mostClickItemsSeries = [
     {
       name: 'Clicked',
-      data: chartData?.map(item => {
-        return item?.rate
-      })
+      data: viewSortItems
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        ?.map(item => {
+          return item?.views
+        })
     }
   ]
 
-  const [mostBoughtItems, setMostBoughtItems] = useState({
+  let mostBoughtItems = {
     chart: {
       type: 'bar',
       stacked: true
@@ -193,9 +239,13 @@ export default function StatisticsChart () {
           fontSize: '12px'
         }
       },
-      categories: chartData?.map(item => {
-        return item?.name
-      })
+      categories: purchaseSortItems
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        ?.map(item => {
+          return item?.name
+        })
     },
     yaxis: {
       labels: {
@@ -246,18 +296,22 @@ export default function StatisticsChart () {
         colors: []
       }
     }
-  })
+  }
 
   const mostBoughtItemsSeries = [
     {
       name: 'Bought',
-      data: chartData?.map(item => {
-        return item?.rate
-      })
+      data: purchaseSortItems
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        ?.map(item => {
+          return item?.purchase
+        })
     }
   ]
 
-  const [orderPeakTime, setOrderPeakTime] = useState({
+  let orderPeakTime = {
     chart: {
       type: 'bar',
       stacked: true
@@ -323,9 +377,9 @@ export default function StatisticsChart () {
         colors: []
       }
     }
-  })
+  }
 
-  const orderPeakTimeSeries = [
+  let orderPeakTimeSeries = [
     {
       name: 'Clicked',
       data: chartData?.map(item => {
@@ -334,8 +388,16 @@ export default function StatisticsChart () {
     }
   ]
 
-  const revenueByItems = {
-    labels: ['Pizza', 'Burger', 'Bread', 'Cheese', 'Fries', 'Chicken'],
+  let topItemViews = 0
+
+  let viewsByItems = {
+    labels: viewSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        return item.name
+      }),
     colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
     options: {
       chart: { type: 'donut' },
@@ -378,7 +440,202 @@ export default function StatisticsChart () {
         }
       }
     },
-    series: [44, 55, 41, 17, 15, 32]
+    series: viewSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        topItemViews += item.views
+        return item.views
+      })
+  }
+
+  let topCategoryViews = 0
+
+  let viewsByCategory = {
+    labels: viewSortCategories
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        return item.name
+      }),
+    colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
+    options: {
+      chart: { type: 'donut' },
+      legend: { show: false },
+      dataLabels: { enabled: false },
+      tooltip: { enabled: false },
+      fill: {
+        colors: [
+          '#7ABAF2',
+          '#16BFD6',
+          '#A155B9',
+          '#5E72E4',
+          '#7C8DB5',
+          '#63B955'
+        ]
+      },
+      states: {
+        hover: { filter: { type: 'lighten', value: 0.5 } },
+        active: { filter: { type: 'none', value: 0 } }
+      },
+      stroke: { width: 0 },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+          donut: {
+            size: '70%',
+            labels: {
+              show: true,
+              name: { show: false },
+              total: {
+                show: true,
+                formatter: function (w) {
+                  const totals = w.globals.seriesTotals
+                  const result = totals.reduce((a, b) => a + b, 0)
+                  return result
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    series: viewSortCategories
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        topCategoryViews += item.views
+        return item.views
+      })
+  }
+
+  let topItemRevenue = 0
+
+  let revenueByItems = {
+    labels: revenueSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        return item.name
+      }),
+    colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
+    options: {
+      chart: { type: 'donut' },
+      legend: { show: false },
+      dataLabels: { enabled: false },
+      tooltip: { enabled: false },
+      fill: {
+        colors: [
+          '#7ABAF2',
+          '#16BFD6',
+          '#A155B9',
+          '#5E72E4',
+          '#7C8DB5',
+          '#63B955'
+        ]
+      },
+      states: {
+        hover: { filter: { type: 'lighten', value: 0.5 } },
+        active: { filter: { type: 'none', value: 0 } }
+      },
+      stroke: { width: 0 },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+          donut: {
+            size: '70%',
+            labels: {
+              show: true,
+              name: { show: false },
+              total: {
+                show: true,
+                formatter: function (w) {
+                  const totals = w.globals.seriesTotals
+                  const result = totals.reduce((a, b) => a + b, 0)
+                  return '$' + result
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    series: revenueSortItems
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        let revenue =
+          (Number(item.price) - Number(item.totalPrice)) * Number(item.purchase)
+        topItemRevenue += revenue
+        return revenue
+      })
+  }
+
+  let topCategoryRevenue = 0
+
+  let revenueByCategories = {
+    labels: revenueSortCategories
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        return item.name
+      }),
+    colors: ['#7ABAF2', '#16BFD6', '#A155B9', '#5E72E4', '#7C8DB5', '#63B955'],
+    options: {
+      chart: { type: 'donut' },
+      legend: { show: false },
+      dataLabels: { enabled: false },
+      tooltip: { enabled: false },
+      fill: {
+        colors: [
+          '#7ABAF2',
+          '#16BFD6',
+          '#A155B9',
+          '#5E72E4',
+          '#7C8DB5',
+          '#63B955'
+        ]
+      },
+      states: {
+        hover: { filter: { type: 'lighten', value: 0.5 } },
+        active: { filter: { type: 'none', value: 0 } }
+      },
+      stroke: { width: 0 },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+          donut: {
+            size: '70%',
+            labels: {
+              show: true,
+              name: { show: false },
+              total: {
+                show: true,
+                formatter: function (w) {
+                  const totals = w.globals.seriesTotals
+                  const result = totals.reduce((a, b) => a + b, 0)
+                  return '$' + result
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    series: revenueSortCategories
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      ?.map(item => {
+        topCategoryRevenue += item.revenue
+        return item.revenue
+      })
   }
 
   return (
@@ -389,7 +646,7 @@ export default function StatisticsChart () {
             <RankingForm
               title='Top Menu Items Clicks'
               description='Menu Items customers visit more often.'
-              items={items}
+              items={sortedItemByView}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -515,7 +772,10 @@ export default function StatisticsChart () {
             <Card sx={{ margin: '5px' }}>
               <CardContent>
                 <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Revenue Share by Menu Items
+                  Revenue Share by Top Menu Items
+                </Typography>
+                <Typography fontWeight={'bold'} marginTop={1}>
+                  Total : ${totalRevenue}
                 </Typography>
                 <Box
                   display={'flex'}
@@ -527,6 +787,7 @@ export default function StatisticsChart () {
                     series={revenueByItems.series}
                   />
                   <SidebarForDonutChart
+                    totalRevenue={totalRevenue}
                     options={revenueByItems.labels}
                     series={revenueByItems.series}
                     colors={revenueByItems.colors}
@@ -539,7 +800,10 @@ export default function StatisticsChart () {
             <Card sx={{ margin: '5px' }}>
               <CardContent>
                 <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Revenue Share by Categories
+                  Revenue Share by Top Categories
+                </Typography>
+                <Typography fontWeight={'bold'} marginTop={1}>
+                  Total : ${totalRevenue}
                 </Typography>
                 <Box
                   display={'flex'}
@@ -547,13 +811,14 @@ export default function StatisticsChart () {
                   alignItems={'center'}
                 >
                   <DonutChart
-                    options={revenueByItems.options}
-                    series={revenueByItems.series}
+                    options={revenueByCategories.options}
+                    series={revenueByCategories.series}
                   />
                   <SidebarForDonutChart
-                    options={revenueByItems.labels}
-                    series={revenueByItems.series}
-                    colors={revenueByItems.colors}
+                    totalRevenue={totalRevenue}
+                    options={revenueByCategories.labels}
+                    series={revenueByCategories.series}
+                    colors={revenueByCategories.colors}
                   />
                 </Box>
               </CardContent>
@@ -563,7 +828,10 @@ export default function StatisticsChart () {
             <Card sx={{ margin: '5px' }}>
               <CardContent>
                 <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Click Share by Menu Items
+                  Click Share by Top Menu Items
+                </Typography>
+                <Typography marginTop={1} fontWeight={'bold'}>
+                  Total Clicks : {totalViews}
                 </Typography>
                 <Box
                   display={'flex'}
@@ -571,13 +839,14 @@ export default function StatisticsChart () {
                   alignItems={'center'}
                 >
                   <DonutChart
-                    options={revenueByItems.options}
-                    series={revenueByItems.series}
+                    options={viewsByItems.options}
+                    series={viewsByItems.series}
                   />
                   <SidebarForDonutChart
-                    options={revenueByItems.labels}
-                    series={revenueByItems.series}
-                    colors={revenueByItems.colors}
+                    totalView={totalViews}
+                    options={viewsByItems.labels}
+                    series={viewsByItems.series}
+                    colors={viewsByItems.colors}
                   />
                 </Box>
               </CardContent>
@@ -587,7 +856,10 @@ export default function StatisticsChart () {
             <Card sx={{ margin: '5px' }}>
               <CardContent>
                 <Typography fontWeight={'bold'} fontSize={'20px'}>
-                  Click Share by Categories
+                  Click Share by Top Categories
+                </Typography>
+                <Typography marginTop={1} fontWeight={'bold'}>
+                  Total Clicks : {totalViews}
                 </Typography>
                 <Box
                   display={'flex'}
@@ -595,13 +867,14 @@ export default function StatisticsChart () {
                   alignItems={'center'}
                 >
                   <DonutChart
-                    options={revenueByItems.options}
-                    series={revenueByItems.series}
+                    options={viewsByCategory.options}
+                    series={viewsByCategory.series}
                   />
                   <SidebarForDonutChart
-                    options={revenueByItems.labels}
-                    series={revenueByItems.series}
-                    colors={revenueByItems.colors}
+                    totalView={totalViews}
+                    options={viewsByCategory.labels}
+                    series={viewsByCategory.series}
+                    colors={viewsByCategory.colors}
                   />
                 </Box>
               </CardContent>
