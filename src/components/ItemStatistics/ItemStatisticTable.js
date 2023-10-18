@@ -44,6 +44,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import PickDateRange from '../../views/auth/PickDateRange'
 import { getAllMenus } from '../../store/actions/statisticAction'
 import { useHistory } from 'react-router-dom'
+import { getTotalRevenue } from '../../Statistical/generalStatistics'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -177,17 +178,17 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired
 }
 
-export default function ItemStatisticTable () {
+export default function ItemStatisticTable (props) {
   //User definition
   const dispatch = useDispatch()
   const history = useHistory()
   const { user } = useSelector(state => state.auth)
+  let rows = useSelector(state => state.statistic.allMenus)
 
   useEffect(() => {
     dispatch(getAllMenus(user.restaurantID))
   }, [])
 
-  let rows = useSelector(state => state.statistic.allMenus)
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState('')
@@ -211,7 +212,9 @@ export default function ItemStatisticTable () {
   ])
 
   const handleItemClick = id => {
-    history.push(`/admin/item-detail/${id}`)
+    // history.push(`/admin/item-detail/${id}`)
+    props.setSelectedItem(id)
+    props.setStatisticOrDetail('detail')
   }
 
   const handleItemDelete = () => {}
@@ -224,6 +227,8 @@ export default function ItemStatisticTable () {
   const [sum, setSum] = useState(0)
 
   useEffect(() => {
+    dispatch(getTotalRevenue(rows))
+
     setVisibleRows(rows)
     for (let i = 0; i < rows.length; i++) {
       totalViews += rows[i].views

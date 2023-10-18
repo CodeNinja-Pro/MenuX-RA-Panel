@@ -821,6 +821,7 @@ export const addMenuNew = (payload, onSuccess) => async dispatch => {
       views: 0,
       purchase: 0,
       viewTime: 0,
+      orderCount: 0,
       images: uploadImages,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }

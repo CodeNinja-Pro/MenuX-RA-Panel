@@ -6,8 +6,11 @@ import {
   CardMedia,
   Grid,
   Typography,
-  Paper
+  Paper,
+  IconButton
 } from '@mui/material'
+import DoDisturbOnOutlinedIcon from '@mui/icons-material/DoDisturbOnOutlined'
+
 import ProductImage from '../../assets/common/statistic/product.png'
 import {
   getAllMenus,
@@ -23,20 +26,40 @@ export default function ItemComparisonCard (props) {
   const { allMenus } = useSelector(state => state.statistic)
 
   useEffect(() => {
-    setItemID(props.itemID)
-    dispatch(getAllMenus(user.restaurantID))
-    dispatch(getTotalRevenueByCategory(props.currentItem.itemID))
+    setItemID(props.currentItem.itemID)
+    // dispatch(getAllMenus(user.restaurantID))
+    dispatch(getTotalRevenueByCategory(props.currentItem?.itemID))
   }, [])
 
-  useEffect(() => {
-    dispatch(getTotalRevenue(allMenus))
-  }, [allMenus])
+  // useEffect(() => {
+  //   dispatch(getTotalRevenue(allMenus))
+  // }, [allMenus])
+
+  const handleRemoveCompare = id => {
+    console.log(id)
+    dispatch({
+      type: 'COMPARE_ITEM_REMOVE',
+      payload: id
+    })
+  }
 
   return (
     <>
       <Card sx={{ boxShadow: 'none' }}>
         <CardContent>
           <Grid container spacing={3}>
+            {props.type === 'origin' ? (
+              <Grid item xs={12} marginBottom={'25px'}></Grid>
+            ) : (
+              <Grid item xs={12} display={'flex'} justifyContent={'flex-end'}>
+                <IconButton
+                  onClick={() => handleRemoveCompare(props.currentItem?.itemID)}
+                  sx={{ padding: 0 }}
+                >
+                  <DoDisturbOnOutlinedIcon color='error' />
+                </IconButton>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <CardMedia
                 sx={{ width: '100%' }}

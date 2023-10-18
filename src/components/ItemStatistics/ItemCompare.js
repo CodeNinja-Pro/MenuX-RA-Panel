@@ -78,42 +78,37 @@ export default function ItemCompare (props) {
       {/* <OnlyHeader /> */}
       {/* <ThemeProvider theme={ThemeMain}> */}
       {/* <Container className='mt--7 mb-5' fluid> */}
-      {/* <Link to='/admin/item-detail'>
-            <IconButton
-              color='primary'
-              sx={{
-                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
-                marginBottom: '15px',
-                marginTop: '10px',
-                display: 'flex',
-                justifyContent: 'left',
-                marginLeft: '40px'
-              }}
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
-          </Link> */}
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid
           item
           xs={12}
           display={'flex'}
-          justifyContent={'flex-end'}
+          justifyContent={'space-between'}
           alignItems={'center'}
         >
-          <Button
-            variant='outlined'
+          <IconButton
+            color='primary'
+            sx={{
+              paddingRight: '3px',
+              paddingLeft: '13px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
+              marginBottom: '15px',
+              marginTop: '10px',
+              display: 'flex',
+              justifyContent: 'left'
+            }}
             onClick={() => props.setCurrentPage('detail')}
           >
-            To Item Detail
-          </Button>
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Button variant='contained'>Compare</Button>
         </Grid>
         <Grid item xs={10} md={6} lg={4}>
-          <ItemComparisonCard currentItem={props.currentItem} />
+          <ItemComparisonCard currentItem={props.currentItem} type={'origin'} />
         </Grid>
         {compareItems.map(item => (
           <Grid item xs={10} md={6} lg={4}>
-            <ItemComparisonCard currentItem={item} />
+            <ItemComparisonCard currentItem={item} type={'compare'} />
           </Grid>
         ))}
         <Grid item xs={2} md={1}>

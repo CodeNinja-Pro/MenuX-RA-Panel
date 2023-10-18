@@ -215,6 +215,7 @@ const EditScratchMenu = () => {
           categoryName: name,
           views: 0,
           purchase: 0,
+          orderCount: 0,
           menuID,
           order: editMenuData.length,
           restaurantID: user.restaurantID

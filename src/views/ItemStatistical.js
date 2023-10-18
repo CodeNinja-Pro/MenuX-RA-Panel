@@ -15,6 +15,7 @@ import StatisticsChart from '../components/ItemStatistics/StatisticsChart'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
 import ItemStatisticTable from '../components/ItemStatistics/ItemStatisticTable'
+import ItemDetail from '../components/ItemStatistics/ItemDetail'
 
 export default function ItemStatistical () {
   const [tabFlag, setTabFlag] = useState('Table')
@@ -23,6 +24,10 @@ export default function ItemStatistical () {
 
   // Enable by staff role
   const [sectionPermission, setSectionPermission] = useState(false)
+
+  const [statisticOrDetail, setStatisticOrDetail] = useState('statistic')
+  const [selectedItem, setSelectedItem] = useState('')
+
   const { currentRoleDetail } = useSelector(state => state.staff)
   useEffect(() => {
     if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
@@ -54,51 +59,65 @@ export default function ItemStatistical () {
     <>
       <OnlyHeader />
       <ThemeProvider theme={ThemeMain}>
-        <Container className='mt--9 mb-5' fluid>
-          <Container fluid>
-            <Card sx={{ boxShadow: 'none' }}>
-              <Box sx={{ width: '100%', typography: 'body1' }}>
-                <Tabs
-                  value={tabFlag}
-                  onChange={handleChange}
-                  aria-label='wrapped label tabs example'
-                >
-                  <Tab value='Table' label='Table' />
-                  <Tab value='Statistics' label='Statistics' />
-                </Tabs>
-              </Box>
-            </Card>
-            {tabFlag === 'Table' ? (
-              <Card sx={{ marginTop: '15px', boxShadow: 'none' }}>
-                <CardContent>
-                  <Typography
-                    fontWeight={'bold'}
-                    fontSize={'25px'}
-                    textAlign={'left'}
+        {statisticOrDetail === 'statistic' ? (
+          <Container className='mt--9 mb-5' fluid>
+            <Container fluid>
+              <Card sx={{ boxShadow: 'none' }}>
+                <Box sx={{ width: '100%', typography: 'body1' }}>
+                  <Tabs
+                    value={tabFlag}
+                    onChange={handleChange}
+                    aria-label='wrapped label tabs example'
                   >
-                    Menu Items
-                  </Typography>
-                  <Typography marginBottom={'10px'} textAlign={'left'}>
-                    Item Performance data
-                  </Typography>
-                  <Box
-                    sx={
-                      user.role === 'staff' && disableOnTrue(sectionPermission)
-                    }
-                  >
-                    <ItemStatisticTable />
-                  </Box>
-                </CardContent>
+                    <Tab value='Table' label='Table' />
+                    <Tab value='Statistics' label='Statistics' />
+                  </Tabs>
+                </Box>
               </Card>
-            ) : (
-              <Box
-                sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
-              >
-                <StatisticsChart />
-              </Box>
-            )}
+              {tabFlag === 'Table' ? (
+                <Card sx={{ marginTop: '15px', boxShadow: 'none' }}>
+                  <CardContent>
+                    <Typography
+                      fontWeight={'bold'}
+                      fontSize={'25px'}
+                      textAlign={'left'}
+                    >
+                      Menu Items
+                    </Typography>
+                    <Typography marginBottom={'10px'} textAlign={'left'}>
+                      Item Performance data
+                    </Typography>
+                    <Box
+                      sx={
+                        user.role === 'staff' &&
+                        disableOnTrue(sectionPermission)
+                      }
+                    >
+                      <ItemStatisticTable
+                        setSelectedItem={setSelectedItem}
+                        setStatisticOrDetail={setStatisticOrDetail}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Box
+                  sx={user.role === 'staff' && disableOnTrue(sectionPermission)}
+                >
+                  <StatisticsChart
+                    setSelectedItem={setSelectedItem}
+                    setStatisticOrDetail={setStatisticOrDetail}
+                  />
+                </Box>
+              )}
+            </Container>
           </Container>
-        </Container>
+        ) : (
+          <ItemDetail
+            selectedItem={selectedItem}
+            setStatisticOrDetail={setStatisticOrDetail}
+          />
+        )}
       </ThemeProvider>
     </>
   )

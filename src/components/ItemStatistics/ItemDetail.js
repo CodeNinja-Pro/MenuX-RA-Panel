@@ -11,7 +11,8 @@ import {
   Box,
   CardMedia,
   Typography,
-  Paper
+  Paper,
+  LinearProgress
 } from '@mui/material'
 import { Link, useHistory } from 'react-router-dom'
 import { ThemeMain } from '../common/Theme'
@@ -25,15 +26,24 @@ import { addDays } from 'date-fns'
 import ItemRankingForm from './ItemRankingForm'
 import ItemCompare from './ItemCompare'
 import { useDispatch, useSelector } from 'react-redux'
-import { getItemDetail } from '../../store/actions/statisticAction'
+import {
+  getItemDetail,
+  getTotalRevenueByCategory
+} from '../../store/actions/statisticAction'
+import { getTotalRevenue } from '../../Statistical/generalStatistics'
 
 export default function ItemDetail (props) {
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const { itemDetail, totalRevenue, totalRevenueByCategory } = useSelector(
-    state => state.statistic
-  )
+  const { user } = useSelector(state => state.auth)
+  const {
+    allMenus,
+    itemDetail,
+    totalRevenue,
+    totalRevenueByCategory,
+    loading
+  } = useSelector(state => state.statistic)
 
   const [currentPage, setCurrentPage] = useState('detail')
   const [currentItem, setCurrentItem] = useState({})
@@ -41,7 +51,8 @@ export default function ItemDetail (props) {
 
   // Defined by smile
   useEffect(() => {
-    setItemID(props.match.params.id)
+    setItemID(props.selectedItem)
+    dispatch(getTotalRevenueByCategory(props.selectedItem))
   }, [])
 
   useEffect(() => {
@@ -50,7 +61,7 @@ export default function ItemDetail (props) {
 
   useEffect(() => {
     setCurrentItem({
-      itemID: props.match.params.id,
+      itemID: props.selectedItem,
       menuName: itemDetail.menuName,
       categoryName: itemDetail.categoryName,
       price: itemDetail.price,
@@ -70,13 +81,13 @@ export default function ItemDetail (props) {
         (itemDetail.price - itemDetail.cost) * itemDetail.purchase,
       averagePurchasePerDay: 200,
       revenueOfMenu: new Intl.NumberFormat('en-IN', {
-        maximumSignificantDigits: 3
+        maximumSignificantDigits: 4
       }).format(
         ((itemDetail.price - itemDetail.cost) * itemDetail.purchase * 100) /
           totalRevenue
       ),
       revenueOfCategory: new Intl.NumberFormat('en-IN', {
-        maximumSignificantDigits: 3
+        maximumSignificantDigits: 4
       }).format(
         ((itemDetail.price - itemDetail.cost) * itemDetail.purchase * 100) /
           totalRevenueByCategory
@@ -181,352 +192,348 @@ export default function ItemDetail (props) {
 
   return (
     <>
-      <OnlyHeader />
+      {/* <OnlyHeader /> */}
       <ThemeProvider theme={ThemeMain}>
         <Container className='mt--7 mb-5' fluid>
-          {/* <IconButton
-            color='primary'
-            onClick={() => {
-              history.goBack()
-            }}
-            sx={{
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
-              marginBottom: '15px',
-              marginTop: '10px',
-              display: 'flex',
-              justifyContent: 'left',
-              marginLeft: '40px'
-            }}
-          >
-            <ArrowBackIosNewIcon sx={{ marginRight: '3px' }} />
-          </IconButton> */}
-          <Container fluid>
-            {currentPage === 'detail' ? (
-              <Grid container>
-                <Grid item xs={12}>
-                  <Card sx={{ boxShadow: 'none' }}>
-                    <CardContent>
-                      <Box
-                        display={'flex'}
-                        justifyContent={'right'}
-                        alignItems={'center'}
-                      >
-                        {/* <Link to={`/admin/item-compare/${itemID}`}> */}
-                        <Button
-                          variant='contained'
-                          sx={{ marginRight: '20px' }}
-                          onClick={() => {
-                            setCurrentPage('compare')
-                          }}
+          {loading === true ? (
+            <LinearProgress />
+          ) : (
+            <Container fluid>
+              {currentPage === 'detail' ? (
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Card sx={{ boxShadow: 'none' }}>
+                      <CardContent>
+                        <Box
+                          display={'flex'}
+                          justifyContent={'right'}
+                          alignItems={'center'}
                         >
-                          Compare
-                        </Button>
-                        {/* </Link> */}
-                        <Button
-                          variant='contained'
-                          sx={{ marginRight: '20px' }}
-                        >
-                          Edit
-                        </Button>
-                        <Button variant='outlined'>
-                          <MoreHorizIcon />
-                        </Button>
-                      </Box>
-                      <Grid container marginTop={'10px'}>
-                        <Grid item xs={12} md={4} lg={3}>
-                          <CardMedia
-                            component='img'
-                            image={ProductImage}
-                            alt='Product'
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={8} lg={9}>
-                          <Typography
-                            marginLeft={'30px'}
-                            fontWeight={'bold'}
-                            fontSize={'25px'}
-                            textAlign={'left'}
+                          {/* <Link to={`/admin/item-compare/${itemID}`}> */}
+                          <Button
+                            variant='contained'
+                            sx={{ marginRight: '20px' }}
+                            onClick={() => {
+                              setCurrentPage('compare')
+                            }}
                           >
-                            {currentItem.menuName}
-                          </Typography>
-                          <Typography
-                            fontSize={'18px'}
-                            marginTop={'15px'}
-                            marginLeft={'30px'}
-                            textAlign={'left'}
+                            Compare
+                          </Button>
+                          {/* </Link> */}
+                          <Button
+                            variant='outlined'
+                            sx={{ marginRight: '20px' }}
+                            onClick={() =>
+                              props.setStatisticOrDetail('statistic')
+                            }
                           >
-                            {currentItem.categoryName}
-                          </Typography>
-                          <Grid
-                            container
-                            paddingLeft={4}
-                            paddingRight={4}
-                            paddingTop={2}
-                            paddingBottom={2}
-                            spacing={4}
-                          >
-                            <Grid item xs={12} md={3}>
-                              <Paper
-                                sx={{
-                                  boxShadow: 'none',
-                                  padding: '5px'
-                                }}
-                              >
-                                <Typography
-                                  fontWeight={'bold'}
-                                  fontSize={'20px'}
-                                  textAlign={'left'}
+                            Back
+                          </Button>
+                          {/* <Button variant='outlined'>
+                            <MoreHorizIcon />
+                          </Button> */}
+                        </Box>
+                        <Grid container marginTop={'10px'}>
+                          <Grid item xs={12} md={4} lg={3}>
+                            <CardMedia
+                              component='img'
+                              image={ProductImage}
+                              alt='Product'
+                            />
+                          </Grid>
+                          <Grid item xs={12} md={8} lg={9}>
+                            <Typography
+                              marginLeft={'30px'}
+                              fontWeight={'bold'}
+                              fontSize={'25px'}
+                              textAlign={'left'}
+                            >
+                              {currentItem.menuName}
+                            </Typography>
+                            <Typography
+                              fontSize={'18px'}
+                              marginTop={'15px'}
+                              marginLeft={'30px'}
+                              textAlign={'left'}
+                            >
+                              {currentItem.categoryName}
+                            </Typography>
+                            <Grid
+                              container
+                              paddingLeft={4}
+                              paddingRight={4}
+                              paddingTop={2}
+                              paddingBottom={2}
+                              spacing={4}
+                            >
+                              <Grid item xs={12} md={3}>
+                                <Paper
+                                  sx={{
+                                    boxShadow: 'none',
+                                    padding: '5px'
+                                  }}
                                 >
-                                  ${currentItem.price}
-                                </Typography>
-                                <Typography textAlign={'left'}>
-                                  Price
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            <Grid item xs={12} md={3}>
-                              <Paper
-                                sx={{
-                                  boxShadow: 'none',
-                                  padding: '5px'
-                                }}
-                              >
-                                <Typography
-                                  fontWeight={'bold'}
-                                  fontSize={'20px'}
-                                  textAlign={'left'}
+                                  <Typography
+                                    fontWeight={'bold'}
+                                    fontSize={'20px'}
+                                    textAlign={'left'}
+                                  >
+                                    ${currentItem.price}
+                                  </Typography>
+                                  <Typography textAlign={'left'}>
+                                    Price
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={12} md={3}>
+                                <Paper
+                                  sx={{
+                                    boxShadow: 'none',
+                                    padding: '5px'
+                                  }}
                                 >
-                                  ${currentItem.cost}
-                                </Typography>
-                                <Typography textAlign={'left'}>
-                                  Cost of Item
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            <Grid item xs={12} md={3}>
-                              <Paper
-                                sx={{
-                                  boxShadow: 'none',
-                                  padding: '5px'
-                                }}
-                              >
-                                <Typography
-                                  fontWeight={'bold'}
-                                  fontSize={'20px'}
-                                  textAlign={'left'}
+                                  <Typography
+                                    fontWeight={'bold'}
+                                    fontSize={'20px'}
+                                    textAlign={'left'}
+                                  >
+                                    ${currentItem.cost}
+                                  </Typography>
+                                  <Typography textAlign={'left'}>
+                                    Cost of Item
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={12} md={3}>
+                                <Paper
+                                  sx={{
+                                    boxShadow: 'none',
+                                    padding: '5px'
+                                  }}
                                 >
-                                  ${currentItem.profitMargin}
-                                </Typography>
-                                <Typography textAlign={'left'}>
-                                  Profit Margin
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            <Grid item xs={12} md={3}>
-                              <Paper
-                                sx={{
-                                  boxShadow: 'none',
-                                  padding: '5px'
-                                }}
-                              >
-                                <Typography
-                                  fontWeight={'bold'}
-                                  fontSize={'20px'}
-                                  textAlign={'left'}
+                                  <Typography
+                                    fontWeight={'bold'}
+                                    fontSize={'20px'}
+                                    textAlign={'left'}
+                                  >
+                                    ${currentItem.profitMargin}
+                                  </Typography>
+                                  <Typography textAlign={'left'}>
+                                    Profit Margin
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={12} md={3}>
+                                <Paper
+                                  sx={{
+                                    boxShadow: 'none',
+                                    padding: '5px'
+                                  }}
                                 >
-                                  {currentItem.profitMarginPercent}%
-                                </Typography>
-                                <Typography textAlign={'left'}>
-                                  Profit Margin %
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            <Grid item xs={12} lg={6}>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>Average Clicks per Day</Typography>
-                                <Typography>
-                                  {currentItem.averageClickPerDay}
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>Average View Time</Typography>
-                                <Typography>
-                                  {currentItem.averageViewTime}
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>Conversion Rate</Typography>
-                                <Typography>
-                                  {itemDetail.purchase === 0 ||
-                                  itemDetail.views === 0
-                                    ? 0
-                                    : currentItem.conversionRate}
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>Revenue Generated</Typography>
-                                <Typography>
-                                  ${currentItem.revenueGenerated}
-                                </Typography>
-                              </Box>
-                            </Grid>
-                            <Grid item xs={12} lg={6}>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>
-                                  Average Purchases per Day
-                                </Typography>
-                                <Typography>
-                                  {currentItem.averagePurchasePerDay}
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>
-                                  Revenue Share of Menu Item
-                                </Typography>
-                                <Typography>
-                                  {currentItem.revenueOfMenu}%
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>
-                                  Revenue Share of Menu Category
-                                </Typography>
-                                <Typography>
-                                  {currentItem.revenueOfCategory}%
-                                </Typography>
-                              </Box>
-                              <Box
-                                marginBottom={2}
-                                display={'flex'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                              >
-                                <Typography>Peak Order time </Typography>
-                                <Typography>
-                                  {currentItem.peakOrderTime}
-                                </Typography>
-                              </Box>
+                                  <Typography
+                                    fontWeight={'bold'}
+                                    fontSize={'20px'}
+                                    textAlign={'left'}
+                                  >
+                                    {currentItem.profitMarginPercent}%
+                                  </Typography>
+                                  <Typography textAlign={'left'}>
+                                    Profit Margin %
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={12} lg={6}>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>
+                                    Average Clicks per Day
+                                  </Typography>
+                                  <Typography>
+                                    {currentItem.averageClickPerDay}
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>Average View Time</Typography>
+                                  <Typography>
+                                    {currentItem.averageViewTime}
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>Conversion Rate</Typography>
+                                  <Typography>
+                                    {itemDetail.purchase === 0 ||
+                                    itemDetail.views === 0
+                                      ? 0
+                                      : currentItem.conversionRate}
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>Revenue Generated</Typography>
+                                  <Typography>
+                                    ${currentItem.revenueGenerated}
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={12} lg={6}>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>
+                                    Average Purchases per Day
+                                  </Typography>
+                                  <Typography>
+                                    {currentItem.averagePurchasePerDay}
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>
+                                    Revenue Share of Menu Item
+                                  </Typography>
+                                  <Typography>
+                                    {currentItem.revenueOfMenu}%
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>
+                                    Revenue Share of Menu Category
+                                  </Typography>
+                                  <Typography>
+                                    {currentItem.revenueOfCategory}%
+                                  </Typography>
+                                </Box>
+                                <Box
+                                  marginBottom={2}
+                                  display={'flex'}
+                                  justifyContent={'space-between'}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>Peak Order time </Typography>
+                                  <Typography>
+                                    {currentItem.peakOrderTime}
+                                  </Typography>
+                                </Box>
+                              </Grid>
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={12} marginBottom={2}>
-                  <Card sx={{ marginTop: '20px', boxShadow: 'none' }}>
-                    <CardContent>
-                      <Box>
-                        <Box display={'flex'} justifyContent={'space-between'}>
-                          <Box>
-                            <Typography
-                              fontWeight={'bold'}
-                              fontSize={'20px'}
-                              textAlign={'left'}
-                              marginLeft={'30px'}
-                            >
-                              Views
-                            </Typography>
-                          </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} marginBottom={2}>
+                    <Card sx={{ marginTop: '20px', boxShadow: 'none' }}>
+                      <CardContent>
+                        <Box>
                           <Box
                             display={'flex'}
-                            alignItems={'center'}
-                            marginRight={'25px'}
+                            justifyContent={'space-between'}
                           >
-                            <Typography marginRight={'30px'}>
-                              Average Views: 434
-                            </Typography>
-                            <PickDateRange
-                              setDateState={handleDateChange}
-                              datestate={dateState}
-                            />
+                            <Box>
+                              <Typography
+                                fontWeight={'bold'}
+                                fontSize={'20px'}
+                                textAlign={'left'}
+                                marginLeft={'30px'}
+                              >
+                                Views
+                              </Typography>
+                            </Box>
+                            <Box
+                              display={'flex'}
+                              alignItems={'center'}
+                              marginRight={'25px'}
+                            >
+                              <Typography marginRight={'30px'}>
+                                Average Views: 434
+                              </Typography>
+                              <PickDateRange
+                                setDateState={handleDateChange}
+                                datestate={dateState}
+                              />
+                            </Box>
                           </Box>
-                        </Box>
-                        {/* <LineChart
+                          {/* <LineChart
                         options={itemDetail.options}
                         series={itemDetail.series}
                       /> */}
-                      </Box>
-                    </CardContent>
-                  </Card>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <ItemRankingForm
+                        title={'View Time Ranking'}
+                        items={viewTimeRanking.items}
+                        parentMenus={viewTimeRanking.parentMenus}
+                        times={viewTimeRanking.times}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <ItemRankingForm
+                        title={'Conversion Rate Ranking'}
+                        items={viewTimeRanking.items}
+                        parentMenus={viewTimeRanking.parentMenus}
+                        times={viewTimeRanking.times}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <ItemRankingForm
+                        title={'Order Ranking'}
+                        items={viewTimeRanking.items}
+                        parentMenus={viewTimeRanking.parentMenus}
+                        times={viewTimeRanking.times}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <ItemRankingForm
+                        title={'Category Order Ranking'}
+                        items={viewTimeRanking.items}
+                        parentMenus={viewTimeRanking.parentMenus}
+                        times={viewTimeRanking.times}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <ItemRankingForm
-                      title={'View Time Ranking'}
-                      items={viewTimeRanking.items}
-                      parentMenus={viewTimeRanking.parentMenus}
-                      times={viewTimeRanking.times}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <ItemRankingForm
-                      title={'Conversion Rate Ranking'}
-                      items={viewTimeRanking.items}
-                      parentMenus={viewTimeRanking.parentMenus}
-                      times={viewTimeRanking.times}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <ItemRankingForm
-                      title={'Order Ranking'}
-                      items={viewTimeRanking.items}
-                      parentMenus={viewTimeRanking.parentMenus}
-                      times={viewTimeRanking.times}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <ItemRankingForm
-                      title={'Category Order Ranking'}
-                      items={viewTimeRanking.items}
-                      parentMenus={viewTimeRanking.parentMenus}
-                      times={viewTimeRanking.times}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            ) : (
-              <ItemCompare
-                currentItem={currentItem}
-                setCurrentPage={setCurrentPage}
-              />
-            )}
-          </Container>
+              ) : (
+                <ItemCompare
+                  currentItem={currentItem}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
+            </Container>
+          )}
         </Container>
       </ThemeProvider>
     </>

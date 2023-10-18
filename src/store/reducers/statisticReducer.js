@@ -91,7 +91,7 @@ const statisticReducer = (state = initState, action) => {
     case 'COMPARE_ITEM_REMOVE': {
       return {
         ...state,
-        compareItems: state.compareItems.filter(item => item.id !== payload)
+        compareItems: state.compareItems.filter(item => item.itemID !== payload)
       }
     }
     case 'LOADING_TRUE':

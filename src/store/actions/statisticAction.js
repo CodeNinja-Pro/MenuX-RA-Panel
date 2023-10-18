@@ -100,6 +100,10 @@ export const getTotalRevenueByCategory = id => async dispatch => {
 
 export const getItemDetail = id => async dispatch => {
   try {
+    dispatch({
+      type: 'LOADING_TRUE'
+    })
+
     const menu = await firebase.firestore().collection('menus').doc(id).get()
     let categoryID = menu.data().categoriesID
     const category = await firebase
@@ -140,8 +144,16 @@ export const getItemDetail = id => async dispatch => {
       type: 'ITEM_DETAIL',
       payload: menuDetail
     })
+
+    dispatch({
+      type: 'LOADING_FALSE'
+    })
   } catch (error) {
     toast.error(error.message)
+
+    dispatch({
+      type: 'LOADING_FALSE'
+    })
   }
 }
 
