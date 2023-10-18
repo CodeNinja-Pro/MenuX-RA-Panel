@@ -1,11 +1,5 @@
 import firebase from '../../config/firebase'
 import { toast } from 'react-toastify'
-import {
-  sortCategoryByView,
-  sortItemByView,
-  boughtSortItems
-} from '../../Statistical/generalStatistics'
-import { reviews } from '../../Statistical/reviewData'
 
 export const getAllMenus = userId => async dispatch => {
   try {
@@ -71,46 +65,163 @@ export const getAllCategories = userId => async dispatch => {
   }
 }
 
-export const getActiveMerchants = () => async dispatch => {
+export const getTotalRevenueByCategory = id => async dispatch => {
   try {
-    let allUsers = []
-    const snapShot = await firebase.firestore().collection('users').get()
+    let totalRevenueByCategory = 0
+    let categoryID = ''
 
-    snapShot.forEach(doc => {
-      allUsers.push(doc.data())
+    await firebase
+      .firestore()
+      .collection('menus')
+      .doc(id)
+      .get()
+      .then(doc => {
+        categoryID = doc.data().categoriesID
+      })
+
+    const snapShot = await firebase
+      .firestore()
+      .collection('menus')
+      .where('categoriesID', '==', categoryID)
+      .get()
+
+    snapShot.forEach(item => {
+      totalRevenueByCategory +=
+        (item.data().price - item.data().totalPrice) * item.data().purchase
+    })
+    dispatch({
+      type: 'GET_TOTAL_REVENUE_CATEGORY',
+      payload: totalRevenueByCategory
     })
   } catch (error) {
     toast.error(error.message)
   }
 }
 
-export const getClickSortItems = restaurantID => async dispatch => {
+export const getItemDetail = id => async dispatch => {
   try {
-    const allActivity = reviews
-    const sortedItems = await sortItemByView(allActivity)
+    const menu = await firebase.firestore().collection('menus').doc(id).get()
+    let categoryID = menu.data().categoriesID
+    const category = await firebase
+      .firestore()
+      .collection('categories')
+      .doc(categoryID)
+      .get()
+
+    const snapShot = await firebase
+      .firestore()
+      .collection('menus')
+      .where('categoriesID', '==', category.id)
+      .get()
+
+    let totalRevenueByCateogry = 0
+    snapShot.forEach(item => {
+      totalRevenueByCateogry +=
+        (item.data().price - item.data().totalPrice) * item.data().purchase
+    })
+
+    const menuDetail = {
+      menuName: menu.data().item,
+      categoryName: category.data().categoryName,
+      price: menu.data().price,
+      cost: menu.data().totalPrice,
+      viewTime: menu.data().viewTime,
+      purchase: menu.data().purchase,
+      views: menu.data().views,
+      totalRevenueByCategory: totalRevenueByCateogry,
+      // profitMargin: menu.data().price - menu.data().totalPrice,
+      // profitMarginPercent:
+      //   ((menu.data().price - menu.data().totalPrice) / menu.data().price) *
+      //   100,
+      createdAt: menu.data().createdAt
+    }
+
+    dispatch({
+      type: 'ITEM_DETAIL',
+      payload: menuDetail
+    })
   } catch (error) {
     toast.error(error.message)
   }
 }
 
-export const getClickSortCategories = restaurantID => async dispatch => {
+export const getCompareItemDetail = (totalRevenue, id) => async dispatch => {
   try {
-    const allActivity = reviews
-    const sortedItems = await sortCategoryByView(allActivity)
+    dispatch({
+      type: 'LOADING_TRUE'
+    })
+    const menu = await firebase.firestore().collection('menus').doc(id).get()
+    let categoryID = menu.data().categoriesID
+    const category = await firebase
+      .firestore()
+      .collection('categories')
+      .doc(categoryID)
+      .get()
+
+    const snapShot = await firebase
+      .firestore()
+      .collection('menus')
+      .where('categoriesID', '==', category.id)
+      .get()
+
+    let totalRevenueByCateogry = 0
+    snapShot.forEach(item => {
+      totalRevenueByCateogry +=
+        (item.data().price - item.data().totalPrice) * item.data().purchase
+    })
+
+    const detail = {
+      itemID: id,
+      menuName: menu.data().item,
+      categoryName: category.data().categoryName,
+      price: menu.data().price,
+      cost: menu.data().totalPrice,
+      profitMargin: menu.data().price - menu.data().totalPrice,
+      profitMarginPercent: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(
+        ((menu.data().price - menu.data().totalPrice) / menu.data().price) * 100
+      ),
+      averageClickPerDay: menu.data().views,
+      averageViewTime: menu.data().viewTime,
+      conversionRate: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(menu.data().purchase / menu.data().views),
+      revenueGenerated:
+        (menu.data().price - menu.data().totalPrice) * menu.data().purchase,
+      averagePurchasePerDay: menu.data().purchase,
+      revenueOfMenu: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(
+        ((menu.data().price - menu.data().totalPrice) *
+          menu.data().purchase *
+          100) /
+          totalRevenue
+      ),
+      revenueOfCategory: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(
+        ((menu.data().price - menu.data().totalPrice) *
+          menu.data().purchase *
+          100) /
+          totalRevenueByCateogry
+      ),
+      peakOrderTime: '12 PM - 2 PM',
+      createdAt: menu.data().createdAt
+    }
+
+    dispatch({
+      type: 'COMPARE_ITEM_ADD',
+      payload: detail
+    })
+
+    dispatch({
+      type: 'LOADING_FALSE'
+    })
   } catch (error) {
     toast.error(error.message)
+    dispatch({
+      type: 'LOADING_FALSE'
+    })
   }
-}
-
-export const getBoughtSortItems = restaurantID => async dispatch => {
-  try {
-    const allActivity = reviews
-    const sortedItems = await boughtSortItems(allActivity)
-  } catch (error) {
-    toast.error(error.message)
-  }
-}
-
-export const getPeaktimeOrderSortItems = restaurantID => async dispatch => {
-  console.log('first')
 }

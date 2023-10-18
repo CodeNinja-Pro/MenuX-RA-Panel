@@ -16,7 +16,7 @@ export default function ItemRankingForm (props) {
   const times = props.times
   return (
     <>
-      <Card>
+      <Card sx={{ boxShadow: 'none' }}>
         <CardContent>
           <Typography
             marginBottom={'20px'}

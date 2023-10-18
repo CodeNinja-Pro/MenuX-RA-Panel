@@ -21,7 +21,6 @@ import {
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import {
-  sortCategoryByPurchase,
   sortCategoryByRevenue,
   sortCategoryByView,
   sortItemByPurchase,
@@ -56,7 +55,6 @@ export default function StatisticsChart () {
     dispatch(sortItemByView(allMenus))
     dispatch(sortCategoryByView(allMenus, allCategories))
     dispatch(sortItemByPurchase(allMenus))
-    dispatch(sortCategoryByPurchase(allMenus, allCategories))
     dispatch(sortItemByRevenue(allMenus))
     dispatch(sortCategoryByRevenue(allMenus, allCategories))
     sortCategoryByView(allMenus)

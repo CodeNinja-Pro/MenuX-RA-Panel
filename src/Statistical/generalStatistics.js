@@ -72,20 +72,20 @@ export const sortItemByPurchase = array => async dispatch => {
   return sortedArray
 }
 
-export const sortCategoryByPurchase = array => async dispatch => {
-  const sortedArray = _.sortBy(array, [
-    o => {
-      return o.purchase
-    }
-  ])
+// export const sortCategoryByPurchase = array => async dispatch => {
+//   const sortedArray = _.sortBy(array, [
+//     o => {
+//       return o.purchase
+//     }
+//   ])
 
-  dispatch({
-    type: 'PURCHASE_SORT_CATEGORIES',
-    payload: sortedArray
-  })
+//   dispatch({
+//     type: 'PURCHASE_SORT_CATEGORIES',
+//     payload: sortedArray
+//   })
 
-  return sortedArray
-}
+//   return sortedArray
+// }
 
 export const sortItemByConversionRate = array => async dispatch => {
   const sortedArray = _.sortBy(array, [
@@ -122,8 +122,19 @@ export const sortItemByRevenue = array => async dispatch => {
       totalRevenue
     }
   })
+}
 
-  return sortedArray
+export const getTotalRevenue = array => async dispatch => {
+  let totalRevenue = 0
+  array.map(item => {
+    totalRevenue +=
+      (Number(item.price) - Number(item.totalPrice)) * Number(item.purchase)
+  })
+
+  dispatch({
+    type: 'GET_TOTAL_REVENUE',
+    payload: totalRevenue
+  })
 }
 
 export const sortCategoryByRevenue = (menus, categories) => async dispatch => {

@@ -11,10 +11,10 @@ import {
   CardContent
 } from '@mui/material'
 import { Container } from 'reactstrap'
-import ItemStatisticData from '../components/ItemStatistics/ItemStatisticData'
 import StatisticsChart from '../components/ItemStatistics/StatisticsChart'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
+import ItemStatisticTable from '../components/ItemStatistics/ItemStatisticTable'
 
 export default function ItemStatistical () {
   const [tabFlag, setTabFlag] = useState('Table')
@@ -86,7 +86,7 @@ export default function ItemStatistical () {
                       user.role === 'staff' && disableOnTrue(sectionPermission)
                     }
                   >
-                    <ItemStatisticData />
+                    <ItemStatisticTable />
                   </Box>
                 </CardContent>
               </Card>

@@ -54,6 +54,7 @@ import CreateNewMenu from './views/CreateNewMenu'
 import StaffSection from './views/StaffSection.js'
 import ItemStatistical from './views/ItemStatistical.js'
 import ItemDetail from './components/ItemStatistics/ItemDetail.js'
+import ItemCompare from './components/ItemStatistics/ItemCompare.js'
 import CreateRestaurant from './views/auth/Step/CreateRestaurant.js'
 import NotificationTable from './components/Navbars/common/NotificationTable.js'
 import CreateCoupon from './components/CreateNewMenu/common/CreateCoupon.js'
@@ -244,9 +245,17 @@ var routes = [
     isMenu: false
   },
   {
-    path: '/item-detail',
+    path: '/item-detail/:id',
     name: 'Item Details',
     component: ItemDetail,
+    type: 'restaurant',
+    layout: '/admin',
+    isMenu: false
+  },
+  {
+    path: '/item-compare/:id',
+    name: 'Item Compare',
+    component: ItemCompare,
     type: 'restaurant',
     layout: '/admin',
     isMenu: false

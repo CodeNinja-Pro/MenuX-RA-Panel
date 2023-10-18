@@ -38,10 +38,12 @@ import {
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import PickDateRange from '../../views/auth/PickDateRange'
 import { getAllMenus } from '../../store/actions/statisticAction'
+import { useHistory } from 'react-router-dom'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -144,7 +146,7 @@ function EnhancedTableHead (props) {
           </TableCell>
         ))}
 
-        <TableCell align={'center'}>Actions</TableCell>
+        {/* <TableCell align={'center'}>Actions</TableCell> */}
       </TableRow>
     </TableHead>
   )
@@ -178,6 +180,7 @@ EnhancedTableHead.propTypes = {
 export default function ItemStatisticTable () {
   //User definition
   const dispatch = useDispatch()
+  const history = useHistory()
   const { user } = useSelector(state => state.auth)
 
   useEffect(() => {
@@ -187,7 +190,6 @@ export default function ItemStatisticTable () {
   let rows = useSelector(state => state.statistic.allMenus)
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
-  const [invitationModal, setInvitationModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState('')
 
   const [visibleRows, setVisibleRows] = useState([])
@@ -200,8 +202,6 @@ export default function ItemStatisticTable () {
     status: null
   })
 
-  const [emailForInvite, setEmailForInvite] = useState('')
-
   const [dateState, setDateState] = useState([
     {
       startDate: addDays(new Date(), -31),
@@ -209,6 +209,12 @@ export default function ItemStatisticTable () {
       key: 'selection'
     }
   ])
+
+  const handleItemClick = id => {
+    history.push(`/admin/item-detail/${id}`)
+  }
+
+  const handleItemDelete = () => {}
 
   const handleDateChange = ranges => {
     setDateState(ranges)
@@ -332,90 +338,87 @@ export default function ItemStatisticTable () {
                   const labelId = `enhanced-table-checkbox-${index}`
 
                   return (
-                    <TableRow
-                      hover
-                      tabIndex={-1}
-                      key={labelId}
-                      sx={{ cursor: 'pointer' }}
-                    >
-                      <TableCell align='center'>{row.name}</TableCell>
-                      <TableCell align='center'>{row.avgClicks}</TableCell>
-                      <TableCell align='center'>
-                        {row.views}/{sum}
-                      </TableCell>
-                      <TableCell align='center'>
-                        {/* {row.createdAt.toDate().toLocaleString()} */}
-                      </TableCell>
-                      <TableCell align='center'>
-                        {row.purchase === 0 || row.views === 0
-                          ? 0
-                          : new Intl.NumberFormat('en-IN', {
-                              maximumSignificantDigits: 2
-                            }).format(row.conversionRate)}
-                      </TableCell>
-                      <TableCell align='center'>${row.price}</TableCell>
-                      <TableCell align='center'>
-                        {row.profitMarginSharp}
-                      </TableCell>
-                      <TableCell align='center'>
-                        {new Intl.NumberFormat('en-IN', {
-                          maximumSignificantDigits: 3
-                        }).format(row.profitMarginPercent)}
-                      </TableCell>
-                      <TableCell align='center' width={'10%'}>
-                        <IconButton
-                          aria-describedby={id}
-                          color='inherit'
-                          size='small'
-                          onClick={event => {
-                            handleClick(event)
-                            setEmailForInvite(row.email)
-                            setSelectedItem(row.id)
-                          }}
-                        >
-                          <MoreVertIcon style={{ marginTop: '5px' }} />
-                        </IconButton>
-                      </TableCell>
-                      <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'left'
-                        }}
+                    <>
+                      <TableRow
+                        hover
+                        onClick={() => handleItemClick(row.id)}
+                        tabIndex={-1}
+                        key={labelId}
+                        sx={{ cursor: 'pointer' }}
                       >
-                        <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList id='split-button-menu'>
-                              <MenuItem
-                                onClick={() => {
-                                  setInvitationModal(true)
-                                }}
-                                key={'edit'}
-                              >
-                                <NotificationsNoneOutlinedIcon />
-                                Send the Invitation
-                              </MenuItem>
-                              <Divider />
-                              <MenuItem
-                                onClick={() => {
-                                  setDeleteModal(true)
-                                }}
-                                key={'status'}
-                              >
-                                <DeleteOutlineOutlinedIcon color='error' />
-                                <Typography color={'error'}>Delete</Typography>
-                              </MenuItem>
-                            </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Popover>
-                    </TableRow>
+                        <TableCell align='center'>{row.name}</TableCell>
+                        <TableCell align='center'>{row.avgClicks}</TableCell>
+                        <TableCell align='center'>
+                          {row.views}/{sum}
+                        </TableCell>
+                        <TableCell align='center'>
+                          {/* {row.createdAt.toDate().toLocaleString()} */}
+                        </TableCell>
+                        <TableCell align='center'>
+                          {row.purchase === 0 || row.views === 0
+                            ? 0
+                            : new Intl.NumberFormat('en-IN', {
+                                maximumSignificantDigits: 2
+                              }).format(row.conversionRate)}
+                        </TableCell>
+                        <TableCell align='center'>${row.price}</TableCell>
+                        <TableCell align='center'>
+                          {row.profitMarginSharp}
+                        </TableCell>
+                        <TableCell align='center'>
+                          {new Intl.NumberFormat('en-IN', {
+                            maximumSignificantDigits: 3
+                          }).format(row.profitMarginPercent)}
+                        </TableCell>
+                        {/* <TableCell align='center' width={'10%'}>
+                          <IconButton
+                            aria-describedby={id}
+                            color='inherit'
+                            size='small'
+                            onClick={event => {
+                              handleClick(event)
+                              setSelectedItem(row.id)
+                            }}
+                          >
+                            <MoreVertIcon style={{ marginTop: '5px' }} />
+                          </IconButton>
+                        </TableCell> */}
+                      </TableRow>
+                    </>
                   )
                 })}
               </TableBody>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList id='split-button-menu'>
+                      <MenuItem onClick={() => {}} key={'view'}>
+                        <VisibilityOutlinedIcon />
+                        View
+                      </MenuItem>
+                      <Divider />
+                      <MenuItem
+                        onClick={() => {
+                          setDeleteModal(true)
+                        }}
+                        key={'delete'}
+                      >
+                        <DeleteOutlineOutlinedIcon color='error' />
+                        <Typography color={'error'}>Delete</Typography>
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Popover>
             </Table>
           </TableContainer>
           <TablePagination
@@ -447,36 +450,8 @@ export default function ItemStatisticTable () {
               <Button onClick={() => setDeleteModal(false)}>Disagree</Button>
               <Button
                 onClick={() => {
+                  handleItemDelete()
                   setDeleteModal(false)
-                }}
-                autoFocus
-              >
-                Agree
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          <Dialog
-            open={invitationModal}
-            onClose={() => setInvitationModal(false)}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>
-              {'You pay attention here'}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                Are you really going to send the invitation?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setInvitationModal(false)}>
-                Disagree
-              </Button>
-              <Button
-                onClick={() => {
-                  setInvitationModal(false)
                 }}
                 autoFocus
               >

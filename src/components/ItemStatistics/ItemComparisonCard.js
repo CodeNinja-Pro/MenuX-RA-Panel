@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Card,
@@ -9,11 +9,32 @@ import {
   Paper
 } from '@mui/material'
 import ProductImage from '../../assets/common/statistic/product.png'
+import {
+  getAllMenus,
+  getTotalRevenueByCategory
+} from '../../store/actions/statisticAction'
+import { useDispatch, useSelector } from 'react-redux'
+import { getTotalRevenue } from '../../Statistical/generalStatistics'
 
-export default function ItemComparisonCard () {
+export default function ItemComparisonCard (props) {
+  const [itemID, setItemID] = useState('')
+  const dispatch = useDispatch()
+  const { user } = useSelector(state => state.auth)
+  const { allMenus } = useSelector(state => state.statistic)
+
+  useEffect(() => {
+    setItemID(props.itemID)
+    dispatch(getAllMenus(user.restaurantID))
+    dispatch(getTotalRevenueByCategory(props.currentItem.itemID))
+  }, [])
+
+  useEffect(() => {
+    dispatch(getTotalRevenue(allMenus))
+  }, [allMenus])
+
   return (
     <>
-      <Card>
+      <Card sx={{ boxShadow: 'none' }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -31,7 +52,7 @@ export default function ItemComparisonCard () {
                 alignItems={'center'}
               >
                 <Typography fontWeight={'bold'} fontSize={'25px'}>
-                  Creamy Pasta
+                  {props.currentItem.menuName}
                 </Typography>
                 <Box
                   margin={'10px'}
@@ -44,7 +65,9 @@ export default function ItemComparisonCard () {
                   <Typography color={'#28C76F'}>100/230</Typography>
                 </Box>
               </Box>
-              <Typography fontSize={'20px'}>Pasta</Typography>
+              <Typography fontSize={'20px'}>
+                {props.currentItem.categoryName}
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Paper
@@ -61,7 +84,7 @@ export default function ItemComparisonCard () {
                   fontSize={'20px'}
                   textAlign={'left'}
                 >
-                  $45.00
+                  ${props.currentItem.price}
                 </Typography>
                 <Typography textAlign={'left'}>Price</Typography>
               </Paper>
@@ -81,7 +104,7 @@ export default function ItemComparisonCard () {
                   fontSize={'20px'}
                   textAlign={'left'}
                 >
-                  $45.00
+                  ${props.currentItem.cost}
                 </Typography>
                 <Typography textAlign={'left'}>Cost of Item</Typography>
               </Paper>
@@ -101,7 +124,7 @@ export default function ItemComparisonCard () {
                   fontSize={'20px'}
                   textAlign={'left'}
                 >
-                  $45.00
+                  ${props.currentItem.profitMargin}
                 </Typography>
                 <Typography textAlign={'left'}>Profit Margin</Typography>
               </Paper>
@@ -121,7 +144,7 @@ export default function ItemComparisonCard () {
                   fontSize={'20px'}
                   textAlign={'left'}
                 >
-                  4.90%
+                  {props.currentItem.profitMarginPercent}%
                 </Typography>
                 <Typography textAlign={'left'}>Profit Margin %</Typography>
               </Paper>
@@ -136,7 +159,7 @@ export default function ItemComparisonCard () {
                 <Typography fontWeight={'bold'}>
                   Average Click per Day
                 </Typography>
-                <Typography>200</Typography>
+                <Typography>{props.currentItem.averageClickPerDay}</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -145,7 +168,7 @@ export default function ItemComparisonCard () {
                 marginBottom={'10px'}
               >
                 <Typography fontWeight={'bold'}>Average View Time</Typography>
-                <Typography>20 mins</Typography>
+                <Typography>{props.currentItem.averageViewTime}</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -154,7 +177,7 @@ export default function ItemComparisonCard () {
                 marginBottom={'10px'}
               >
                 <Typography fontWeight={'bold'}>Conversion Rate</Typography>
-                <Typography>20 %</Typography>
+                <Typography>{props.currentItem.conversionRate}</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -163,7 +186,7 @@ export default function ItemComparisonCard () {
                 marginBottom={'10px'}
               >
                 <Typography fontWeight={'bold'}>Revenue Generated</Typography>
-                <Typography>$1000</Typography>
+                <Typography>${props.currentItem.revenueGenerated}</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -174,7 +197,9 @@ export default function ItemComparisonCard () {
                 <Typography fontWeight={'bold'}>
                   Average Purchase per Day
                 </Typography>
-                <Typography>19</Typography>
+                <Typography>
+                  {props.currentItem.averagePurchasePerDay}
+                </Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -185,7 +210,7 @@ export default function ItemComparisonCard () {
                 <Typography fontWeight={'bold'}>
                   Revenue Share of Menu Item
                 </Typography>
-                <Typography>5%</Typography>
+                <Typography>{props.currentItem.revenueOfMenu}%</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -196,7 +221,7 @@ export default function ItemComparisonCard () {
                 <Typography fontWeight={'bold'}>
                   Revenue Share of Menu Category
                 </Typography>
-                <Typography>50%</Typography>
+                <Typography>{props.currentItem.revenueOfCategory}%</Typography>
               </Grid>
               <Grid
                 display={'flex'}
@@ -205,7 +230,7 @@ export default function ItemComparisonCard () {
                 marginBottom={'10px'}
               >
                 <Typography fontWeight={'bold'}>Peak Order time</Typography>
-                <Typography>12:30PM-1:30PM</Typography>
+                <Typography>{props.currentItem.peakOrderTime}</Typography>
               </Grid>
             </Grid>
           </Grid>
