@@ -1,8 +1,12 @@
 const initState = {
   loader: false,
+  allRestaurantItems: [],
   allRestaurants: [],
   allFeedbacks: [],
-  allStaffs: []
+  allStaffs: [],
+  viewSortItems: [],
+  sellersSort: [],
+  conversionRateSortItems: []
 }
 const superReducer = (state = initState, action) => {
   switch (action.type) {
@@ -70,6 +74,30 @@ const superReducer = (state = initState, action) => {
         allFeedbacks: state.allFeedbacks?.filter(
           staff => staff.id !== action.payload
         )
+      }
+    }
+    case 'ALL_RESTAURANT_ITEMS': {
+      return {
+        ...state,
+        allRestaurantItems: action.payload
+      }
+    }
+    case 'SUPER_VIEW_SORT_ITEMS': {
+      return {
+        ...state,
+        viewSortItems: action.payload
+      }
+    }
+    case 'SUPER_SELLER_SORT': {
+      return {
+        ...state,
+        sellersSort: action.payload
+      }
+    }
+    case 'SUPER_CONVERSION_RATE_SORT_ITEMS': {
+      return {
+        ...state,
+        conversionRateSortItems: action.payload
       }
     }
     default:

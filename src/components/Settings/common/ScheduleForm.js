@@ -30,14 +30,16 @@ export default function ScheduleForm (props) {
             label={props.title}
             // onChange={handleDateChange}
           />
-          <Box width={190}>
+          <Box width={230}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <SingleInputTimeRangeField
+                color='primary'
+                label='From - To'
                 disabled={props.disabled}
                 // value={props.periodic[props.title]}
-                onChange={newValue =>
-                  props.handlePeriodic(props.title, newValue)
-                }
+                // onChange={newValue =>
+                //   props.handlePeriodic(props.title, newValue)
+                // }
               />
             </LocalizationProvider>
           </Box>

@@ -58,6 +58,7 @@ import {
 import VisaCard from '../../assets/common/patmentCard/Payment.png'
 import ExpressCard from '../../assets/common/patmentCard/Payment1.png'
 import { useHistory, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const publishable_API =
   'pk_test_51Mzkp7ITuIlz575ivol6fzkYduTdDKHgAudxugxaqn8N8AM1h0qcmw95rivH5HWXNeyToz5kEzdcC4ntnPss05yF00bpwqr8mC'
@@ -119,6 +120,9 @@ export default function AccountSetting () {
   // Card information
   const [cardNumber, setCardNumber] = useState('')
 
+  const [verificationSent, setVerificationSent] = useState(false)
+  const [emailVerified, setEmailVerified] = useState(false)
+
   const handleOnChange = e => {
     const { complete, elementType } = e
     setCardNumber(e)
@@ -130,6 +134,20 @@ export default function AccountSetting () {
 
   useEffect(() => {
     dispatch(getCustomerID(user.restaurantID))
+    // const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     console.log(user)
+    //     if (user.emailVerified) {
+    //       // window.location.replace('/admin/settings')
+    //       history.push('/admin/settings')
+    //     }
+    //     // setEmailVerified(user.emailVerified)
+    //     // setTFA(!TFA)
+    //     // toast.success('Your email is verified successfully.')
+    //   }
+    // })
+
+    // return () => unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -148,10 +166,6 @@ export default function AccountSetting () {
       card: cardElement2,
       card: cardElement3
     })
-    console.log('cardElement', cardElement)
-    console.log('cardnumberElement', CardNumberElement)
-    console.log('cardElement2', cardElement2)
-    console.log('cardElement3', cardElement3)
     if (error) {
       toast.warn('Card Details not Added')
     } else {
@@ -231,52 +245,24 @@ export default function AccountSetting () {
   const [changePasswordModal, setChangePasswordModal] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [verificationConfirmModal, setVerificationConfirmModal] =
+    useState(false)
 
   const [verificationCode, setVerificationCode] = useState('')
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    setVerificationCode(searchParams.get('oobCode'))
-    console.log('first')
-  }, [location.search])
-
-  useEffect(() => {
-    console.log('second')
-    if (verificationCode) {
-      firebase
-        .auth()
-        .applyActionCode(verificationCode)
-        .then(() => {
-          toast.success('Email verification seccessful.', {
-            style: {
-              fontFamily: 'Poppins'
-            }
-          })
-          history.push('/admin/settings')
-          setChangePasswordModal(true)
-        })
-        .catch(error => {
-          toast.error(error.message, {
-            style: {
-              fontFamily: 'Poppins'
-            }
-          })
-          toast.error(error.message, {
-            style: {
-              fontFamily: 'Poppins'
-            }
-          })
-          history.push('/admin/settings')
-        })
-    }
-  }, [verificationCode])
+  const { verificationToken } = useParams()
+  const [verified, setVerified] = useState(false)
 
   const handleChangePassword = () => {
     dispatch(checkCurrentPassword(currentPassword, newPassword))
   }
 
   const sendVerificationCode = () => {
-    dispatch(emailVerification())
+    dispatch(
+      emailVerification(() => {
+        setVerificationConfirmModal(true)
+      })
+    )
   }
 
   return (
@@ -399,8 +385,8 @@ export default function AccountSetting () {
                 <Switch
                   checked={TFA}
                   onChange={e => {
-                    setTFA(!TFA)
-                    dispatch(updateTFA(user.id, !TFA))
+                    sendVerificationCode()
+                    // dispatch(updateTFA(user.id, !TFA))
                   }}
                   inputProps={'aria-label'}
                 ></Switch>
@@ -509,9 +495,9 @@ export default function AccountSetting () {
                 setSocialInfo={onChangeSocialAccount}
                 title={'LinkTree'}
               />
-              <Button variant='contained' sx={{ height: '40px' }} fullWidth>
+              {/* <Button variant='contained' sx={{ height: '40px' }} fullWidth>
                 Save
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
         </CardContent>
@@ -1021,7 +1007,6 @@ export default function AccountSetting () {
                   </DialogContentText>
                 </DialogContent>
               </Dialog>
-
               <Dialog
                 open={confirmUpdatePasswordModal}
                 onClose={() => setConfirmUpdatePasswordModal(false)}
@@ -1054,6 +1039,31 @@ export default function AccountSetting () {
                     autoFocus
                   >
                     Agree
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              <Dialog
+                open={verificationConfirmModal}
+                onClose={() => setVerificationConfirmModal(false)}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  {'You can check'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    We sent the verification code to your eamil.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setVerificationConfirmModal(false)
+                    }}
+                  >
+                    Okay
                   </Button>
                 </DialogActions>
               </Dialog>

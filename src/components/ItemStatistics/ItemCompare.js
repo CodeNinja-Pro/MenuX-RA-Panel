@@ -27,8 +27,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ItemComparisonCard from './ItemComparisonCard'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import ProductImage from '../../assets/common/statistic/product.png'
 import LineChart from '../Charts/LineChart'
 import PickDateRange from '../../views/auth/PickDateRange'
 import { addDays } from 'date-fns'
@@ -47,22 +45,8 @@ export default function ItemCompare (props) {
   )
 
   const { allMenus } = useSelector(state => state.statistic)
-  const [viewTimeRanking, setViewTimeRanking] = useState({
-    items: ['Pasta', 'Fries', 'Burger', 'Bread', 'Salad', 'Cheese'],
-    parentMenus: [
-      'Light Food',
-      'Light Food',
-      'Light Food',
-      'Light Food',
-      'Meal',
-      'Meal'
-    ],
-    times: ['54', '234', '23', '12', '65', '33']
-  })
 
   const [modalFlag, setModalFlag] = useState(false)
-
-  const [compareList, setCompareList] = useState([])
 
   const [compareProduct, setCompareProduct] = useState('')
   const compareProductChange = e => {

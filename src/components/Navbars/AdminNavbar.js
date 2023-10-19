@@ -372,19 +372,22 @@ const AdminNavbar = props => {
                 </DropdownToggle>
                 <DropdownMenu className='dropdown-menu-arrow mt-2' right>
                   <DropdownItem>
-                    <Media className='align-items-center'>
-                      <span className='avatar avatar-sm rounded-circle'>
-                        <img src={MainMark} />
-                      </span>
-                      <Media className='ml-2 d-none d-lg-flex flex-column'>
-                        <span className='mb-0 text-sm  text-dark font-weight-bold'>
-                          {user?.name}
-                        </span>
-                        <span className='mb-0 text-sm text-dark '>
-                          {user?.role}
-                        </span>
-                      </Media>
-                    </Media>
+                    {/* <Box
+                      display={'flex'}
+                      sx={{ width: '100%' }}
+                      justifyContent={'space-between'}
+                    >
+                      <Box>
+                        <Typography fontWeight={'bold'}>Name</Typography>
+                      </Box>
+                      <Box>
+                        <Typography>{user?.name}</Typography>
+                      </Box>
+                    </Box> */}
+                    <Box display={'flex'} justifyContent={'space-between'}>
+                      <Typography fontWeight={'bold'}>Role</Typography>
+                      <Typography>{user?.role}</Typography>
+                    </Box>
                   </DropdownItem>
                   <DropdownItem divider />
                   {user?.type === 'restaurant' && (

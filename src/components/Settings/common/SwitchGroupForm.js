@@ -13,7 +13,7 @@ export default function SwitchGroupForm (props) {
       <Grid container spacing={2}>
         <Grid item xs={12} lg={8} margin={1}>
           <Typography textAlign={'left'} fontSize={'20px'}>
-            Select Language
+            {/* Select Language */}
           </Typography>
           <Box
             margin={1}
@@ -47,7 +47,7 @@ export default function SwitchGroupForm (props) {
               sx={{ cursor: 'pointer' }}
               onClick={() => setFlag('ge')}
             >
-              German
+              Spanish
             </Typography>
             <Typography color={'primary'}>
               {flag === 'ge' && 'Primary'}
@@ -68,7 +68,7 @@ export default function SwitchGroupForm (props) {
               sx={{ cursor: 'pointer' }}
               onClick={() => setFlag('ar')}
             >
-              Arabic
+              Portuguese
             </Typography>
             <Typography color={'primary'}>
               {flag === 'ar' && 'Primary'}
@@ -90,7 +90,7 @@ export default function SwitchGroupForm (props) {
               sx={{ cursor: 'pointer' }}
               onClick={() => setFlag('ur')}
             >
-              Urdu
+              French
             </Typography>
             <Typography color={'primary'}>
               {flag === 'ur' && 'Primary'}

@@ -25,10 +25,11 @@ export default function TextFieldUpdateForm (props) {
         <Grid item xs={4}>
           <OutlinedInput
             fullWidth
+            placeholder='smile@gmail.com'
             name={props.socialName}
             value={props.socialInfo}
             onChange={props.setSocialInfo}
-            disabled={!updateFlag}
+            // disabled={!updateFlag}
             id='outlined-adornment-weight'
             aria-describedby='outlined-weight-helper-text'
             inputProps={{
@@ -37,24 +38,21 @@ export default function TextFieldUpdateForm (props) {
           />
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          {updateFlag === false ? (
+          {/* {updateFlag === false ? (
             <Button onClick={() => setUpdateFlag(true)}>Change</Button>
-          ) : (
-            <Box>
-              <Button
-                sx={{ color: '#6E6B7B' }}
-                onClick={() => setUpdateFlag(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                disabled={props.socialInfo ? false : true}
-                onClick={() => handleSocialAccount(props.socialName)}
-              >
-                Save
-              </Button>
-            </Box>
-          )}
+          ) : ( */}
+          <Box>
+            {/* <Button sx={{ color: '#6E6B7B' }} onClick={() => {}}>
+              Clear
+            </Button> */}
+            <Button
+              // disabled={props.socialInfo ? false : true}
+              onClick={() => handleSocialAccount(props.socialName)}
+            >
+              Save
+            </Button>
+          </Box>
+          {/* )} */}
         </Grid>
       </Grid>
     </>

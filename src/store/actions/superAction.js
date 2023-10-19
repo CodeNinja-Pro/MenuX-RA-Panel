@@ -3,6 +3,48 @@ import { toast } from 'react-toastify'
 import { RepositoryFactory } from '../../repository/RepositoryFactory'
 let Staff = RepositoryFactory.get('staff')
 
+// Get All menu item of all restaurants
+export const getAllMenuItems = () => async dispatch => {
+  try {
+    dispatch({
+      type: 'LOADER',
+      payload: true
+    })
+
+    let allMenuItems = []
+    const snapShot = await firebase.firestore().collection('menus').get()
+
+    snapShot.forEach(doc => {
+      allMenuItems.push({
+        id: doc.id,
+        name: doc.data().name,
+        restaurantID: doc.data().restaurantID,
+        views: doc.data().views,
+        purchase: doc.data().purchase,
+        price: doc.data().price,
+        cost: doc.data().totalPrice
+      })
+    })
+
+    dispatch({
+      type: 'ALL_RESTAURANT_ITEMS',
+      payload: allMenuItems
+    })
+
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  } catch (error) {
+    toast.error(error.message)
+
+    dispatch({
+      type: 'LOADER',
+      payload: false
+    })
+  }
+}
+
 // Get all restaurant informations
 export const getAllRestaurants = () => async dispatch => {
   dispatch({

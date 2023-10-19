@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeMain } from '../../components/common/Theme'
 import OnlyHeader from '../../components/Headers/OnlyHeader'
 import {
@@ -28,6 +28,10 @@ import {
   AreaChart,
   Area
 } from 'recharts'
+import UserIcon from '../../assets/common/dashboard/UserIcon.png'
+import CheckIcon from '../../assets/common/dashboard/CheckIcon.png'
+import BackIcon from '../../assets/common/dashboard/BackIcon.png'
+import BucketIcon from '../../assets/common/dashboard/BucketIcon.png'
 
 // Image load
 import DashboardStatisticItem from '../common/DashboardStatisticItem'
@@ -37,8 +41,27 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 
 // Chart load
 import BarChartForm from '../../components/Charts/BarChart'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllMenuItems } from '../../store/actions/superAction'
+import {
+  sortItemByConversionRate,
+  sortItemByView
+} from './StatisticalAnalysis/statisticalFunc'
 
 export default function SuperDashboard () {
+  const dispatch = useDispatch()
+
+  // const { allRestaurantItems } = useSelector(state => state.super)
+
+  // useEffect(() => {
+  //   dispatch(getAllMenuItems())
+  // }, [])
+
+  // useEffect(() => {
+  //   dispatch(sortItemByView(allRestaurantItems))
+  //   dispatch(sortItemByConversionRate(allRestaurantItems))
+  // }, [allRestaurantItems])
+
   const revenueByItems = {
     labels: ['Pizza', 'Burger', 'Bread'],
     colors: ['#7AF27F', '#FFB800', '#EF4B4B'],
@@ -269,7 +292,7 @@ export default function SuperDashboard () {
                       color='#0074D9'
                       id={'chart1'}
                       background={'#0074d91f'}
-                      component={ActiveMerchant}
+                      revenueComponent={UserIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -279,15 +302,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      revenueComponent={
-                        <AttachMoneyIcon
-                          sx={{
-                            width: '50px',
-                            height: '50px',
-                            color: '#09BD3B'
-                          }}
-                        />
-                      }
+                      revenueComponent={BucketIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -297,7 +312,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF8A00'
                       id={'chart3'}
-                      component={CustomerRetention}
+                      revenueComponent={CheckIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -307,7 +322,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF0000'
                       id={'chart4'}
-                      component={CustomerLifetime}
+                      revenueComponent={BackIcon}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -317,7 +332,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color={'#7534FF'}
                       id={'chart5'}
-                      component={ChurnRate}
+                      revenueComponent={BackIcon}
                     />
                   </Grid>
                 </Grid>

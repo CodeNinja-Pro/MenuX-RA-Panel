@@ -69,17 +69,18 @@ export const updateTFA = (id, TFA) => async dispatch => {
   }
 }
 
-export const emailVerification = () => async dispatch => {
+export const emailVerification = onSuccess => async dispatch => {
   try {
     await firebase
       .auth()
       .currentUser.sendEmailVerification()
       .then(() => {
-        toast.success('You sent the verfication code to your email.', {
-          style: {
-            fontFamily: 'Poppins'
-          }
-        })
+        onSuccess()
+        // toast.success('You sent the verfication code to your email.', {
+        //   style: {
+        //     fontFamily: 'Poppins'
+        //   }
+        // })
       })
       .catch(error => {
         toast.error(error.message, {

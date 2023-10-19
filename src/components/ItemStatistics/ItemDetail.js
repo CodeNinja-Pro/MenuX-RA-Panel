@@ -65,6 +65,15 @@ export default function ItemDetail (props) {
   }, [itemID])
 
   useEffect(() => {
+    const milliseconds =
+      itemDetail.createdAt.seconds * 1000 +
+      Math.floor(itemDetail.createdAt.nanoseconds / 1000000)
+
+    const differenceMilliseconds = new Date() - new Date(milliseconds)
+    const differenceDays = Math.floor(
+      differenceMilliseconds / (1000 * 60 * 60 * 24)
+    )
+
     setCurrentItem({
       itemID: props.selectedItem,
       menuName: itemDetail.menuName,
@@ -77,14 +86,18 @@ export default function ItemDetail (props) {
       }).format(
         ((itemDetail.price - itemDetail.cost) / itemDetail.price) * 100
       ),
-      averageClickPerDay: 200,
-      averageViewTime: 2000,
+      averageClickPerDay: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(itemDetail.views / differenceDays),
+      averageViewTime: itemDetail.viewTime,
       conversionRate: new Intl.NumberFormat('en-IN', {
         maximumSignificantDigits: 3
       }).format(itemDetail.purchase / itemDetail.views),
       revenueGenerated:
         (itemDetail.price - itemDetail.cost) * itemDetail.purchase,
-      averagePurchasePerDay: 200,
+      averagePurchasePerDay: new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(itemDetail.purchase / differenceDays),
       revenueOfMenu: new Intl.NumberFormat('en-IN', {
         maximumSignificantDigits: 4
       }).format(
