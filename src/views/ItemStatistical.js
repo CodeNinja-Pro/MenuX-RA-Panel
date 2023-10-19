@@ -16,10 +16,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
 import ItemStatisticTable from '../components/ItemStatistics/ItemStatisticTable'
 import ItemDetail from '../components/ItemStatistics/ItemDetail'
+import {
+  sortCategoryByOrder,
+  sortItemByConversionRate,
+  sortItemByOrder,
+  sortItemByViewTime
+} from '../Statistical/generalStatistics'
+import { getAllCategories, getAllMenus } from '../store/actions/statisticAction'
 
 export default function ItemStatistical () {
   const [tabFlag, setTabFlag] = useState('Table')
   const { user } = useSelector(state => state.auth)
+
+  const { allMenus, allCategories } = useSelector(state => state.statistic)
   const dispatch = useDispatch()
 
   // Enable by staff role
@@ -29,9 +38,20 @@ export default function ItemStatistical () {
   const [selectedItem, setSelectedItem] = useState('')
 
   const { currentRoleDetail } = useSelector(state => state.staff)
+
   useEffect(() => {
     if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
+
+    dispatch(getAllMenus(user.restaurantID))
+    dispatch(getAllCategories(user.restaurantID))
   }, [])
+
+  useEffect(() => {
+    dispatch(sortItemByViewTime(allMenus))
+    dispatch(sortItemByOrder(allMenus))
+    dispatch(sortItemByConversionRate(allMenus))
+    dispatch(sortCategoryByOrder(allMenus, allCategories))
+  }, [allMenus])
 
   useEffect(() => {
     const obj = currentRoleDetail.filter(

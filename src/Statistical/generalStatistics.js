@@ -57,6 +57,68 @@ export const sortCategoryByView = (menus, categories) => async dispatch => {
   })
 }
 
+export const sortCategoryByOrder = (menus, categories) => async dispatch => {
+  let countArray = {}
+
+  for (let i = 0; i < categories.length; i++) {
+    for (let j = 0; j < menus.length; j++) {
+      if (categories[i].id === menus[j].categoryID) {
+        if (countArray[categories[i].id]) {
+          countArray[categories[i].id] += menus[j].orderCount
+        } else {
+          countArray[categories[i].id] = menus[j].orderCount
+        }
+      }
+    }
+  }
+
+  let sortedArray = []
+  const arr = _.toPairs(countArray)
+  const sorted = _.sortBy(arr, pair => -pair[1])
+
+  sorted.map(item => {
+    let filteredCategory = categories.filter(
+      category => category.id === item[0]
+    )
+    sortedArray.push({
+      id: filteredCategory[0].id,
+      name: filteredCategory[0].name,
+      orderCount: item[1]
+    })
+  })
+
+  dispatch({
+    type: 'ORDER_SORT_CATEGORIES',
+    payload: sortedArray.reverse()
+  })
+}
+
+export const sortItemByViewTime = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return o.viewTime
+    }
+  ])
+
+  dispatch({
+    type: 'VIEWTIME_SORT_ITEMS',
+    payload: sortedArray
+  })
+}
+
+export const sortItemByOrder = array => async dispatch => {
+  const sortedArray = _.sortBy(array, [
+    o => {
+      return o.orderCount
+    }
+  ])
+
+  dispatch({
+    type: 'ORDER_SORT_ITEMS',
+    payload: sortedArray
+  })
+}
+
 export const sortItemByPurchase = array => async dispatch => {
   const sortedArray = _.sortBy(array, [
     o => {

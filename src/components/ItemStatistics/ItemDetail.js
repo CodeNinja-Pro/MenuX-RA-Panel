@@ -38,11 +38,15 @@ export default function ItemDetail (props) {
 
   const { user } = useSelector(state => state.auth)
   const {
-    allMenus,
     itemDetail,
     totalRevenue,
     totalRevenueByCategory,
-    loading
+    loading,
+    allCategories,
+    viewTimeSortItems,
+    orderSortItems,
+    orderSortCategories,
+    conversionRateSortItems
   } = useSelector(state => state.statistic)
 
   const [currentPage, setCurrentPage] = useState('detail')
@@ -53,6 +57,7 @@ export default function ItemDetail (props) {
   useEffect(() => {
     setItemID(props.selectedItem)
     dispatch(getTotalRevenueByCategory(props.selectedItem))
+    console.log('sss', conversionRateRanking)
   }, [])
 
   useEffect(() => {
@@ -177,18 +182,67 @@ export default function ItemDetail (props) {
   //   }
   // })
 
-  const [viewTimeRanking, setViewTimeRanking] = useState({
-    items: ['Pasta', 'Fries', 'Burger', 'Bread', 'Salad', 'Cheese'],
-    parentMenus: [
-      'Light Food',
-      'Light Food',
-      'Light Food',
-      'Light Food',
-      'Meal',
-      'Meal'
-    ],
-    times: ['54', '234', '23', '12', '65', '33']
-  })
+  let viewTimeRanking = {
+    items: viewTimeSortItems?.slice().map(item => {
+      return item?.name
+    }),
+    parentMenus: viewTimeSortItems?.map(item => {
+      const filtered = allCategories.filter(
+        category => category.id === item.categoryID
+      )
+      return filtered[0].name
+    }),
+    times: viewTimeSortItems?.map(item => {
+      return item?.viewTime
+    })
+  }
+
+  let conversionRateRanking = {
+    items: conversionRateSortItems?.slice().map(item => {
+      return item?.name
+    }),
+    parentMenus: conversionRateSortItems?.map(item => {
+      const filtered = allCategories.filter(
+        category => category.id === item.categoryID
+      )
+      return filtered[0].name
+    }),
+    times: conversionRateSortItems?.map(item => {
+      return new Intl.NumberFormat('en-IN', {
+        maximumSignificantDigits: 3
+      }).format(item?.conversionRate)
+    })
+  }
+
+  let orderItemRanking = {
+    items: orderSortItems?.slice().map(item => {
+      return item?.name
+    }),
+    parentMenus: orderSortItems?.map(item => {
+      const filtered = allCategories.filter(
+        category => category.id === item.categoryID
+      )
+      return filtered[0]?.name
+    }),
+    times: orderSortItems?.map(item => {
+      return item?.orderCount
+    })
+  }
+
+  let orderCategoryRanking = {
+    items: orderSortCategories?.slice().map(item => {
+      return item?.name
+    }),
+    parentMenus: orderSortCategories?.map(item => {
+      const filtered = allCategories.filter(
+        category => category.id === item.categoryID
+      )
+      return filtered[0]?.name
+    }),
+    times: orderSortCategories?.map(item => {
+      return item?.orderCount
+    })
+  }
 
   return (
     <>
@@ -494,6 +548,7 @@ export default function ItemDetail (props) {
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <ItemRankingForm
+                        unit={'sec'}
                         title={'View Time Ranking'}
                         items={viewTimeRanking.items}
                         parentMenus={viewTimeRanking.parentMenus}
@@ -502,26 +557,29 @@ export default function ItemDetail (props) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <ItemRankingForm
+                        unit={''}
                         title={'Conversion Rate Ranking'}
-                        items={viewTimeRanking.items}
-                        parentMenus={viewTimeRanking.parentMenus}
-                        times={viewTimeRanking.times}
+                        items={conversionRateRanking.items}
+                        parentMenus={conversionRateRanking.parentMenus}
+                        times={conversionRateRanking.times}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <ItemRankingForm
+                        unit={''}
                         title={'Order Ranking'}
-                        items={viewTimeRanking.items}
-                        parentMenus={viewTimeRanking.parentMenus}
-                        times={viewTimeRanking.times}
+                        items={orderItemRanking.items}
+                        parentMenus={orderItemRanking.parentMenus}
+                        times={orderItemRanking.times}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <ItemRankingForm
+                        unit={''}
                         title={'Category Order Ranking'}
-                        items={viewTimeRanking.items}
-                        parentMenus={viewTimeRanking.parentMenus}
-                        times={viewTimeRanking.times}
+                        items={orderCategoryRanking.items}
+                        parentMenus={orderCategoryRanking.parentMenus}
+                        times={orderCategoryRanking.times}
                       />
                     </Grid>
                   </Grid>

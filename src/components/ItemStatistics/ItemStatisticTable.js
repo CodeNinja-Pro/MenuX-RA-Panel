@@ -185,10 +185,6 @@ export default function ItemStatisticTable (props) {
   const { user } = useSelector(state => state.auth)
   let rows = useSelector(state => state.statistic.allMenus)
 
-  useEffect(() => {
-    dispatch(getAllMenus(user.restaurantID))
-  }, [])
-
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState('')

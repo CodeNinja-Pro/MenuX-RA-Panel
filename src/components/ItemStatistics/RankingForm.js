@@ -15,6 +15,11 @@ import 'react-circular-progressbar/dist/styles.css'
 export default function RankingForm (props) {
   const [arrange, setArrange] = useState('most')
 
+  const handleClickItem = id => {
+    props.setSelectedItem(id)
+    props.setStatisticOrDetail('detail')
+  }
+
   const percentage = 34
 
   const color = [
@@ -86,9 +91,17 @@ export default function RankingForm (props) {
                     alignItems={'center'}
                     marginTop={'10px'}
                   >
-                    <Link to={`/admin/item-detail/${item.id}`}>
+                    {props.type === 'menu' ? (
+                      <Typography
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => handleClickItem(item.id)}
+                        color={'#121212'}
+                      >
+                        {item.name}
+                      </Typography>
+                    ) : (
                       <Typography color={'#121212'}>{item.name}</Typography>
-                    </Link>
+                    )}
                   </Grid>
                   <Grid
                     xs={3}

@@ -28,7 +28,7 @@ import {
   sortItemByView
 } from '../../Statistical/generalStatistics'
 
-export default function StatisticsChart () {
+export default function StatisticsChart (props) {
   const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
 
@@ -46,10 +46,7 @@ export default function StatisticsChart () {
 
   let sortedItemByView = []
 
-  useEffect(() => {
-    dispatch(getAllMenus(user.restaurantID))
-    dispatch(getAllCategories(user.restaurantID))
-  }, [])
+  useEffect(() => {}, [])
 
   useEffect(() => {
     dispatch(sortItemByView(allMenus))
@@ -57,7 +54,7 @@ export default function StatisticsChart () {
     dispatch(sortItemByPurchase(allMenus))
     dispatch(sortItemByRevenue(allMenus))
     dispatch(sortCategoryByRevenue(allMenus, allCategories))
-    sortCategoryByView(allMenus)
+    // sortCategoryByView(allMenus)
   }, [allMenus, allCategories])
 
   useEffect(() => {
@@ -643,6 +640,9 @@ export default function StatisticsChart () {
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <RankingForm
+                type={'menu'}
+                setSelectedItem={props.setSelectedItem}
+                setStatisticOrDetail={props.setStatisticOrDetail}
                 title='Top Menu Items Clicks'
                 description='Menu Items customers visit more often.'
                 items={viewSortItems}
@@ -651,6 +651,7 @@ export default function StatisticsChart () {
             </Grid>
             <Grid item xs={12} md={6}>
               <RankingForm
+                type={'category'}
                 title='Top Categories Clicks'
                 description='Categories customers visit more often.'
                 items={viewSortCategories}

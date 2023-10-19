@@ -17,6 +17,8 @@ export const getAllMenus = userId => async dispatch => {
         name: doc.data().item,
         categoryID: doc.data().categoriesID,
         views: doc.data().views,
+        viewTime: doc.data().viewTime,
+        orderCount: doc.data().orderCount,
         purchase: doc.data().purchase,
         price: doc.data().price,
         totalPrice: doc.data().totalPrice,
