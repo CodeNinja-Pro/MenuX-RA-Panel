@@ -36,10 +36,7 @@ export default function SuperFeedback () {
                       marginTop={'10px'}
                       fontSize={'25px'}
                     >
-                      Feedbacks
-                    </Typography>
-                    <Typography textAlign={'left'}>
-                      Feedbacks from the merchants
+                      Feedback
                     </Typography>
                   </Grid>
                   <SuperFeedbackTable />

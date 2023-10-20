@@ -384,7 +384,39 @@ export default function SuperStaffTable () {
                       </TableCell>
                       <TableCell align='center'>
                         <Typography color='text.primary'>
-                          {row.score}
+                          {row.score >= 9 && (
+                            <Typography
+                              sx={{
+                                backgroundColor: 'rgba(0, 116, 217, 0.12)',
+                                borderRadius: '10px'
+                              }}
+                              color={'rgba(0, 116, 217, 1)'}
+                            >
+                              Promoters
+                            </Typography>
+                          )}
+                          {row.score >= 7 && row.score < 9 && (
+                            <Typography
+                              sx={{
+                                backgroundColor: 'rgba(40, 199, 111, 0.12)',
+                                borderRadius: '10px'
+                              }}
+                              color={'rgba(40, 199, 111, 1)'}
+                            >
+                              Passives
+                            </Typography>
+                          )}
+                          {row.score < 7 && (
+                            <Typography
+                              sx={{
+                                backgroundColor: 'rgba(255, 245, 248, 1)',
+                                borderRadius: '10px'
+                              }}
+                              color={'rgba(241, 65, 108, 1)'}
+                            >
+                              Detractors
+                            </Typography>
+                          )}
                         </Typography>
                       </TableCell>
                       <TableCell align='center'>
@@ -448,7 +480,7 @@ export default function SuperStaffTable () {
                                 key={'edit'}
                               >
                                 <NotificationsNoneOutlinedIcon />
-                                Send the Respond
+                                Send Respond
                               </MenuItem>
                               <Divider />
                               <MenuItem

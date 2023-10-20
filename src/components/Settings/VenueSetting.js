@@ -464,7 +464,7 @@ export default function VenueSetting () {
                     Enable Customer Feedback
                   </Typography>
                   <Typography textAlign={'left'}>
-                    Let the customer send the feedback against your restaurant.
+                    Let the customer send feedback against your restaurant.
                   </Typography>
                 </Box>
                 <Switch inputProps={'aria-label'} />

@@ -114,6 +114,11 @@ const headCells = [
     label: 'Opening Year'
   },
   {
+    id: 'phoneNumber',
+    numeric: true,
+    label: 'Phone Number'
+  },
+  {
     id: 'subscription',
     numeric: false,
     label: 'Subscription'
@@ -413,6 +418,11 @@ export default function SuperRestaurantTable () {
                         <TableCell align='center'>
                           <Typography color='text.primary'>
                             {tableItem.openingYear}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align='center'>
+                          <Typography color='text.primary'>
+                            {tableItem.phoneNumber}
                           </Typography>
                         </TableCell>
                         <TableCell align='center'>

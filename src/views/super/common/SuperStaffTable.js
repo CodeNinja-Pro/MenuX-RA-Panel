@@ -388,7 +388,7 @@ export default function SuperStaffTable () {
                                 key={'edit'}
                               >
                                 <NotificationsNoneOutlinedIcon />
-                                Send the Invitation
+                                Send Invitation
                               </MenuItem>
                               <Divider />
                               <MenuItem

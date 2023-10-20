@@ -11,11 +11,6 @@ import {
   Paper
 } from '@mui/material'
 import { Container } from 'reactstrap'
-import ActiveMerchant from '../../assets/common/dashboard/super/active_merchant.png'
-import Revenue from '../../assets/common/dashboard/super/revenue.png'
-import CustomerRetention from '../../assets/common/dashboard/super/customer_retention.png'
-import CustomerLifetime from '../../assets/common/dashboard/super/customer_lifetime.png'
-import ChurnRate from '../../assets/common/dashboard/super/churn_rate.png'
 
 import {
   XAxis,
@@ -28,16 +23,16 @@ import {
   AreaChart,
   Area
 } from 'recharts'
-import UserIcon from '../../assets/common/dashboard/UserIcon.png'
-import CheckIcon from '../../assets/common/dashboard/CheckIcon.png'
-import BackIcon from '../../assets/common/dashboard/BackIcon.png'
-import BucketIcon from '../../assets/common/dashboard/BucketIcon.png'
+import SuperUser from '../../assets/common/dashboard/SuperUser.png'
+import SuperHand from '../../assets/common/dashboard/SuperHand.png'
+import SuperChart from '../../assets/common/dashboard/SuperChart.png'
+import SuperHome from '../../assets/common/dashboard/SuperHome.png'
+import SuperDollar from '../../assets/common/dashboard/SuperDollar.png'
 
 // Image load
 import DashboardStatisticItem from '../common/DashboardStatisticItem'
 import DonutChart from '../common/DonutChart'
 import SidebarDonut from '../common/SidebarDonut'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 
 // Chart load
 import BarChartForm from '../../components/Charts/BarChart'
@@ -292,7 +287,7 @@ export default function SuperDashboard () {
                       color='#0074D9'
                       id={'chart1'}
                       background={'#0074d91f'}
-                      revenueComponent={UserIcon}
+                      revenueComponent={SuperHome}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -302,7 +297,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#09BD3B'
                       id={'chart2'}
-                      revenueComponent={BucketIcon}
+                      revenueComponent={SuperDollar}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -312,7 +307,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF8A00'
                       id={'chart3'}
-                      revenueComponent={CheckIcon}
+                      revenueComponent={SuperUser}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -322,7 +317,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color='#FF0000'
                       id={'chart4'}
-                      revenueComponent={BackIcon}
+                      revenueComponent={SuperHand}
                     />
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
@@ -332,7 +327,7 @@ export default function SuperDashboard () {
                       stat={'7.2%'}
                       color={'#7534FF'}
                       id={'chart5'}
-                      revenueComponent={BackIcon}
+                      revenueComponent={SuperChart}
                     />
                   </Grid>
                 </Grid>
