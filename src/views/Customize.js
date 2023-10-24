@@ -44,6 +44,7 @@ import { useHistory } from 'react-router-dom'
 import 'alertifyjs/build/css/alertify.css'
 import 'alertifyjs/build/css/themes/default.css'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
+import PresetCP from '../components/Customization/PresetCP'
 
 function Customize () {
   const dispatch = useDispatch()
@@ -1163,6 +1164,7 @@ function Customize () {
                         >
                           Save Changes
                         </Button>
+                        <PresetCP theme={theme} setTheme={setTheme} />
                       </Box>
                       <Dialog
                         open={confirmModal}

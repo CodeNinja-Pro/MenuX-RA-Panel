@@ -62,6 +62,7 @@ function MyApp (props) {
   const width = props.width
 
   // Extract the red, green, and blue components
+  console.log('Mobile', props.style.categoryTextColor)
   const red = parseInt(props.style.categoryTextColor.substring(1, 3), 16)
   const green = parseInt(props.style.categoryTextColor.substring(3, 5), 16)
   const blue = parseInt(props.style.categoryTextColor.substring(5, 7), 16)
@@ -726,6 +727,7 @@ export default function MobileCP (props) {
   const [mode, setMode] = React.useState('light')
 
   React.useEffect(() => {
+    console.log('colorMode', style.colorMode)
     if (!style.colorMode) {
       setMode('dark')
     } else {
