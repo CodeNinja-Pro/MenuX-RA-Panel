@@ -41,7 +41,6 @@ import {
 } from '../store/actions/customization'
 import { ThemeMain } from '../components/common/Theme'
 import { useHistory } from 'react-router-dom'
-import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css'
 import 'alertifyjs/build/css/themes/default.css'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
@@ -53,14 +52,7 @@ function Customize () {
     dispatch(getCustomization(user.restaurantID))
   }, [])
   const { restaurantMedia } = useSelector(state => state.restaurant)
-  const [galleryImages, setGalleryImages] = useState([])
-  const [addModal, setAddModal] = useState(false)
-  const [editModal, setEditModal] = useState(false)
-  const [deleteModal, setDeleteModal] = useState(false)
-  // const [editData, setEditData] = useState('')
-  // const [index, setIndex] = useState('')
 
-  // Status of this section as staff role
   const [sectionPermission, setSectionPermission] = useState(false)
   const { currentRoleDetail } = useSelector(state => state.staff)
   useEffect(() => {
@@ -85,39 +77,10 @@ function Customize () {
     }
   }
 
-  const addToggle = () => {
-    setAddModal(!addModal)
-    setGalleryImages([])
-  }
-  const editToggle = () => {
-    setEditModal(!editModal)
-  }
-  const deleteToggle = () => {
-    setDeleteModal(!deleteModal)
-  }
-
   const history = useHistory()
-
-  const redirectHandle = () => {
-    return true
-  }
-
-  const redirectCancelHandle = () => {
-    return false
-  }
 
   useEffect(() => {
     const unlisten = history.block((location, action) => {
-      // action === 'POP' &&
-      //   alertify.confirm(
-      //     'Attention',
-      //     () => {
-      //       return true
-      //     },
-      //     () => {
-      //       return false
-      //     }
-      //   )
       if (
         action === 'POP' ||
         window.confirm(
@@ -205,13 +168,7 @@ function Customize () {
   const [confirmModal, setConfirmModal] = useState(false)
 
   const [mainFont, setMainFont] = useState('')
-  const mainFontChange = e => {
-    setMainFont(e.target.value)
-  }
   const [secondaryFont, setSecondaryFont] = useState('')
-  const secondaryFontChange = e => {
-    setSecondaryFont(e.target.value)
-  }
 
   const [categoryColor, setCategoryColor] = useState('')
   const categoryColorChange = e => {
@@ -248,9 +205,6 @@ function Customize () {
   }
 
   const [secondaryFontSize, setSecondaryFontSize] = useState('15')
-  const onSecondaryFontSizeChange = e => {
-    setSecondaryFontSize(e.target.value)
-  }
 
   const [logoImage, setLogoImage] = useState('')
   const [coverImage, setCoverImage] = useState('')
@@ -591,7 +545,6 @@ function Customize () {
     <>
       <OnlyHeader />
 
-      {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}> */}
       <ThemeProvider theme={ThemeMain}>
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
@@ -1201,7 +1154,7 @@ function Customize () {
                       )}
                       <Box
                         display={'flex'}
-                        marginBottom={5}
+                        marginBottom={8}
                         justifyContent={'space-around'}
                       >
                         <Button
@@ -1279,40 +1232,6 @@ function Customize () {
           </Container>
         </Container>
       </ThemeProvider>
-
-      {/* </div> */}
-      {/* <Container className='mt--7 mb-5' fluid>
-        <CustomizationTable
-          data={data}
-          logo={logo}
-          addToggle={addToggle}
-          editToggle={editToggle}
-          deleteToggle={deleteToggle}
-          setEditData={setEditData}
-          setIndex={setIndex}
-        />
-      </Container>
-      <AddRestaurantImageModal
-        addModal={addModal}
-        addToggle={addToggle}
-        data={data}
-        galleryImages={galleryImages}
-        setGalleryImages={setGalleryImages}
-      />
-      <EditRestaurantImageModal
-        editModal={editModal}
-        editToggle={editToggle}
-        editData={editData}
-        setEditData={setEditData}
-        index={index}
-      />
-      <DeleteRestaurantImageModal
-        deleteModal={deleteModal}
-        deleteToggle={deleteToggle}
-        editData={editData}
-        id={uid}
-        title={'Image'}
-      /> */}
     </>
   )
 }

@@ -77,7 +77,7 @@ function MyApp (props) {
           borderWidth: '15px',
           borderRadius: '70px',
           borderColor: 'black',
-          height: '700px'
+          height: '670px'
         }}
       >
         <CardActionArea disableRipple>

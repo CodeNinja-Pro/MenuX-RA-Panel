@@ -530,7 +530,12 @@ export default function Dashboard () {
     {
       name: 'Clicked',
       data: conversionRateSortItems.slice(0, 5)?.map(item => {
-        let number = Number(item?.purchase) / Number(item?.views)
+        let number = 0
+        if (item?.views === 0) {
+          number = 0
+        } else {
+          number = Number(item?.purchase) / Number(item?.views)
+        }
         return new Intl.NumberFormat('en-IN', {
           maximumSignificantDigits: 2
         }).format(number)
@@ -697,7 +702,11 @@ export default function Dashboard () {
                         series={revenueByItems.series}
                       />
                     </Box>
-                    <Box marginLeft={5}>
+                    <Box
+                      display={'flex'}
+                      justifyContent={'center'}
+                      alignItems={'center'}
+                    >
                       <SidebarDonut
                         options={revenueByItems.labels}
                         series={revenueByItems.series}

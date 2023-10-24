@@ -1403,6 +1403,10 @@ const EditScratchMenu = () => {
                                           (item, i) => i !== index
                                         )
                                         setCostOfGoods(filtered)
+                                        setTotalPrice(
+                                          Number(totalPrice) -
+                                            Number(item.price)
+                                        )
                                       }}
                                     >
                                       <RemoveCircleOutlineOutlinedIcon color='error' />

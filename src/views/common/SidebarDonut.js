@@ -7,11 +7,7 @@ export default function SidebarDonut (props) {
   const colors = props.colors
   return (
     <>
-      <Box
-        display={'flex'}
-        justifyContent={'space-around'}
-        alignItems={'center'}
-      >
+      <Box display={'flex'} flexDirection={'row'}>
         {labels?.map((label, index) => (
           <Grid container spacing={1}>
             <Grid
@@ -33,12 +29,14 @@ export default function SidebarDonut (props) {
                   ></Paper>
                 </Box>
                 <Typography>
-                  {new Intl.NumberFormat('en-IN', {
-                    maximumSignificantDigits: 3
-                  }).format(
-                    (Number(series[index]) * 100) / Number(props.totalRevenue)
-                  )}
-                  {'%'}
+                  {props.totalRevenue !== 0
+                    ? new Intl.NumberFormat('en-IN', {
+                        maximumSignificantDigits: 3
+                      }).format(
+                        (Number(series[index]) * 100) /
+                          Number(props.totalRevenue)
+                      ) + '%'
+                    : '0%'}
                 </Typography>
               </Box>
             </Grid>

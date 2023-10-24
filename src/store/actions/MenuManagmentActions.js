@@ -643,7 +643,11 @@ export const editMenu =
       .firestore()
       .collection('menus')
       .doc(id)
-      .update({ ...payload, images: uploadImages })
+      .update({
+        ...payload,
+        images: uploadImages,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
       .then(() => {
         onSuccess({
           type: 'item',

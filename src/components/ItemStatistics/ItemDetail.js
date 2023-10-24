@@ -71,7 +71,7 @@ export default function ItemDetail (props) {
 
     const differenceMilliseconds = new Date() - new Date(milliseconds)
     const differenceDays = Math.floor(
-      differenceMilliseconds / (1000 * 60 * 60 * 24)
+      differenceMilliseconds / (1000 * 60 * 60 * 24) + 1
     )
 
     setCurrentItem({
@@ -221,9 +221,12 @@ export default function ItemDetail (props) {
       return filtered[0].name
     }),
     times: conversionRateSortItems?.map(item => {
-      return new Intl.NumberFormat('en-IN', {
-        maximumSignificantDigits: 3
-      }).format(item?.conversionRate)
+      if (isNaN(item?.conversionRate)) return 0
+      else {
+        return new Intl.NumberFormat('en-IN', {
+          maximumSignificantDigits: 3
+        }).format(item?.conversionRate)
+      }
     })
   }
 
