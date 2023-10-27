@@ -11,10 +11,11 @@ import {
   IconButton,
   Box,
   Button,
-  CardMedia
+  CardMedia,
+  LinearProgress
 } from '@mui/material'
 import { ThemeMain } from '../../common/Theme'
-import { Col, Container, Row, Spinner } from 'reactstrap'
+import { Col, Container, Row } from 'reactstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
@@ -257,11 +258,7 @@ export default function CreatePopup (props) {
                         }
                       >
                         {popupLoader === true ? (
-                          <Spinner
-                            size={'md'}
-                            color='white'
-                            className='mr-2'
-                          ></Spinner>
+                          <LinearProgress />
                         ) : (
                           `${
                             props.popupStatus === 'create' ? 'Save' : 'Update'

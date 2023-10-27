@@ -8,14 +8,15 @@ import {
   Label,
   Row,
   CustomInput,
-  Table,
-  Spinner
+  Table
 } from 'reactstrap'
 import { toast } from 'react-toastify'
 import edit from '../../assets/img/icons/edit.svg'
 import deleteIcon from '../../assets/img/icons/delete.svg'
 import hide from '../../assets/img/icons/hide.svg'
 import fileupload from '../../assets/img/icons/fileupload.svg'
+
+import { LinearProgress } from '@mui/material'
 
 import Select from 'react-select'
 import { useDispatch, useSelector } from 'react-redux'
@@ -742,11 +743,7 @@ const ScratchMenu = ({ menuID }) => {
                       }}
                       disabled={categoryLoader}
                     >
-                      {categoryLoader ? (
-                        <Spinner size={'sm'} className='mr-3'></Spinner>
-                      ) : (
-                        ''
-                      )}
+                      {categoryLoader ? <LinearProgress /> : ''}
                       Submit
                     </Button>
                   </div>
@@ -1484,12 +1481,7 @@ const ScratchMenu = ({ menuID }) => {
                         style={{ background: restaurantMedia.adminColor }}
                         disabled={addMenuLoader}
                       >
-                        {addMenuLoader ? (
-                          <Spinner size={'sm'} className='mr-3'></Spinner>
-                        ) : (
-                          ''
-                        )}{' '}
-                        Save
+                        {addMenuLoader ? <LinearProgress /> : ''} Save
                       </Button>
                     </Col>
                   </Row>

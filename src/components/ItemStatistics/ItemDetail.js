@@ -57,7 +57,6 @@ export default function ItemDetail (props) {
   useEffect(() => {
     setItemID(props.selectedItem)
     dispatch(getTotalRevenueByCategory(props.selectedItem))
-    console.log('sss', conversionRateRanking)
   }, [])
 
   useEffect(() => {
@@ -66,8 +65,8 @@ export default function ItemDetail (props) {
 
   useEffect(() => {
     const milliseconds =
-      itemDetail.createdAt.seconds * 1000 +
-      Math.floor(itemDetail.createdAt.nanoseconds / 1000000)
+      itemDetail.createdAt?.seconds * 1000 +
+      Math.floor(itemDetail.createdAt?.nanoseconds / 1000000)
 
     const differenceMilliseconds = new Date() - new Date(milliseconds)
     const differenceDays = Math.floor(
@@ -102,13 +101,13 @@ export default function ItemDetail (props) {
         maximumSignificantDigits: 4
       }).format(
         ((itemDetail.price - itemDetail.cost) * itemDetail.purchase * 100) /
-          totalRevenue
+          (totalRevenue + 0.000001)
       ),
       revenueOfCategory: new Intl.NumberFormat('en-IN', {
         maximumSignificantDigits: 4
       }).format(
         ((itemDetail.price - itemDetail.cost) * itemDetail.purchase * 100) /
-          totalRevenueByCategory
+          (totalRevenueByCategory + 0.00000001)
       ),
       peakOrderTime: '12 PM - 2 PM'
     })

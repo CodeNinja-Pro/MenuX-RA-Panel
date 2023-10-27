@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Col, FormGroup, Label, Row, Container, Spinner } from 'reactstrap'
+import { Col, FormGroup, Label, Row, Container } from 'reactstrap'
 
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import { styled } from '@mui/material/styles'
 
 import { useHistory } from 'react-router-dom'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -42,7 +43,9 @@ import {
   Switch,
   Input,
   InputAdornment,
-  CardActionArea
+  CardActionArea,
+  Stack,
+  LinearProgress
 } from '@mui/material'
 
 import { TabContext, TabList, TabPanel } from '@mui/lab'
@@ -54,6 +57,50 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import { ThemeMain } from '../common/Theme'
 import MultipleSelectForm from './forms/MultipleSelectForm'
 import { FiCardContent, FiCardMedia } from '../common/CardBackground'
+
+const AntSwitch = styled(Switch)(({ theme }) => ({
+  width: 28,
+  height: 16,
+  padding: 0,
+  display: 'flex',
+  '&:active': {
+    '& .MuiSwitch-thumb': {
+      width: 15
+    },
+    '& .MuiSwitch-switchBase.Mui-checked': {
+      transform: 'translateX(9px)'
+    }
+  },
+  '& .MuiSwitch-switchBase': {
+    padding: 2,
+    '&.Mui-checked': {
+      transform: 'translateX(12px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        opacity: 1,
+        backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff'
+      }
+    }
+  },
+  '& .MuiSwitch-thumb': {
+    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    transition: theme.transitions.create(['width'], {
+      duration: 200
+    })
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 16 / 2,
+    opacity: 1,
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255,255,255,.35)'
+        : 'rgba(0,0,0,.25)',
+    boxSizing: 'border-box'
+  }
+}))
 
 const EditScratchMenu = () => {
   const dispatch = useDispatch()
@@ -142,6 +189,9 @@ const EditScratchMenu = () => {
   const [menuItemCount, setMenuItemCount] = useState(0)
 
   const [editTitle, setEditTitle] = useState('')
+
+  // Menu Item filter
+  const [itemFilter, setItemFilter] = useState(false)
 
   const handleCostOfGoods = () => {
     setCostOfGoods([
@@ -269,7 +319,6 @@ const EditScratchMenu = () => {
       totalPrice: Number(totalPrice)
     }
 
-    // Dispatch addMenu action here...
     dispatch(
       addMenuNew(obj, res => {
         // Create a copy of the categoriesAndItems array
@@ -354,7 +403,6 @@ const EditScratchMenu = () => {
           if (!saveAndAddMore) {
             setSaveAndAddMore(false)
           }
-          // close the offcanvas
           setCategoryImage('')
           setName('')
         }
@@ -570,17 +618,24 @@ const EditScratchMenu = () => {
                   history.push('/admin/new-menu')
                 }}
               ></i>
-
               <Typography fontWeight={'bold'} fontSize={'23px'}>
                 {toEdit ? editTitle : parentMenuName}
               </Typography>
-              <span></span>
+              <Stack direction='row' spacing={1} alignItems='center'>
+                <Typography>Move</Typography>
+                <AntSwitch
+                  checked={itemFilter}
+                  onChange={e => setItemFilter(e.target.checked)}
+                  inputProps={{ 'aria-label': 'ant design' }}
+                />
+                <Typography>Sort by Profit</Typography>
+              </Stack>
             </div>
           </Col>
         </Row>
         {editLabelLoader ? (
           <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-            <Spinner size={'lg'} className='text-primary'></Spinner>
+            <LinearProgress />
           </div>
         ) : (
           <Row className='row-height mt-2'>
@@ -643,7 +698,6 @@ const EditScratchMenu = () => {
                       )}
                     </Droppable>
                   </DragDropContext>
-                  {/* )} */}
                 </div>
               </Col>
             )}
@@ -669,7 +723,7 @@ const EditScratchMenu = () => {
                 <h3 className='ml-2 mb-0'>Add Categories</h3>
               </div>
               {editCategoryLoader ? (
-                <Spinner size={'lg'} className='text-primary'></Spinner>
+                <LinearProgress />
               ) : (
                 categoriesAndItems?.map((ele, index) => {
                   const toggleDropdownItems = index => {
@@ -740,98 +794,170 @@ const EditScratchMenu = () => {
                       </div>
                       {ele.openSubMenu && (
                         <Col className='pl-4'>
-                          <DragDropContext onDragEnd={onItemDragEnd}>
-                            <Droppable droppableId={ele.id}>
-                              {(provided, snapshot) => (
-                                <div
-                                  {...provided.droppableProps}
-                                  ref={provided.innerRef}
-                                >
-                                  {ele.items.map((ele, index) => (
-                                    <Draggable
-                                      key={ele.id}
-                                      draggableId={ele.id}
-                                      index={index}
-                                    >
-                                      {(provided, snapshot) => (
-                                        <div
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
-                                        >
+                          {!itemFilter ? (
+                            <DragDropContext onDragEnd={onItemDragEnd}>
+                              <Droppable droppableId={ele.id}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                  >
+                                    {ele.items.map((ele, index) => (
+                                      <Draggable
+                                        key={ele.id}
+                                        draggableId={ele.id}
+                                        index={index}
+                                      >
+                                        {(provided, snapshot) => (
                                           <div
-                                            key={index}
-                                            className='mt-2 shadow cursor-pointer d-flex justify-content-between align-items-center p-3 shadow-sm bg-white rounded '
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
                                           >
-                                            <div className='d-flex align-items-center'>
-                                              {/* <i className='fas fa-bars'></i> */}
-                                              <div className='d-flex align-items-center h-100'>
-                                                {' '}
-                                                <i className='fas fa-1x fa-ellipsis-v'></i>
-                                                <i className='fas fa-1x fa-ellipsis-v'></i>
+                                            <div
+                                              key={index}
+                                              className='mt-2 shadow cursor-pointer d-flex justify-content-between align-items-center p-3 shadow-sm bg-white rounded '
+                                            >
+                                              <div className='d-flex align-items-center'>
+                                                <div className='d-flex align-items-center h-100'>
+                                                  {' '}
+                                                  <i className='fas fa-1x fa-ellipsis-v'></i>
+                                                  <i className='fas fa-1x fa-ellipsis-v'></i>
+                                                </div>
+                                                {ele?.images.length > 0 ? (
+                                                  <img
+                                                    src={
+                                                      ele?.images[0] instanceof
+                                                      File
+                                                        ? URL.createObjectURL(
+                                                            ele?.images[0]
+                                                          )
+                                                        : ele?.images[0]
+                                                    }
+                                                    height={50}
+                                                    width={50}
+                                                    className='ml-4 rounded'
+                                                  />
+                                                ) : (
+                                                  <></>
+                                                )}
+                                                <h2 className='ml-3 mb-0'>
+                                                  {ele.item?.toUpperCase()}
+                                                </h2>
                                               </div>
-                                              {ele?.images.length > 0 ? (
-                                                <img
-                                                  src={
-                                                    ele?.images[0] instanceof
-                                                    File
-                                                      ? URL.createObjectURL(
-                                                          ele?.images[0]
-                                                        )
-                                                      : ele?.images[0]
-                                                  }
-                                                  height={50}
-                                                  width={50}
-                                                  className='ml-4 rounded'
-                                                />
-                                              ) : (
-                                                <></>
-                                              )}
-                                              <h2 className='ml-3 mb-0'>
-                                                {ele.item?.toUpperCase()}
-                                              </h2>
-                                            </div>
 
-                                            <div className='d-flex align-items-center'>
-                                              <div className='bg-white text-dark'></div>
-                                              {'Price : '}
-                                              {ele?.price === undefined
-                                                ? 0
-                                                : ele?.price + '$'}
-                                              {'    '}
-                                              {'Calorie : '}
-                                              {ele?.calories === undefined ||
-                                              ele?.calories === null
-                                                ? 0
-                                                : ele?.calories}
-                                              <IconButton
-                                                style={{ marginLeft: '15px' }}
-                                                color='black'
-                                                onClick={event => {
-                                                  setEditItem(event, ele)
-                                                }}
-                                              >
-                                                <EditOutlinedIcon />
-                                              </IconButton>
-                                              <IconButton
-                                                color='black'
-                                                onClick={event => {
-                                                  onDeleteIconClick(event, ele)
-                                                }}
-                                              >
-                                                <DeleteOutlineOutlinedIcon />
-                                              </IconButton>
+                                              <div className='d-flex align-items-center'>
+                                                <div className='bg-white text-dark'></div>
+                                                {'Price : '}
+                                                {ele?.price === undefined
+                                                  ? 0
+                                                  : ele?.price + '$'}
+                                                {'    '}
+                                                {'Calorie : '}
+                                                {ele?.calories === undefined ||
+                                                ele?.calories === null
+                                                  ? 0
+                                                  : ele?.calories}
+                                                <IconButton
+                                                  style={{
+                                                    marginLeft: '15px'
+                                                  }}
+                                                  color='black'
+                                                  onClick={event => {
+                                                    setEditItem(event, ele)
+                                                  }}
+                                                >
+                                                  <EditOutlinedIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                  color='black'
+                                                  onClick={event => {
+                                                    onDeleteIconClick(
+                                                      event,
+                                                      ele
+                                                    )
+                                                  }}
+                                                >
+                                                  <DeleteOutlineOutlinedIcon />
+                                                </IconButton>
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                  </div>
+                                )}
+                              </Droppable>
+                            </DragDropContext>
+                          ) : (
+                            <>
+                              {ele.items
+                                .sort((a, b) => b.price - a.price)
+                                .map((ele, index) => (
+                                  <div
+                                    key={index}
+                                    className='mt-2 shadow cursor-pointer d-flex justify-content-between align-items-center p-3 shadow-sm bg-white rounded '
+                                  >
+                                    <div className='d-flex align-items-center'>
+                                      {ele?.images.length > 0 ? (
+                                        <img
+                                          src={
+                                            ele?.images[0] instanceof File
+                                              ? URL.createObjectURL(
+                                                  ele?.images[0]
+                                                )
+                                              : ele?.images[0]
+                                          }
+                                          height={50}
+                                          width={50}
+                                          className='ml-4 rounded'
+                                        />
+                                      ) : (
+                                        <></>
                                       )}
-                                    </Draggable>
-                                  ))}
-                                  {provided.placeholder}
-                                </div>
-                              )}
-                            </Droppable>
-                          </DragDropContext>
+                                      <h2 className='ml-3 mb-0'>
+                                        {ele.item?.toUpperCase()}
+                                      </h2>
+                                    </div>
+
+                                    <div className='d-flex align-items-center'>
+                                      <div className='bg-white text-dark'></div>
+                                      {'Price : '}
+                                      {ele?.price === undefined
+                                        ? 0
+                                        : ele?.price + '$'}
+                                      {'    '}
+                                      {'Calorie : '}
+                                      {ele?.calories === undefined ||
+                                      ele?.calories === null
+                                        ? 0
+                                        : ele?.calories}
+                                      <IconButton
+                                        style={{
+                                          marginLeft: '15px'
+                                        }}
+                                        color='black'
+                                        onClick={event => {
+                                          setEditItem(event, ele)
+                                        }}
+                                      >
+                                        <EditOutlinedIcon />
+                                      </IconButton>
+                                      <IconButton
+                                        color='black'
+                                        onClick={event => {
+                                          onDeleteIconClick(event, ele)
+                                        }}
+                                      >
+                                        <DeleteOutlineOutlinedIcon />
+                                      </IconButton>
+                                    </div>
+                                  </div>
+                                ))}
+                            </>
+                          )}
                           <div
                             style={{ backgroundColor: '#cfebff' }}
                             className='d-flex align-items-center p-3 mt-2 rounded w-100 mb-2 shadow shadow-sm cursor-pointer  float-right'
@@ -924,11 +1050,7 @@ const EditScratchMenu = () => {
                               : addCategoryHandle(event)
                           }}
                         >
-                          {categoryLoader ? (
-                            <Spinner size={'sm'} className='mr-3'></Spinner>
-                          ) : (
-                            ''
-                          )}
+                          {categoryLoader ? <LinearProgress /> : ''}
                           {toEdit ? 'Update' : 'Submit'}
                         </Button>
                       </div>
@@ -1491,14 +1613,7 @@ const EditScratchMenu = () => {
                                   toEdit ? updateItemHandle : addItemhandle
                                 }
                               >
-                                {addMenuLoader ? (
-                                  <Spinner
-                                    size={'sm'}
-                                    className='mr-3'
-                                  ></Spinner>
-                                ) : (
-                                  ''
-                                )}{' '}
+                                {addMenuLoader ? <LinearProgress /> : ''}{' '}
                                 {toEdit ? 'Update' : 'Save'}
                               </Button>
                             </Grid>

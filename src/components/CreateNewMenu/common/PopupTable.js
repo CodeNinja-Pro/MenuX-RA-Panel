@@ -22,7 +22,8 @@ import {
   Switch,
   Grid,
   TextField,
-  InputAdornment
+  InputAdornment,
+  LinearProgress
 } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
@@ -35,7 +36,6 @@ import {
   getPopups,
   updatePopupStatus
 } from '../../../store/actions/MenuManagmentActions'
-import { Spinner } from 'reactstrap'
 import { toast } from 'react-toastify'
 
 const applyFilters = (tableItems, filters) => {
@@ -150,7 +150,7 @@ const PopupTable = props => {
   return (
     <>
       {popupLoader ? (
-        <Spinner size={'lg'} color='primary' className='mr-2'></Spinner>
+        <LinearProgress />
       ) : (
         <Card sx={{ boxShadow: 'none' }}>
           <Grid

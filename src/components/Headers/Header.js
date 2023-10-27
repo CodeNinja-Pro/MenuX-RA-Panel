@@ -3,15 +3,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
 import { useEffect } from 'react'
-import {
-  Card,
-  Container,
-  Col,
-  Row,
-  CardHeader,
-  CardBody,
-  Spinner
-} from 'reactstrap'
+import { Card, Container, Col, Row, CardHeader, CardBody } from 'reactstrap'
 import { DateRangePicker } from 'react-date-range'
 import BarChart from '../Charts/BarChart'
 import PieChart from '../Charts/PieChart'
@@ -31,6 +23,7 @@ import { getWorstSellersById } from '../../store/actions/statsActions'
 import { getResturantRevenue } from '../../store/actions/statsActions'
 import { getOrderAnalysisById } from '../../store/actions/statsActions'
 import { getRestaurantVisitsById } from '../../store/actions/statsActions'
+import { LinearProgress } from '@material-ui/core'
 
 const Header = () => {
   const [modal, setModal] = useState(false)
@@ -1004,11 +997,7 @@ const Header = () => {
                           </CardHeader>
                           {loading ? (
                             <div>
-                              <Spinner
-                                className='d-flex mx-auto'
-                                size='sm'
-                                color='primary'
-                              />
+                              <LinearProgress />
                             </div>
                           ) : (
                             <PieChart
@@ -1095,11 +1084,7 @@ const Header = () => {
                       </div>
                       {loading ? (
                         <div>
-                          <Spinner
-                            className='d-flex mx-auto'
-                            size='sm'
-                            color='primary'
-                          />
+                          <LinearProgress />
                         </div>
                       ) : (
                         <LineChart
@@ -1161,7 +1146,7 @@ const Header = () => {
                           {restaurantAnalysisLoader ? (
                             <CardBody className='d-flex justify-content-center align-items-center'>
                               {' '}
-                              <Spinner size='sm' color='primary' />
+                              <LinearProgress />
                             </CardBody>
                           ) : (
                             <>
@@ -1269,7 +1254,7 @@ const Header = () => {
                         >
                           {revenueLoader ? (
                             <CardBody className='d-flex justify-content-center align-items-center'>
-                              <Spinner size='sm' color='primary' />
+                              <LinearProgress />
                             </CardBody>
                           ) : (
                             <>
@@ -1382,7 +1367,7 @@ const Header = () => {
                     <Card>
                       {visitsLoader ? (
                         <CardBody className='d-flex justify-content-center align-items-center'>
-                          <Spinner color='primary' size='sm' />
+                          <LinearProgress />
                         </CardBody>
                       ) : (
                         <>

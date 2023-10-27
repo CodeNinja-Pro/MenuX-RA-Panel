@@ -25,7 +25,8 @@ export const getAllMenus = userId => async dispatch => {
         conversionRate: doc.data().purchase / doc.data().views,
         profitMarginSharp: doc.data().price - doc.data().totalPrice,
         profitMarginPercent:
-          ((doc.data().price - doc.data().totalPrice) / doc.data().price) * 100
+          ((doc.data().price - doc.data().totalPrice) / doc.data().price) * 100,
+        createdAt: doc.data().createdAt
       })
     })
 

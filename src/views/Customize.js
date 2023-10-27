@@ -15,7 +15,8 @@ import {
   Divider,
   IconButton,
   ThemeProvider,
-  Slider
+  Slider,
+  LinearProgress
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -29,7 +30,7 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
 import { styled } from '@mui/material'
 import { toast } from 'react-toastify'
 
-import { Container, Row, Col, Spinner } from 'reactstrap'
+import { Container, Row, Col } from 'reactstrap'
 import ColorPickerCP from '../components/common/ColorPickerCP'
 import FontCP from '../components/common/FontCP'
 import MobileCP from '../components/common/MobileCP'
@@ -551,7 +552,7 @@ function Customize () {
           <Container fluid>
             {customization.loading ? (
               <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                <Spinner size={'lg'} className='text-primary'></Spinner>
+                <LinearProgress />
               </div>
             ) : (
               <Box
@@ -569,10 +570,7 @@ function Customize () {
                                   <p>App Logo</p>
                                   {customization.loading ? (
                                     <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                      <Spinner
-                                        size={'lg'}
-                                        className='text-primary'
-                                      ></Spinner>
+                                      <LinearProgress />
                                     </div>
                                   ) : (
                                     <>
@@ -685,10 +683,7 @@ function Customize () {
                                   <p>Cover</p>
                                   {customization.loading ? (
                                     <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                      <Spinner
-                                        size={'lg'}
-                                        className='text-primary'
-                                      ></Spinner>
+                                      <LinearProgress />
                                     </div>
                                   ) : (
                                     <>
@@ -803,10 +798,7 @@ function Customize () {
                                   <p>Background Pattern 1:1</p>
                                   {customization.loading ? (
                                     <div className='h-100 w-100 d-flex justify-content-center align-items-center'>
-                                      <Spinner
-                                        size={'lg'}
-                                        className='text-primary'
-                                      ></Spinner>
+                                      <LinearProgress />
                                     </div>
                                   ) : (
                                     <>

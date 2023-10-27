@@ -28,7 +28,8 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Grid
+  Grid,
+  LinearProgress
 } from '@mui/material'
 
 import {
@@ -44,8 +45,7 @@ import {
   Input,
   FormGroup,
   Nav,
-  NavItem,
-  Spinner
+  NavItem
 } from 'reactstrap'
 import {
   getAllParentMenu,
@@ -565,11 +565,6 @@ function CreateNewMenu () {
               >
                 <Row>
                   <Col>
-                    {/* {addMenuLoader ? (
-                    <div className='w-100 v-100 d-flex justify-content-center align-items-center py-5'>
-                      <Spinner className='text-primary'></Spinner>
-                    </div>
-                  ) : */}
                     {parents.length > 0 ? (
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId='droppable'>
@@ -649,10 +644,7 @@ function CreateNewMenu () {
                                           >
                                             {editLabelLoader &&
                                               ele.id == selectedEdit && (
-                                                <Spinner
-                                                  size={'sm'}
-                                                  className='mr-2'
-                                                ></Spinner>
+                                                <LinearProgress />
                                               )}{' '}
                                             Edit
                                           </Button>
@@ -1119,7 +1111,7 @@ function CreateNewMenu () {
                 }
               }}
             >
-              {importLoader && <Spinner size={'sm'} className='mr-2'></Spinner>}
+              {importLoader && <LinearProgress />}
               {selectedOption
                 ? selectedOption?.title === 'Start from scratch'
                   ? 'create'
@@ -1167,12 +1159,7 @@ function CreateNewMenu () {
               className='d-flex align-items-center'
               onClick={handleParentMenu}
             >
-              {addMenuLoader ? (
-                <Spinner size={'sm'} className='mr-2'></Spinner>
-              ) : (
-                ''
-              )}{' '}
-              Save
+              {addMenuLoader ? <LinearProgress /> : ''} Save
             </Button>
           </DialogActions>
         </Dialog>
@@ -1224,7 +1211,7 @@ function CreateNewMenu () {
 
                 <div className='d-flex justify-content-end'>
                   <Button color='primary' type='submit'>
-                    {addLabelLoader ? <Spinner size='sm' /> : 'Save'}
+                    {addLabelLoader ? <LinearProgress /> : 'Save'}
                   </Button>
                 </div>
               </Form>

@@ -3,15 +3,9 @@ import { useHistory } from 'react-router-dom'
 import {
   Card,
   CardHeader,
-  CardFooter,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   Table,
   Row,
   Button,
-  Spinner,
-  CardBody,
   Col,
   Input,
   Container
@@ -23,6 +17,7 @@ import { updateProfilePicture } from '../../store/actions/settingAction'
 import { toast } from 'react-toastify'
 import { updateColors } from '../../store/actions/authActions'
 import PopUp from '../PopUp'
+import { LinearProgress } from '@mui/material'
 
 const CustomizationTable = ({
   data,
@@ -165,7 +160,7 @@ const CustomizationTable = ({
                         }}
                       >
                         {loading ? (
-                          <Spinner className='ml-3' size='sm' />
+                          <LinearProgress />
                         ) : (
                           <img
                             className='ml-3 img-fluid rounded-circle'
@@ -348,7 +343,7 @@ const CustomizationTable = ({
                     }}
                   >
                     {loading ? (
-                      <Spinner className='ml-3' size='sm' />
+                      <LinearProgress />
                     ) : (
                       <img
                         className='ml-3 img-fluid rounded-circle'

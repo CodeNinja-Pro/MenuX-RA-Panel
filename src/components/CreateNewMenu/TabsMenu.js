@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Row, Spinner } from 'reactstrap'
+import { Row } from 'reactstrap'
 
 import {
   Button,
@@ -18,7 +18,8 @@ import {
   DialogTitle,
   Divider,
   DialogContentText,
-  Grid
+  Grid,
+  LinearProgress
 } from '@mui/material'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -229,7 +230,7 @@ const TabsMenu = () => {
             onClick={addTab}
             autoFocus
           >
-            {addTabLoader ? <Spinner size='md' /> : 'Save'}
+            {addTabLoader ? <LinearProgress /> : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -299,7 +300,7 @@ const TabsMenu = () => {
             onClick={editTab}
             autoFocus
           >
-            {editTabLoader ? <Spinner size='md' /> : 'Update'}
+            {editTabLoader ? <LinearProgress /> : 'Update'}
           </Button>
         </DialogActions>
       </Dialog>

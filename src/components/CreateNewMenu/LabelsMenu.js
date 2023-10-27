@@ -22,7 +22,8 @@ import {
   IconButton,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
+  LinearProgress
 } from '@mui/material'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -441,7 +442,7 @@ const LabelsMenu = () => {
             onClick={addLabel}
             autoFocus
           >
-            {addLabelLoader ? <Spinner size='md' /> : 'Save'}
+            {addLabelLoader ? <LinearProgress /> : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -584,7 +585,7 @@ const LabelsMenu = () => {
             onClick={editLabel}
             autoFocus
           >
-            {editLabelLoader ? <Spinner size='md' /> : 'Save'}
+            {editLabelLoader ? <LinearProgress /> : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -18,11 +18,12 @@ import {
   FormHelperText,
   OutlinedInput,
   CardMedia,
-  Icon
+  Icon,
+  LinearProgress
 } from '@mui/material'
 import firebase from '../../config/firebase'
 
-import { FormGroup, Label, Spinner } from 'reactstrap'
+import { FormGroup, Label } from 'reactstrap'
 
 import React, { useEffect, useState } from 'react'
 import TextFieldForm from './common/TextFieldForm'
@@ -749,11 +750,7 @@ export default function AccountSetting () {
                             }}
                             autoFocus
                           >
-                            {isLoading === true ? (
-                              <Spinner size={'md'}></Spinner>
-                            ) : (
-                              'Delete'
-                            )}
+                            {isLoading === true ? <LinearProgress /> : 'Delete'}
                           </Button>
                         </DialogActions>
                       </Dialog>
@@ -791,11 +788,7 @@ export default function AccountSetting () {
                     }}
                     variant='contained'
                   >
-                    {isLoading === true ? (
-                      <Spinner size={'md'}></Spinner>
-                    ) : (
-                      'Add Card'
-                    )}
+                    {isLoading === true ? <LinearProgress /> : 'Add Card'}
                   </Button>
                 </Box>
               </Typography>
