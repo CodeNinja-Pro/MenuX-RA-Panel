@@ -21,7 +21,6 @@ import {
   Icon,
   LinearProgress
 } from '@mui/material'
-import firebase from '../../config/firebase'
 
 import { FormGroup, Label } from 'reactstrap'
 
@@ -35,7 +34,8 @@ import {
   checkCurrentPassword,
   emailVerification,
   updatePersonalInfo,
-  updateTFA
+  updateTFA,
+  verifyCodeCheck
 } from '../../store/actions/authActions'
 import { toast } from 'react-toastify'
 
@@ -58,8 +58,6 @@ import {
 } from '../../store/actions/paymentAction'
 import VisaCard from '../../assets/common/patmentCard/Payment.png'
 import ExpressCard from '../../assets/common/patmentCard/Payment1.png'
-import { useHistory, useLocation } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
 
 const publishable_API =
   'pk_test_51Mzkp7ITuIlz575ivol6fzkYduTdDKHgAudxugxaqn8N8AM1h0qcmw95rivH5HWXNeyToz5kEzdcC4ntnPss05yF00bpwqr8mC'
@@ -73,11 +71,9 @@ const CardImage = {
 
 export default function AccountSetting () {
   const dispatch = useDispatch()
-  const history = useHistory()
-  const location = useLocation()
 
   // Loading information from redux store.
-  const { user } = useSelector(state => state.auth)
+  const { user, loading } = useSelector(state => state.auth)
   const { customer } = useSelector(state => state.payment)
   const { cardInfo } = useSelector(state => state.payment)
   const { isLoading } = useSelector(state => state.payment)
@@ -89,7 +85,6 @@ export default function AccountSetting () {
 
   // Modal setting for new payment
   const [paymentCardModal, setPaymentCardModal] = useState(false)
-  const [editPaymentCard, setEditPaymentCard] = useState(false)
   const [deleteModalFlag, setDeleteModalFlag] = useState(false)
 
   const [confirmUpdatePasswordModal, setConfirmUpdatePasswordModal] =
@@ -116,13 +111,10 @@ export default function AccountSetting () {
     linktree: ''
   })
   const [editOrAdd, setEditOrAdd] = useState(false)
-  const [TFA, setTFA] = useState(false)
+  const [TFA, setTFA] = useState(user.tfa)
 
   // Card information
   const [cardNumber, setCardNumber] = useState('')
-
-  const [verificationSent, setVerificationSent] = useState(false)
-  const [emailVerified, setEmailVerified] = useState(false)
 
   const handleOnChange = e => {
     const { complete, elementType } = e
@@ -135,20 +127,6 @@ export default function AccountSetting () {
 
   useEffect(() => {
     dispatch(getCustomerID(user.restaurantID))
-    // const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     console.log(user)
-    //     if (user.emailVerified) {
-    //       // window.location.replace('/admin/settings')
-    //       history.push('/admin/settings')
-    //     }
-    //     // setEmailVerified(user.emailVerified)
-    //     // setTFA(!TFA)
-    //     // toast.success('Your email is verified successfully.')
-    //   }
-    // })
-
-    // return () => unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -225,7 +203,8 @@ export default function AccountSetting () {
     setName(user.name)
     setEmail(user.email)
     setPhone(user.phone)
-    setTFA(user.TFA)
+    setTFA(user.tfa)
+    console.log('TFA', TFA)
   }, [user])
 
   const handlePersonalInfo = e => {
@@ -248,20 +227,55 @@ export default function AccountSetting () {
   const [newPassword, setNewPassword] = useState('')
   const [verificationConfirmModal, setVerificationConfirmModal] =
     useState(false)
+  const [verifyModalForUpdate, setVerifyModalForUpdate] = useState(false)
 
-  const [verificationCode, setVerificationCode] = useState('')
+  const [mailID, setMailID] = useState('')
 
-  const { verificationToken } = useParams()
-  const [verified, setVerified] = useState(false)
+  const [verifyCode, setVerifyCode] = useState('')
 
   const handleChangePassword = () => {
-    dispatch(checkCurrentPassword(currentPassword, newPassword))
+    dispatch(
+      checkCurrentPassword(currentPassword, newPassword, () => {
+        toast.success('Updated the password')
+        setConfirmUpdatePasswordModal(false)
+        setChangePasswordModal(false)
+      })
+    )
   }
 
   const sendVerificationCode = () => {
     dispatch(
-      emailVerification(() => {
-        setVerificationConfirmModal(true)
+      emailVerification(user.email, mail_id => {
+        toast.success('Sent the verification mail.', {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        })
+        setMailID(mail_id)
+      })
+    )
+  }
+
+  const checkVerifyCode = () => {
+    dispatch(
+      verifyCodeCheck(verifyCode, mailID, () => {
+        dispatch(
+          updateTFA(user.id, !TFA, () => {
+            toast.success('Verify success!')
+            setVerificationConfirmModal(false)
+            setVerifyCode('')
+          })
+        )
+      })
+    )
+  }
+
+  const checkVerifyCodeForUpdate = () => {
+    dispatch(
+      verifyCodeCheck(verifyCode, mailID, () => {
+        setVerifyModalForUpdate(false)
+        setChangePasswordModal(true)
+        setVerifyCode('')
       })
     )
   }
@@ -297,7 +311,7 @@ export default function AccountSetting () {
               />
               <Button
                 variant='contained'
-                sx={{ m: 1, height: '40px' }}
+                sx={{ mt: 2, height: '40px' }}
                 fullWidth
                 disabled={!name || !phone}
                 onClick={handlePersonalInfo}
@@ -324,7 +338,11 @@ export default function AccountSetting () {
               <TextFieldForm title={'Street'} />
               <TextFieldForm title={'City'} />
               <TextFieldForm title={'Country'} />
-              <Button variant='contained' sx={{ height: '40px' }} fullWidth>
+              <Button
+                variant='contained'
+                sx={{ mt: 2, height: '40px' }}
+                fullWidth
+              >
                 Save
               </Button>
             </Grid>
@@ -335,6 +353,7 @@ export default function AccountSetting () {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12} lg={8}>
+              {loading && <LinearProgress />}
               <Typography
                 textAlign={'left'}
                 fontWeight={'bold'}
@@ -363,13 +382,15 @@ export default function AccountSetting () {
               <Button
                 onClick={() => {
                   // handleChangePassword()
-                  if (!TFA) {
+                  if (TFA === false) {
                     setChangePasswordModal(true)
                   } else {
+                    setVerifyModalForUpdate(true)
                     sendVerificationCode()
                   }
                 }}
-                sx={{ height: '40px' }}
+                disabled={!newPassword}
+                sx={{ height: '40px', marginTop: 2 }}
                 fullWidth
               >
                 Change Password
@@ -385,9 +406,9 @@ export default function AccountSetting () {
                 </Typography>
                 <Switch
                   checked={TFA}
-                  onChange={e => {
+                  onChange={() => {
                     sendVerificationCode()
-                    // dispatch(updateTFA(user.id, !TFA))
+                    setVerificationConfirmModal(true)
                   }}
                   inputProps={'aria-label'}
                 ></Switch>
@@ -1025,8 +1046,6 @@ export default function AccountSetting () {
                   </Button>
                   <Button
                     onClick={() => {
-                      setChangePasswordModal(false)
-                      setConfirmUpdatePasswordModal(false)
                       handleChangePassword()
                     }}
                     autoFocus
@@ -1035,10 +1054,8 @@ export default function AccountSetting () {
                   </Button>
                 </DialogActions>
               </Dialog>
-
               <Dialog
                 open={verificationConfirmModal}
-                onClose={() => setVerificationConfirmModal(false)}
                 aria-labelledby='alert-dialog-title'
                 aria-describedby='alert-dialog-description'
               >
@@ -1049,11 +1066,53 @@ export default function AccountSetting () {
                   <DialogContentText id='alert-dialog-description'>
                     We sent the verification code to your eamil.
                   </DialogContentText>
+                  <TextField
+                    fullWidth
+                    placeholder='Verification Code'
+                    value={verifyCode}
+                    onChange={e => setVerifyCode(e.target.value)}
+                  ></TextField>
                 </DialogContent>
                 <DialogActions>
+                  <Button onClick={() => setVerificationConfirmModal(false)}>
+                    Cancel
+                  </Button>
                   <Button
                     onClick={() => {
-                      setVerificationConfirmModal(false)
+                      checkVerifyCode()
+                    }}
+                  >
+                    Okay
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              <Dialog
+                open={verifyModalForUpdate}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  {'You can check'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    We sent the verification code to your eamil.
+                  </DialogContentText>
+                  <TextField
+                    fullWidth
+                    value={verifyCode}
+                    placeholder='Verification Code'
+                    onChange={e => setVerifyCode(e.target.value)}
+                  ></TextField>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setVerifyModalForUpdate(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      checkVerifyCodeForUpdate()
                     }}
                   >
                     Okay

@@ -55,11 +55,18 @@ export const updatePersonalInfo =
       })
   }
 
-export const updateTFA = (id, TFA) => async dispatch => {
+export const updateTFA = (id, TFA, onSuccess) => async dispatch => {
   try {
-    await firebase.firestore().collection('users').doc(id).update({
-      TFA
-    })
+    console.log('action TFA', TFA)
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(id)
+      .update({
+        tfa: TFA
+      })
+      .then(() => onSuccess())
+      .catch(err => toast.error(err.message))
   } catch (error) {
     toast.error(error.message, {
       style: {
@@ -69,38 +76,129 @@ export const updateTFA = (id, TFA) => async dispatch => {
   }
 }
 
-export const emailVerification = onSuccess => async dispatch => {
+function generateRandomSixDigits () {
+  // Generate a random number between 0 and 999999 (6 digits)
+  const randomNumber = Math.floor(Math.random() * 1000000)
+
+  // Ensure it has 6 digits by formatting with leading zeros if necessary
+  const randomSixDigits = randomNumber.toString().padStart(6, '0')
+
+  return randomSixDigits.toString()
+}
+
+export const emailVerification = (email, onSuccess) => async dispatch => {
   try {
+    dispatch({
+      type: 'LOGIN_REQUEST'
+    })
+
+    const verificationCode = generateRandomSixDigits()
+
+    const info = {
+      to: email,
+      message: {
+        subject: 'Hello from MenuX!',
+        html: `
+          <html>
+            <head>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f0f0f0;
+                }
+                .message-container {
+                  border: 2px solid #333;
+                  padding: 10px;
+                  background-color: #fff;
+                }
+                .fontsize {
+                  font-size: 15px
+                }
+              </style>
+            </head>
+            <body>
+              <div class="message-container">
+                <h1 style="color: #007bff;">Hello from MenuX!</h1>
+                <div class="fontsize">
+                  <p>This is a verification email from MenuX.</p>
+                  <p>Your verification code: <b> ${verificationCode} </b></p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        code: verificationCode
+      }
+    }
+
     await firebase
-      .auth()
-      .currentUser.sendEmailVerification()
-      .then(() => {
-        onSuccess()
-        // toast.success('You sent the verfication code to your email.', {
-        //   style: {
-        //     fontFamily: 'Poppins'
-        //   }
-        // })
+      .firestore()
+      .collection('mail')
+      .add(info)
+      .then(doc => {
+        onSuccess(doc.id)
       })
       .catch(error => {
-        toast.error(error.message, {
-          style: {
-            fontFamily: 'Poppins'
-          }
-        })
+        toast.error('Fail')
       })
+
+    dispatch({
+      type: 'LOGIN_REQUEST_END'
+    })
   } catch (error) {
     toast.error(error.message, {
       style: {
         fontFamily: 'Poppins'
       }
     })
+
+    dispatch({
+      type: 'LOGIN_REQUEST_END'
+    })
+  }
+}
+
+export const verifyCodeCheck = (code, codeID, onSuccess) => async dispatch => {
+  try {
+    dispatch({
+      type: 'LOGIN_REQUEST'
+    })
+
+    await firebase
+      .firestore()
+      .collection('mail')
+      .doc(codeID)
+      .get()
+      .then(doc => {
+        if (doc.data().message.code == code) {
+          onSuccess()
+        } else {
+          toast.error('Verification Fail!')
+        }
+      })
+      .catch(error => {
+        toast.error(error.message)
+      })
+
+    dispatch({
+      type: 'LOGIN_REQUEST_END'
+    })
+  } catch (error) {
+    dispatch({
+      type: 'LOGIN_REQUEST_END'
+    })
+
+    toast.error(error.message)
   }
 }
 
 export const checkCurrentPassword =
-  (currentPassword, newPassword) => async dispatch => {
+  (currentPassword, newPassword, onSuccess) => async dispatch => {
     try {
+      dispatch({
+        type: 'LOGIN_REQUEST'
+      })
+
       const user = await firebase.auth().currentUser
       const credential = await firebase.auth.EmailAuthProvider.credential(
         user.email,
@@ -112,7 +210,7 @@ export const checkCurrentPassword =
           user
             .updatePassword(newPassword)
             .then(() => {
-              toast.success('Password updated successfully.')
+              onSuccess()
             })
             .catch(error => {
               toast.error(error.message, {
@@ -129,11 +227,17 @@ export const checkCurrentPassword =
             }
           })
         })
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
     } catch (error) {
       toast.error(error.message, {
         style: {
           fontFamily: 'Poppins'
         }
+      })
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
       })
     }
   }
@@ -400,6 +504,7 @@ export const signupInformation =
         role: 'staff',
         name: name,
         email: email,
+        tfa: false,
         active: true
       }
     } else {
@@ -408,6 +513,7 @@ export const signupInformation =
         role: 'admin',
         name: name,
         email: email,
+        tfa: false,
         active: false
       }
     }
