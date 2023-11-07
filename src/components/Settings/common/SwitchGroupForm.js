@@ -1,12 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Switch, Typography, Box } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  updateLanguages,
+  updateMenuLanguage
+} from '../../../store/actions/settingAction'
 
 export default function SwitchGroupForm (props) {
-  const [english, setEnglish] = useState(false)
-  const [german, setGerman] = useState(false)
-  const [arabic, setArabic] = useState(false)
-  const [urdu, setUrdu] = useState(false)
-  const [flag, setFlag] = useState('en')
+  const dispatch = useDispatch()
+  const { user } = useSelector(state => state.auth)
+
+  const [english, setEnglish] = useState(user.menuLang.english)
+  const [spanish, setSpanish] = useState(user.menuLang.spanish)
+  const [portuguese, setPortuguese] = useState(user.menuLang.portuguese)
+  const [french, setFrench] = useState(user.menuLang.french)
+  const [flag, setFlag] = useState(user.language)
+
+  useEffect(() => {
+    dispatch(updateLanguages(user.id, flag))
+  }, [flag])
+
+  useEffect(() => {
+    let menuLang = {
+      english,
+      spanish,
+      portuguese,
+      french
+    }
+
+    dispatch(updateMenuLanguage(user.id, menuLang))
+  }, [english, spanish, portuguese, french])
 
   return (
     <>
@@ -23,12 +46,12 @@ export default function SwitchGroupForm (props) {
           >
             <Typography
               sx={{ cursor: 'pointer' }}
-              onClick={() => setFlag('en')}
+              onClick={() => setFlag('english')}
             >
               English
             </Typography>
             <Typography color={'primary'}>
-              {flag === 'en' && 'Primary'}
+              {flag === 'english' && 'Primary'}
             </Typography>
 
             <Switch
@@ -45,17 +68,17 @@ export default function SwitchGroupForm (props) {
           >
             <Typography
               sx={{ cursor: 'pointer' }}
-              onClick={() => setFlag('ge')}
+              onClick={() => setFlag('spanish')}
             >
               Spanish
             </Typography>
             <Typography color={'primary'}>
-              {flag === 'ge' && 'Primary'}
+              {flag === 'spanish' && 'Primary'}
             </Typography>
             <Switch
-              checked={german}
+              checked={spanish}
               inputProps={'aria-label'}
-              onChange={() => setGerman(!german)}
+              onChange={() => setSpanish(!spanish)}
             />
           </Box>
           <Box
@@ -66,18 +89,18 @@ export default function SwitchGroupForm (props) {
           >
             <Typography
               sx={{ cursor: 'pointer' }}
-              onClick={() => setFlag('ar')}
+              onClick={() => setFlag('portuguese')}
             >
               Portuguese
             </Typography>
             <Typography color={'primary'}>
-              {flag === 'ar' && 'Primary'}
+              {flag === 'portuguese' && 'Primary'}
             </Typography>
 
             <Switch
-              checked={arabic}
+              checked={portuguese}
               inputProps={'aria-label'}
-              onChange={() => setArabic(!arabic)}
+              onChange={() => setPortuguese(!portuguese)}
             />
           </Box>
           <Box
@@ -88,17 +111,17 @@ export default function SwitchGroupForm (props) {
           >
             <Typography
               sx={{ cursor: 'pointer' }}
-              onClick={() => setFlag('ur')}
+              onClick={() => setFlag('french')}
             >
               French
             </Typography>
             <Typography color={'primary'}>
-              {flag === 'ur' && 'Primary'}
+              {flag === 'french' && 'Primary'}
             </Typography>
             <Switch
-              checked={urdu}
+              checked={french}
               inputProps={'aria-label'}
-              onChange={() => setUrdu(!urdu)}
+              onChange={() => setFrench(!french)}
             />
           </Box>
         </Grid>

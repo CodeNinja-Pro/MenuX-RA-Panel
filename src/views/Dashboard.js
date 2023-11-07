@@ -545,43 +545,73 @@ export default function Dashboard () {
 
   let data = [
     {
-      name: 'Page A',
+      name: 'Jan',
       uv: 4000,
       pv: 2400,
       amt: 2400
     },
     {
-      name: 'Page B',
+      name: 'Feb',
       uv: 3000,
       pv: 1398,
       amt: 2210
     },
     {
-      name: 'Page C',
+      name: 'Mar',
       uv: 2000,
       pv: 9800,
       amt: 2290
     },
     {
-      name: 'Page D',
+      name: 'Apr',
       uv: 2780,
       pv: 3908,
       amt: 2000
     },
     {
-      name: 'Page E',
+      name: 'May',
       uv: 1890,
       pv: 4800,
       amt: 2181
     },
     {
-      name: 'Page F',
+      name: 'June',
       uv: 2390,
       pv: 3800,
       amt: 2500
     },
     {
-      name: 'Page G',
+      name: 'July',
+      uv: 3490,
+      pv: 4300,
+      amt: 2100
+    },
+    {
+      name: 'Aug',
+      uv: 2780,
+      pv: 3908,
+      amt: 2000
+    },
+    {
+      name: 'Sep',
+      uv: 1890,
+      pv: 4800,
+      amt: 2181
+    },
+    {
+      name: 'Oct',
+      uv: 2390,
+      pv: 3800,
+      amt: 2500
+    },
+    {
+      name: 'Nov',
+      uv: 3490,
+      pv: 4300,
+      amt: 2100
+    },
+    {
+      name: 'Dec',
       uv: 3490,
       pv: 4300,
       amt: 2100
@@ -610,7 +640,7 @@ export default function Dashboard () {
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
-                      title={'Total Customers'}
+                      title={'Total Orders'}
                       value={'1234'}
                       stat={'7.2%'}
                       color='#09BD3B'
@@ -620,9 +650,9 @@ export default function Dashboard () {
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
-                      title={'Total Customers'}
+                      title={'Average Order Size'}
                       value={'1234'}
-                      stat={'7.2%'}
+                      stat={'17.2%'}
                       color='#FF8A00'
                       id={'chart3'}
                       revenueComponent={CheckIcon}
@@ -630,7 +660,7 @@ export default function Dashboard () {
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
-                      title={'Total Customers'}
+                      title={'Requests'}
                       value={'1234'}
                       stat={'7.2%'}
                       color='#FF0000'
@@ -640,7 +670,7 @@ export default function Dashboard () {
                   </Grid>
                   <Grid item spacing={2} xs={12} md={2}>
                     <DashboardStatisticItem
-                      title={'Customers'}
+                      title={'Recommendations'}
                       value={'1234'}
                       stat={'7.2%'}
                       color={'#7534FF'}
@@ -871,7 +901,7 @@ export default function Dashboard () {
                             bottom: 5
                           }}
                         >
-                          <CartesianGrid strokeDasharray='3 3' />
+                          {/* <CartesianGrid strokeDasharray='1 1' /> */}
                           <XAxis dataKey='name' />
                           <YAxis />
                           <Tooltip />

@@ -20,18 +20,25 @@ import {
   DialogTitle,
   Divider,
   InputAdornment,
-  IconButton
+  IconButton,
+  LinearProgress
 } from '@mui/material'
 import React, { useState } from 'react'
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 
 import ScheduleForm from './common/ScheduleForm'
 import SwitchGroupForm from './common/SwitchGroupForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateRestaurantCurrency } from '../../store/actions/settingAction'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export default function VenueSetting () {
   // const [serviceMode, setServiceMode] = useState('Quick')
+
+  const dispatch = useDispatch()
+  const { user, loading } = useSelector(state => state.auth)
+
   const [quickService, setQuickService] = useState(false)
   const [fullService, setFullService] = useState(false)
 
@@ -43,6 +50,8 @@ export default function VenueSetting () {
   const [amount, setAmount] = useState('')
   const [percentage, setPercentage] = useState('')
   const [maximumAmount, setMaximumAmount] = useState('')
+
+  const [currency, setCurrency] = useState(user.currency)
 
   const [allFee, setAllFee] = useState([])
 
@@ -127,6 +136,7 @@ export default function VenueSetting () {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
+              {loading && <LinearProgress />}
               <Typography
                 marginLeft={'10px'}
                 textAlign={'left'}
@@ -143,16 +153,20 @@ export default function VenueSetting () {
                 alignItems={'center'}
               >
                 <Grid container alignItems={'center'} spacing={2}>
-                  <Grid item xs={12} lg={3}>
+                  <Grid item xs={12} sm={12} xl={3}>
                     <Typography textAlign={'left'}>
                       Selected Currency
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} lg={6}>
+                  <Grid item xs={12} sm={9} xl={6}>
                     <Select
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
                       defaultValue={'USD'}
+                      value={currency}
+                      onChange={e => {
+                        setCurrency(e.target.value)
+                      }}
                     >
                       <MenuItem value={'USD'}>
                         United States Dollar (USD) - United States
@@ -239,8 +253,15 @@ export default function VenueSetting () {
                       </MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={12} lg={3}>
-                    <Button>Save</Button>
+                  <Grid item xs={12} sm={3} xl={3}>
+                    <Button
+                      fullWidth
+                      onClick={() => {
+                        dispatch(updateRestaurantCurrency(user.id, currency))
+                      }}
+                    >
+                      Save
+                    </Button>
                   </Grid>
                 </Grid>
               </Box>
@@ -395,7 +416,7 @@ export default function VenueSetting () {
                   <Box>
                     <Typography fontWeight={'bold'}>Full Service</Typography>
                     <Typography>
-                      Your guests’ ticket remains open until you close it. New
+                      Your guests' ticket remains open until you close it. New
                       orders are collected on the same ticket, and guests can
                       make an online payment when leaving.
                     </Typography>

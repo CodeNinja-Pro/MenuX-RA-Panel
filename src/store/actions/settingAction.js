@@ -767,36 +767,46 @@ export const updateRestaurantProfile = (id, obj) => async dispatch => {
 
 export const updateLanguages = (id, languages) => async dispatch => {
   dispatch(profileLoader(true))
-  const db = firebase.firestore()
-  const docRef = db.collection('users').doc(id)
-  docRef
+  const db = await firebase.firestore()
+  const docRef = await db.collection('users').doc(id)
+  await docRef
     .update({ languages: languages }, { merge: true })
     .then(() => {
       dispatch(profileLoader(false))
-      toast.success('Languaes Update Successfully', {
-        style: {
-          fontFamily: 'Poppins'
-        }
-      })
     })
     .catch(err => {
       dispatch(profileLoader(false))
-      toast.warn(err, {
-        style: {
-          fontFamily: 'Poppins'
-        }
-      })
+    })
+}
+
+export const updateMenuLanguage = (id, menuLang) => async dispatch => {
+  dispatch(profileLoader(true))
+  const db = await firebase.firestore()
+  const docRef = await db.collection('users').doc(id)
+  await docRef
+    .update({ menuLang: menuLang }, { merge: true })
+    .then(() => {
+      dispatch(profileLoader(false))
+    })
+    .catch(err => {
+      dispatch(profileLoader(false))
     })
 }
 
 export const updateRestaurantCurrency = (id, currency) => async dispatch => {
-  dispatch(currencyLoader(true))
+  dispatch({
+    type: 'LOGIN_REQUEST'
+  })
+
   const db = firebase.firestore()
   const docRef = db.collection('users').doc(id)
   docRef
     .update({ currency: currency }, { merge: true })
     .then(() => {
-      dispatch(currencyLoader(false))
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
+
       toast.success('Currency Update Successfully', {
         style: {
           fontFamily: 'Poppins'
@@ -804,7 +814,9 @@ export const updateRestaurantCurrency = (id, currency) => async dispatch => {
       })
     })
     .catch(err => {
-      dispatch(currencyLoader(false))
+      dispatch({
+        type: 'LOGIN_REQUEST_END'
+      })
       toast.warn(err, {
         style: {
           fontFamily: 'Poppins'

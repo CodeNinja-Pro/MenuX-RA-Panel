@@ -91,7 +91,7 @@ export default function ItemDetail (props) {
       averageViewTime: itemDetail.viewTime,
       conversionRate: new Intl.NumberFormat('en-IN', {
         maximumSignificantDigits: 3
-      }).format(itemDetail.purchase / itemDetail.views),
+      }).format(itemDetail.purchase / (itemDetail.views + 0.000000001)),
       revenueGenerated:
         (itemDetail.price - itemDetail.cost) * itemDetail.purchase,
       averagePurchasePerDay: new Intl.NumberFormat('en-IN', {

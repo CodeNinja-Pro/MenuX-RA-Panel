@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -14,10 +14,6 @@ import BarChart from '../Charts/BarChart'
 import DonutChart from '../Charts/DonutChart'
 import { ThemeMain } from '../common/Theme'
 import SidebarForDonutChart from './SidebarForDonutChart'
-import {
-  getAllMenus,
-  getAllCategories
-} from '../../store/actions/statisticAction'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import {
@@ -30,7 +26,9 @@ import {
 
 export default function StatisticsChart (props) {
   const dispatch = useDispatch()
-  const { user } = useSelector(state => state.auth)
+
+  const [sortBy, setSortBy] = useState('most')
+  const [sortBy_, setSortBy_] = useState('most')
 
   const {
     allMenus,
@@ -46,15 +44,12 @@ export default function StatisticsChart (props) {
 
   let sortedItemByView = []
 
-  useEffect(() => {}, [])
-
   useEffect(() => {
     dispatch(sortItemByView(allMenus))
     dispatch(sortCategoryByView(allMenus, allCategories))
     dispatch(sortItemByPurchase(allMenus))
     dispatch(sortItemByRevenue(allMenus))
     dispatch(sortCategoryByRevenue(allMenus, allCategories))
-    // sortCategoryByView(allMenus)
   }, [allMenus, allCategories])
 
   useEffect(() => {
@@ -65,33 +60,6 @@ export default function StatisticsChart (props) {
       })
     })
   }, [viewSortItems])
-
-  const items = [
-    {
-      name: 'Cheesy burger',
-      rate: 80.6
-    },
-    {
-      name: 'Cheesy Bread',
-      rate: 76.5
-    },
-    {
-      name: 'Thin Crust Pizza',
-      rate: 68.4
-    },
-    {
-      name: 'Crunch Pasta',
-      rate: 56.3
-    },
-    {
-      name: 'House Special',
-      rate: 45.3
-    },
-    {
-      name: 'Creamy Cheesy Pasta',
-      rate: 36.2
-    }
-  ]
 
   const chartData = [
     {
@@ -149,13 +117,21 @@ export default function StatisticsChart (props) {
           fontSize: '12px'
         }
       },
-      categories: viewSortItems
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        ?.map(item => {
-          return item?.name
-        })
+      categories:
+        sortBy === 'most'
+          ? viewSortItems
+              .slice()
+              .reverse()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.name
+              })
+          : viewSortItems
+              .slice()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.name
+              })
     },
     yaxis: {
       labels: {
@@ -208,16 +184,24 @@ export default function StatisticsChart (props) {
     }
   }
 
-  const mostClickItemsSeries = [
+  let mostClickItemsSeries = [
     {
       name: 'Clicked',
-      data: viewSortItems
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        ?.map(item => {
-          return item?.views
-        })
+      data:
+        sortBy === 'most'
+          ? viewSortItems
+              .slice()
+              .reverse()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.views
+              })
+          : viewSortItems
+              .slice()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.views
+              })
     }
   ]
 
@@ -234,13 +218,21 @@ export default function StatisticsChart (props) {
           fontSize: '12px'
         }
       },
-      categories: purchaseSortItems
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        ?.map(item => {
-          return item?.name
-        })
+      categories:
+        sortBy_ === 'most'
+          ? purchaseSortItems
+              .slice()
+              .reverse()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.name
+              })
+          : purchaseSortItems
+              .slice()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.name
+              })
     },
     yaxis: {
       labels: {
@@ -296,13 +288,21 @@ export default function StatisticsChart (props) {
   const mostBoughtItemsSeries = [
     {
       name: 'Bought',
-      data: purchaseSortItems
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        ?.map(item => {
-          return item?.purchase
-        })
+      data:
+        sortBy_ === 'most'
+          ? purchaseSortItems
+              .slice()
+              .reverse()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.purchase
+              })
+          : purchaseSortItems
+              .slice()
+              .slice(0, 10)
+              ?.map(item => {
+                return item?.purchase
+              })
     }
   ]
 
@@ -684,8 +684,18 @@ export default function StatisticsChart (props) {
                         variant='contained'
                         aria-label='Disabled elevation buttons'
                       >
-                        <Button>Most</Button>
-                        <Button>Least</Button>
+                        <Button
+                          disabled={sortBy === 'most' && true}
+                          onClick={() => setSortBy('most')}
+                        >
+                          Most
+                        </Button>
+                        <Button
+                          disabled={sortBy === 'least' && true}
+                          onClick={() => setSortBy('least')}
+                        >
+                          Least
+                        </Button>
                       </ButtonGroup>
                       {/* <ButtonGroup
                       sx={{ marginLeft: '50px' }}
@@ -729,8 +739,18 @@ export default function StatisticsChart (props) {
                         variant='contained'
                         aria-label='Disabled elevation buttons'
                       >
-                        <Button>Most</Button>
-                        <Button>Least</Button>
+                        <Button
+                          disabled={sortBy_ === 'most' && true}
+                          onClick={() => setSortBy_('most')}
+                        >
+                          Most
+                        </Button>
+                        <Button
+                          disabled={sortBy_ === 'least' && true}
+                          onClick={() => setSortBy_('least')}
+                        >
+                          Least
+                        </Button>
                       </ButtonGroup>
                     </Box>
                   </Box>

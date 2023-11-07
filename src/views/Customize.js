@@ -942,178 +942,184 @@ function Customize () {
                                   )}
                                 </Col>
                               </Row>
-                              <Row>
-                                <Col>
-                                  <h3
-                                    style={{
-                                      marginTop: '30px',
-                                      marginBottom: '30px',
-                                      textAlign: 'left'
-                                    }}
-                                  >
-                                    Colors
-                                  </h3>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Grid container spacing={3}>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Category Text Color'}
-                                      currentColor={categoryColor}
-                                      setColor={setCategoryColor}
-                                      colorChange={categoryColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Item Border Color'}
-                                      currentColor={borderColor}
-                                      setColor={setBorderColor}
-                                      colorChange={borderColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Price Text Color'}
-                                      currentColor={priceColor}
-                                      setColor={setPriceColor}
-                                      colorChange={priceColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Item Text Color'}
-                                      currentColor={itemColor}
-                                      setColor={setItemColor}
-                                      colorChange={itemColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Item Background Color'}
-                                      currentColor={backgroundColor}
-                                      setColor={setBackgroundColor}
-                                      colorChange={backgroundColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <ColorPickerCP
-                                      title={'Background Color'}
-                                      currentColor={entireColor}
-                                      setColor={setEntireColor}
-                                      colorChange={entireColorChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <Box
-                                      display={'flex'}
-                                      justifyContent={'space-between'}
+                              <Box marginLeft={3}>
+                                <Row>
+                                  <Col>
+                                    <h3
+                                      style={{
+                                        marginTop: '30px',
+                                        marginBottom: '30px',
+                                        textAlign: 'left'
+                                      }}
                                     >
-                                      <Typography
-                                        marginTop={'10px'}
-                                        marginLeft={'30px'}
-                                      >
-                                        Header(Light/Dark)
-                                      </Typography>
-                                      <FormControlLabel
-                                        onClick={onSelectColorMode}
-                                        checked={!colorMode}
-                                        control={
-                                          <MaterialUISwitch
-                                            sx={{ m: 1 }}
-                                            defaultChecked={false}
-                                          />
-                                        }
+                                      Colors
+                                    </h3>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Grid container spacing={3}>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Category Text Color'}
+                                        currentColor={categoryColor}
+                                        setColor={setCategoryColor}
+                                        colorChange={categoryColorChange}
                                       />
-                                    </Box>
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Item Border Color'}
+                                        currentColor={borderColor}
+                                        setColor={setBorderColor}
+                                        colorChange={borderColorChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Price Text Color'}
+                                        currentColor={priceColor}
+                                        setColor={setPriceColor}
+                                        colorChange={priceColorChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Item Text Color'}
+                                        currentColor={itemColor}
+                                        setColor={setItemColor}
+                                        colorChange={itemColorChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Item Background Color'}
+                                        currentColor={backgroundColor}
+                                        setColor={setBackgroundColor}
+                                        colorChange={backgroundColorChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <ColorPickerCP
+                                        title={'Background Color'}
+                                        currentColor={entireColor}
+                                        setColor={setEntireColor}
+                                        colorChange={entireColorChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <Box
+                                        display={'flex'}
+                                        justifyContent={'space-between'}
+                                      >
+                                        <Typography
+                                          marginTop={'10px'}
+                                          marginLeft={'30px'}
+                                        >
+                                          Header(Light/Dark)
+                                        </Typography>
+                                        <FormControlLabel
+                                          onClick={onSelectColorMode}
+                                          checked={!colorMode}
+                                          control={
+                                            <MaterialUISwitch
+                                              sx={{ m: 1 }}
+                                              defaultChecked={false}
+                                            />
+                                          }
+                                        />
+                                      </Box>
+                                    </Grid>
                                   </Grid>
-                                </Grid>
-                              </Row>
-                              <Row>
-                                <Col>
-                                  <h3
-                                    style={{
-                                      marginTop: '30px',
-                                      marginBottom: '30px',
-                                      textAlign: 'left'
-                                    }}
+                                </Row>
+                              </Box>
+                              <Box marginLeft={4}>
+                                <Row>
+                                  <Col>
+                                    <h3
+                                      style={{
+                                        marginTop: '30px',
+                                        marginBottom: '30px',
+                                        textAlign: 'left'
+                                      }}
+                                    >
+                                      Fonts
+                                    </h3>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Grid
+                                    container
+                                    marginBottom={'20px'}
+                                    spacing={4}
                                   >
-                                    Fonts
-                                  </h3>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Grid
-                                  container
-                                  marginBottom={'20px'}
-                                  spacing={4}
-                                >
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <FontSizeCP
-                                      title='Primary Text Font(menu/category/item)'
-                                      size={fontSize}
-                                      setSize={onFontSizeChange}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    {/* <FontSizeCP
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <FontSizeCP
+                                        title='Primary Text Font(menu/category/item)'
+                                        size={fontSize}
+                                        setSize={onFontSizeChange}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      {/* <FontSizeCP
                                     title='Secondary Font'
                                     size={secondaryFontSize}
                                     setSize={onSecondaryFontSizeChange}
                                   /> */}
-                                    <Typography>Primary Text Weight</Typography>
-                                    <Switch
-                                      value={fontWeight}
-                                      onChange={onFontWeightChange}
-                                      sx={{ marginTop: '10px' }}
-                                      {...label}
-                                    />
+                                      <Typography>
+                                        Primary Text Weight
+                                      </Typography>
+                                      <Switch
+                                        value={fontWeight}
+                                        onChange={onFontWeightChange}
+                                        sx={{ marginTop: '10px' }}
+                                        {...label}
+                                      />
+                                    </Grid>
                                   </Grid>
-                                </Grid>
-                              </Row>
-                              <Row>
-                                <Grid
-                                  container
-                                  marginBottom={'20px'}
-                                  spacing={4}
-                                >
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <FontCP
-                                      title={
-                                        'Primary Text Font(menu/category/item name)'
-                                      }
-                                      fontFamily={mainFont}
-                                      setFontFamily={setMainFont}
-                                    />
+                                </Row>
+                                <Row>
+                                  <Grid
+                                    container
+                                    marginBottom={'20px'}
+                                    spacing={4}
+                                  >
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <FontCP
+                                        title={
+                                          'Primary Text Font(menu/category/item name)'
+                                        }
+                                        fontFamily={mainFont}
+                                        setFontFamily={setMainFont}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <Typography fontFamily={mainFont}>
+                                        We love MenuX
+                                      </Typography>
+                                    </Grid>
                                   </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <Typography fontFamily={mainFont}>
-                                      We love MenuX
-                                    </Typography>
+                                </Row>
+                                <Row>
+                                  <Grid
+                                    container
+                                    marginBottom={'20px'}
+                                    spacing={4}
+                                  >
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <FontCP
+                                        title={'Secondary Font'}
+                                        fontFamily={secondaryFont}
+                                        setFontFamily={setSecondaryFont}
+                                      />
+                                    </Grid>
+                                    <Grid item xl={5} md={5} xs={11}>
+                                      <Typography fontFamily={secondaryFont}>
+                                        We love MenuX
+                                      </Typography>
+                                    </Grid>
                                   </Grid>
-                                </Grid>
-                              </Row>
-                              <Row>
-                                <Grid
-                                  container
-                                  marginBottom={'20px'}
-                                  spacing={4}
-                                >
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <FontCP
-                                      title={'Secondary Font'}
-                                      fontFamily={secondaryFont}
-                                      setFontFamily={setSecondaryFont}
-                                    />
-                                  </Grid>
-                                  <Grid item xl={5} md={5} xs={12}>
-                                    <Typography fontFamily={secondaryFont}>
-                                      We love MenuX
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Row>
+                                </Row>
+                              </Box>
                             </Col>
                           </Row>
                         </Container>

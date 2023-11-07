@@ -161,9 +161,11 @@ export default function RankingForm (props) {
                       })}
                       strokeWidth={15}
                       value={parseInt((item.views / props.totalViews) * 100)}
-                      text={`${parseInt(
-                        (item.views / props.totalViews) * 100
-                      )}%`}
+                      text={`${
+                        props.totalViews === 0
+                          ? 0
+                          : parseInt((item.views / props.totalViews) * 100)
+                      }%`}
                     />
                   </div>
                 </Grid>

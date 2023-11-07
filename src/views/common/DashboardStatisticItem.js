@@ -10,6 +10,9 @@ import {
   CardMedia
 } from '@mui/material'
 
+import DownIcon from '../../assets/common/dashboard/DownIcon.png'
+import UpIcon from '../../assets/common/dashboard/UpIcon.png'
+
 import {
   XAxis,
   YAxis,
@@ -106,7 +109,14 @@ export default function DashboardStatisticItem (props) {
             alignItems={'center'}
           >
             <Typography>{props.title}</Typography>
-            <Typography>{props.stat}</Typography>
+            <Box display={'flex'}>
+              <img
+                style={{ marginTop: 5, marginRight: 2 }}
+                src={DownIcon}
+                height={'15px'}
+              />
+              <Typography fontSize={20}>{props.stat}</Typography>
+            </Box>
           </Box>
           <Grid item xs={12}></Grid>
         </CardContent>
