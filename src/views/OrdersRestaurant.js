@@ -21,6 +21,9 @@ import OrderTable from '../components/Orders/OrderTable'
 import { toast } from 'react-toastify'
 import { getCurrentRoleDetail } from '../store/actions/staffAction'
 import { useDispatch, useSelector } from 'react-redux'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { DateRangePicker } from '@mui/x-date-pickers-pro'
+import dayjs from 'dayjs'
 
 export default function OrdersRestaurant () {
   const dispatch = useDispatch()
@@ -41,6 +44,13 @@ export default function OrdersRestaurant () {
   // Status of this section as staff role
   const [sectionPermission, setSectionPermission] = useState(false)
   const { currentRoleDetail } = useSelector(state => state.staff)
+
+  let endDate = new Date()
+  let startDate = new Date()
+  startDate.setMonth(startDate.getMonth() - 1)
+
+  const [dateRange, setDateRange] = useState([dayjs(startDate), dayjs(endDate)])
+
   useEffect(() => {
     if (user.role === 'staff') dispatch(getCurrentRoleDetail(user.staffRole))
   }, [])
@@ -201,10 +211,13 @@ export default function OrdersRestaurant () {
                   </Grid>
                   <Grid item xs={12} lg={3}>
                     <Box>
-                      <PickDateRange
-                        setDateState={handleDateChange}
-                        datestate={dateState}
-                      />
+                      <DemoContainer components={['DateRangePicker']}>
+                        <DateRangePicker
+                          localeText={{ start: 'Start', end: 'End' }}
+                          value={dateRange}
+                          onChange={newValue => setDateRange(newValue)}
+                        />
+                      </DemoContainer>
                     </Box>
                   </Grid>
                 </Grid>

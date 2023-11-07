@@ -5,7 +5,9 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addDays } from 'date-fns'
+import dayjs, { Dayjs } from 'dayjs'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker'
 
 import {
   Divider,
@@ -18,7 +20,6 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  IconButton,
   Popover,
   Paper,
   ClickAwayListener,
@@ -37,12 +38,8 @@ import {
 } from '@mui/material'
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import PickDateRange from '../../views/auth/PickDateRange'
-import { getAllMenus } from '../../store/actions/statisticAction'
 import { useHistory } from 'react-router-dom'
 import { getTotalRevenue } from '../../Statistical/generalStatistics'
 
@@ -199,25 +196,18 @@ export default function ItemStatisticTable (props) {
     status: null
   })
 
-  const [dateState, setDateState] = useState([
-    {
-      startDate: addDays(new Date(), -31),
-      endDate: new Date(),
-      key: 'selection'
-    }
-  ])
+  let endDate = new Date()
+  let startDate = new Date()
+  startDate.setMonth(startDate.getMonth() - 1)
+
+  const [dateRange, setDateRange] = useState([dayjs(startDate), dayjs(endDate)])
 
   const handleItemClick = id => {
-    // history.push(`/admin/item-detail/${id}`)
     props.setSelectedItem(id)
     props.setStatisticOrDetail('detail')
   }
 
   const handleItemDelete = () => {}
-
-  const handleDateChange = ranges => {
-    setDateState(ranges)
-  }
 
   let totalViews = 0
   const [sum, setSum] = useState(0)
@@ -287,26 +277,14 @@ export default function ItemStatisticTable (props) {
 
   return (
     <>
-      <Grid
-        item
-        xs={12}
-        display={'flex'}
-        justifyContent={'start'}
-        marginTop={'20px'}
-      >
-        <Box
-          width={'100%'}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
+      <Grid container>
+        <Grid item xs={12} md={3}>
           <TextField
             id='outlined-start-adornment'
             placeholder='Search by Name, Email and Role.'
-            sx={{ width: '400px' }}
             value={searchValue}
+            fullWidth
+            sx={{ alignItems: '' }}
             onChange={e => setSearchValue(e.target.value)}
             InputProps={{
               startAdornment: (
@@ -316,16 +294,20 @@ export default function ItemStatisticTable (props) {
               )
             }}
           />
-          <Box width={300}>
-            <PickDateRange
-              setDateState={handleDateChange}
-              datestate={dateState}
+        </Grid>
+        <Grid item xs={12} md={5}></Grid>
+        <Grid item xs={12} md={4}>
+          <DemoContainer components={['DateRangePicker']}>
+            <DateRangePicker
+              localeText={{ start: 'Start', end: 'End' }}
+              value={dateRange}
+              onChange={newValue => setDateRange(newValue)}
             />
-          </Box>
-        </Box>
+          </DemoContainer>
+        </Grid>
       </Grid>
       <Grid item xs={12} marginTop={2}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
           <TableContainer>
             <Table aria-labelledby='tableTitle'>
               <EnhancedTableHead
