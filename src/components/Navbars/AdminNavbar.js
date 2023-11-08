@@ -176,6 +176,7 @@ const AdminNavbar = props => {
       <ThemeProvider theme={ThemeMain}>
         <Navbar
           className={`navbar-dark ${hide ? 'navbar-top-hide' : 'navbar-top'}`}
+          style={{ transition: '0.2s' }}
           expand='md'
           id='navbar-main'
         >

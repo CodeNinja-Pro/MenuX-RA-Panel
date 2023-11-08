@@ -172,7 +172,6 @@ const Sidebar = props => {
           if (user?.type == prop.type) {
             return (
               <NavItem key={key1}>
-                {/* Sidebar for Restaurant Admin Panel */}
                 <NavLink
                   to={prop.layout + prop.path}
                   tag={NavLinkRRD}
@@ -281,7 +280,7 @@ const Sidebar = props => {
 
                             <Collapse
                               isOpen={isOpen}
-                              className={`${hide ? '' : 'sidebar-collapse'}`}
+                              // className={`${hide ? '' : 'sidebar-collapse'}`}
                             >
                               {userPermissions?.menus && (
                                 <NavItem>
@@ -715,111 +714,114 @@ const Sidebar = props => {
   }
 
   return (
-    <Navbar
-      className={`navbar-vertical fixed-left navbar-light bg-white ${
-        hide ? 'hidden' : ''
-      }`}
-      expand='md'
-      id='sidenav-main'
-    >
-      <Container fluid>
-        <button
-          className='navbar-toggler'
-          type='button'
-          onClick={toggleCollapse}
-        >
-          <span className='navbar-toggler-icon' />
-        </button>
-        <div className='brand'>
-          {logo ? (
-            <NavbarBrand className='pt-2 pb-0' {...navbarBrandProps}>
-              <img
-                alt={logo.imgAlt}
-                className='navbar-brand-img'
-                src={logo.imgSrc}
-              />
-            </NavbarBrand>
-          ) : null}
-        </div>
-        <Nav className='align-items-center d-md-none'>
-          <UncontrolledDropdown nav>
-            <DropdownMenu
-              aria-labelledby='navbar-default_dropdown_1'
-              className='dropdown-menu-arrow'
-              right
-            >
-              <DropdownItem>Action</DropdownItem>
-              <DropdownItem>Another action</DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>Something else here</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <UncontrolledDropdown nav>
-            <DropdownToggle nav>
-              <Media className='align-items-center'>
-                <span className='avatar avatar-sm rounded-circle'>
-                  <img
-                    className='img-fluid'
-                    alt='...'
-                    src={
-                      user?.restaurantLogo ||
-                      require('../../assets/img/MainMark.svg').default
-                    }
-                  />
-                </span>
-              </Media>
-            </DropdownToggle>
-            <DropdownMenu className='dropdown-menu-arrow ' right>
-              <DropdownItem
-                onClick={() => {
-                  dispatch(logout())
-                }}
-              >
-                <i className='ni ni-user-run' />
-                <span>Logout</span>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
-        <Collapse navbar isOpen={collapseOpen}>
-          <Box
-            sx={{
-              height: '85vh',
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'column'
-            }}
+    <>
+      <Navbar
+        className={`navbar-vertical fixed-left navbar-light bg-white  ${
+          hide ? 'hidden' : ''
+        }`}
+        style={{ transition: '0.2s' }}
+        expand='md'
+        id='sidenav-main'
+      >
+        <Container fluid>
+          <button
+            className='navbar-toggler'
+            type='button'
+            onClick={toggleCollapse}
           >
-            <Box>
-              <Nav navbar>{createLinks(routes)}</Nav>
-            </Box>
-            {user.type === 'super' ? (
-              ''
-            ) : (
+            <span className='navbar-toggler-icon' />
+          </button>
+          <div className='brand'>
+            {logo ? (
+              <NavbarBrand className='pt-2 pb-0' {...navbarBrandProps}>
+                <img
+                  alt={logo.imgAlt}
+                  className='navbar-brand-img'
+                  src={logo.imgSrc}
+                />
+              </NavbarBrand>
+            ) : null}
+          </div>
+          <Nav className='align-items-center d-md-none'>
+            <UncontrolledDropdown nav>
+              <DropdownMenu
+                aria-labelledby='navbar-default_dropdown_1'
+                className='dropdown-menu-arrow'
+                right
+              >
+                <DropdownItem>Action</DropdownItem>
+                <DropdownItem>Another action</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem>Something else here</DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+            <UncontrolledDropdown nav>
+              <DropdownToggle nav>
+                <Media className='align-items-center'>
+                  <span className='avatar avatar-sm rounded-circle'>
+                    <img
+                      className='img-fluid'
+                      alt='...'
+                      src={
+                        user?.restaurantLogo ||
+                        require('../../assets/img/MainMark.svg').default
+                      }
+                    />
+                  </span>
+                </Media>
+              </DropdownToggle>
+              <DropdownMenu className='dropdown-menu-arrow ' right>
+                <DropdownItem
+                  onClick={() => {
+                    dispatch(logout())
+                  }}
+                >
+                  <i className='ni ni-user-run' />
+                  <span>Logout</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </Nav>
+          <Collapse navbar isOpen={collapseOpen}>
+            <Box
+              sx={{
+                height: '85vh',
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column'
+              }}
+            >
               <Box>
-                {hide ? (
-                  ''
-                ) : (
-                  <Button
-                    onClick={() => onPreviewClick}
-                    style={{
-                      marginLeft: '-10px',
-                      backgroundColor: '#2D66EE',
-                      color: `${mainColor}`,
-                      borderWidth: '5px',
-                      borderColor: '#E0EAFF'
-                    }}
-                    className={'nav-link__active'}
-                  >
-                    {'Preview Menu'}
-                  </Button>
-                )}
+                <Nav navbar>{createLinks(routes)}</Nav>
               </Box>
-            )}
-          </Box>
-        </Collapse>
-      </Container>
-    </Navbar>
+              {user.type === 'super' ? (
+                ''
+              ) : (
+                <Box>
+                  {hide ? (
+                    ''
+                  ) : (
+                    <Button
+                      onClick={() => onPreviewClick}
+                      style={{
+                        marginLeft: '-10px',
+                        backgroundColor: '#2D66EE',
+                        color: `${mainColor}`,
+                        borderWidth: '5px',
+                        borderColor: '#E0EAFF'
+                      }}
+                      className={'nav-link__active'}
+                    >
+                      {'Preview Menu'}
+                    </Button>
+                  )}
+                </Box>
+              )}
+            </Box>
+          </Collapse>
+        </Container>
+      </Navbar>
+    </>
   )
 }
 
