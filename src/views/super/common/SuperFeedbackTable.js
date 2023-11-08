@@ -42,7 +42,8 @@ import {
   FormControl,
   Backdrop,
   Fade,
-  Modal
+  Modal,
+  useMediaQuery
 } from '@mui/material'
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
@@ -50,6 +51,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import { makeStyles } from '@mui/styles'
+import { useTheme } from '@mui/material/styles'
 
 const useStyles = makeStyles(() => ({
   textField: {
@@ -206,6 +208,9 @@ export default function SuperStaffTable () {
   let rows = useSelector(state => state.super.allFeedbacks)
   let { loader } = useSelector(state => state.super)
 
+  const theme = useTheme()
+  const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'))
+
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState('')
@@ -318,9 +323,14 @@ export default function SuperStaffTable () {
         marginTop={'20px'}
       >
         <TextField
-          sx={{ width: '500px' }}
+          sx={{ width: `${matchDownMD ? '100%' : '550px'}` }}
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email, Type, Score and Feedback.'
+          // placeholder='Search by Name, Email, Type, Score and Feedback.'
+          placeholder={`${
+            matchDownMD
+              ? 'Search'
+              : 'Search by Name, Email, Type, Score and Feedback'
+          }`}
           value={searchValue}
           className={classes.textField}
           onChange={e => setSearchValue(e.target.value)}

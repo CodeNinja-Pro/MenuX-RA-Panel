@@ -12,6 +12,8 @@ import {
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { useTheme } from '@mui/material/styles'
+
 import {
   Divider,
   Box,
@@ -43,7 +45,8 @@ import {
   FormHelperText,
   InputAdornment,
   Grid,
-  TextField
+  TextField,
+  useMediaQuery
 } from '@mui/material'
 
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -344,6 +347,9 @@ export default function SuperRestaurantTable () {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
+  const theme = useTheme()
+  const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'))
+
   return (
     <>
       <Grid
@@ -355,8 +361,13 @@ export default function SuperRestaurantTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email, Location, Type and Opening year.'
-          sx={{ width: '550px' }}
+          // placeholder='Search by Name, Email, Location, Type and Opening year.'
+          placeholder={`${
+            matchDownMD
+              ? 'Search'
+              : 'Search by Name, Email, Location, Type and Opening year.'
+          }`}
+          sx={{ width: `${matchDownMD ? '100%' : '550px'}` }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           InputProps={{

@@ -20,15 +20,8 @@ export default function SuperFeedback () {
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
             <Card sx={{ boxShadow: 'none' }}>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+              <Grid container>
+                <Grid item xs={12} marginTop={2} marginBottom={2} padding={1}>
                   <Grid item xs={12}>
                     <Typography
                       textAlign={'left'}

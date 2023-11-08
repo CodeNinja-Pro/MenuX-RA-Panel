@@ -36,7 +36,8 @@ import {
   TableSortLabel,
   Grid,
   TextField,
-  InputAdornment
+  InputAdornment,
+  useMediaQuery
 } from '@mui/material'
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
@@ -45,6 +46,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 
 import { makeStyles } from '@mui/styles'
+import { useTheme } from '@mui/material/styles'
+
 const useStyles = makeStyles(() => ({
   textField: {
     width: '100%',
@@ -182,6 +185,9 @@ export default function SuperStaffTable () {
   const dispatch = useDispatch()
   let rows = useSelector(state => state.super.allStaffs)
 
+  const theme = useTheme()
+  const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'))
+
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
   const [invitationModal, setInvitationModal] = useState(false)
@@ -290,8 +296,11 @@ export default function SuperStaffTable () {
       >
         <TextField
           id='outlined-start-adornment'
-          placeholder='Search by Name, Email and Role.'
-          sx={{ width: '400px' }}
+          // placeholder='Search by Name, Email and Role.'
+          placeholder={`${
+            matchDownMD ? 'Search' : 'Search by Name, Email and Role'
+          }`}
+          sx={{ width: `${matchDownMD ? '100%' : '400px'}` }}
           value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
           className={classes.textField}

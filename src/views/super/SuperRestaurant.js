@@ -32,15 +32,8 @@ export default function SuperRestaurant () {
         <Container className='mt--7 mb-5' fluid>
           <Container fluid>
             <Card sx={{ boxShadow: 'none' }}>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  marginTop={2}
-                  marginLeft={2}
-                  marginRight={2}
-                  marginBottom={2}
-                >
+              <Grid container>
+                <Grid item xs={12} marginTop={2} padding={1} marginBottom={2}>
                   <Grid
                     item
                     xs={12}
@@ -58,7 +51,6 @@ export default function SuperRestaurant () {
                     <Box display={'flex'}>
                       <Button
                         onClick={() => setExportModal(true)}
-                        sx={{ marginRight: 2 }}
                         variant='contained'
                       >
                         Export
