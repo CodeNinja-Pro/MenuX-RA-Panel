@@ -519,7 +519,7 @@ export default function SuperRestaurantTable () {
                                   <NotificationsNoneOutlinedIcon />
                                   Send Notification
                                 </MenuItem>
-                                <Divider />
+                                {/* <Divider />
                                 <MenuItem
                                   onClick={() => {
                                     setDeleteModal(true)
@@ -530,7 +530,7 @@ export default function SuperRestaurantTable () {
                                   <Typography color={'error'}>
                                     Delete
                                   </Typography>
-                                </MenuItem>
+                                </MenuItem> */}
                               </MenuList>
                             </ClickAwayListener>
                           </Paper>

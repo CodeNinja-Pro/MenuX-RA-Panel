@@ -1,7 +1,6 @@
 import Index from './views/Index.js'
 // import Profile from './views/Profile.js'
 // import Maps from './views/Maps.js'
-import Register from './views/auth/Register.js'
 import Login from './views/auth/Login.js'
 // import Icons from './views/Icons.js'
 // import Tables from './views/Tables.js'
@@ -226,14 +225,6 @@ var routes = [
     component: AdminLogin,
     layout: '/auth',
 
-    isMenu: false
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    icon: 'ni ni-circle-08 text-pink',
-    component: Register,
-    layout: '/auth',
     isMenu: false
   },
   {

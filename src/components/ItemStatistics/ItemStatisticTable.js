@@ -40,7 +40,6 @@ import {
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import { useHistory } from 'react-router-dom'
 import { getTotalRevenue } from '../../Statistical/generalStatistics'
 
 function descendingComparator (a, b, orderBy) {
@@ -143,8 +142,6 @@ function EnhancedTableHead (props) {
             </TableSortLabel>
           </TableCell>
         ))}
-
-        {/* <TableCell align={'center'}>Actions</TableCell> */}
       </TableRow>
     </TableHead>
   )
@@ -178,13 +175,10 @@ EnhancedTableHead.propTypes = {
 export default function ItemStatisticTable (props) {
   //User definition
   const dispatch = useDispatch()
-  const history = useHistory()
-  const { user } = useSelector(state => state.auth)
   let rows = useSelector(state => state.statistic.allMenus)
 
   // Variable definition
   const [deleteModal, setDeleteModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState('')
 
   const [visibleRows, setVisibleRows] = useState([])
 
@@ -263,10 +257,6 @@ export default function ItemStatisticTable (props) {
 
   // user definition
   const [anchorEl, setAnchorEl] = useState(null)
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
 
   const handleClose = () => {
     setAnchorEl(null)

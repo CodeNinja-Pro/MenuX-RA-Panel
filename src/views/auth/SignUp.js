@@ -414,6 +414,8 @@ import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import { useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import { ThemeMain } from '../../components/common/Theme'
@@ -602,147 +604,160 @@ export default function SignUp () {
     }
   }
 
+  const theme = useTheme()
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <ThemeProvider theme={ThemeMain}>
       <Grid
         display={'flex'}
         component='main'
         margin={'1'}
-        sx={{ height: '95vh', width: '100vw' }}
+        sx={{ height: '95vh', width: '100vw', overflow: 'auto' }}
       >
-        <CssBaseline />
-        <Grid
-          xs={12}
-          sm={8}
-          md={6}
-          width={'100%'}
-          display={'flex'}
-          flexDirection={'column'}
-          justifyContent={'space-between'}
-        >
-          <Box display={'flex'} marginLeft={'40px'}>
-            <img src={LoginMark} style={{ marginBottom: '30px' }} alt='' />
-          </Box>
-          <Box
+        <Grid container marginRight={!matchDownSM && 2}>
+          <CssBaseline />
+          <Grid
+            xs={12}
+            md={6}
+            width={'100%'}
             display={'flex'}
-            justifyContent={'center'}
             flexDirection={'column'}
-            alignItems={'center'}
+            justifyContent={'space-between'}
           >
-            <Typography
-              fontSize={'25px'}
-              fontWeight={'bold'}
-              marginBottom={'10px'}
-              textAlign={'left'}
-            >
-              Register
-            </Typography>
-            <Box component='form' noValidate sx={{ mt: 1 }} width={'50%'}>
-              <TextField
-                margin='normal'
-                fullWidth
-                label='Full Name'
-                name='fullName'
-                autoFocus
-                value={fullName}
-                required
-                onChange={e => setFullName(e.target.value)}
-              />
-              <TextField
-                margin='normal'
-                fullWidth
-                name='email'
-                label='Email'
-                type='email'
-                value={email}
-                required
-                onChange={e => setEmail(e.target.value)}
-              />
-              <TextField
-                margin='normal'
-                fullWidth
-                name='password'
-                label='Password'
-                type='password'
-                value={password}
-                required
-                onChange={e => setPassword(e.target.value)}
-              />
-              <TextField
-                margin='normal'
-                fullWidth
-                name='passwordOk'
-                label='Confirm Password'
-                type='password'
-                required
-                value={passwordOk}
-                onChange={e => setPasswordOk(e.target.value)}
-              />
-              <Button
-                fullWidth
-                variant='contained'
-                sx={{ mt: 3, mb: 2 }}
-                style={{ height: '50px' }}
-                onClick={onRegisterClick}
-                disabled={!email || !fullName || !passwordOk || !password}
-              >
-                {loading ? <Spinner size='md' /> : 'Register'}
-              </Button>
-              <Divider textAlign='center' sx={{ marginBottom: '30px' }}>
-                OR
-              </Divider>
-              <Box width={'100%'}>
-                <Button
-                  onClick={signupWithGoogle}
-                  variant='outlined'
-                  sx={{
-                    width: '45%',
-                    height: '60px',
-                    borderColor: '#e0e0e0'
-                  }}
-                >
-                  <GoogleIcon />
-                </Button>
-              </Box>
-              <Typography textAlign={'center'} marginTop={'20px'}>
-                Already have an account? <Link href='/auth/login'>Login</Link>
-              </Typography>
+            <Box display={'flex'} marginLeft={'40px'}>
+              <img src={LoginMark} style={{ marginBottom: '30px' }} alt='' />
             </Box>
-          </Box>
-          <Box display={'flex'} marginLeft={'40px'}>
-            <Typography>@MenuX, All rights Reserved</Typography>
-          </Box>
-        </Grid>
-        <Grid
-          xs={false}
-          sm={4}
-          md={6}
-          sx={{
-            marginRight: '20px',
-            backgroundColor: '#F3F4F6',
-            borderRadius: '20px',
-            width: '100%'
-          }}
-          display={'flex'}
-          justifyContent={'center'}
-          flexDirection={'column'}
-        >
-          <Grid container>
-            <Grid item xs={12}>
+            <Box
+              display={'flex'}
+              justifyContent={'center'}
+              flexDirection={'column'}
+              alignItems={'center'}
+            >
               <Typography
-                fontSize={'30px'}
+                fontSize={'25px'}
                 fontWeight={'bold'}
-                marginBottom={'30px'}
+                marginBottom={'10px'}
+                textAlign={'left'}
               >
-                Create an account and get started!
+                Register
               </Typography>
-              <Typography marginBottom={'30px'}>
-                Manage your restaurant much better and faster with all the
-                statistics and information in one place.
-              </Typography>
-              <img src={LoginImage} className='img-fluid' alt='Phone image' />
-            </Grid>
+              <Box
+                component='form'
+                noValidate
+                sx={{ mt: 1 }}
+                width={matchDownSM ? '90%' : '50%'}
+              >
+                <TextField
+                  margin='normal'
+                  fullWidth
+                  label='Full Name'
+                  name='fullName'
+                  autoFocus
+                  value={fullName}
+                  required
+                  onChange={e => setFullName(e.target.value)}
+                />
+                <TextField
+                  margin='normal'
+                  fullWidth
+                  name='email'
+                  label='Email'
+                  type='email'
+                  value={email}
+                  required
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <TextField
+                  margin='normal'
+                  fullWidth
+                  name='password'
+                  label='Password'
+                  type='password'
+                  value={password}
+                  required
+                  onChange={e => setPassword(e.target.value)}
+                />
+                <TextField
+                  margin='normal'
+                  fullWidth
+                  name='passwordOk'
+                  label='Confirm Password'
+                  type='password'
+                  required
+                  value={passwordOk}
+                  onChange={e => setPasswordOk(e.target.value)}
+                />
+                <Button
+                  fullWidth
+                  variant='contained'
+                  sx={{ mt: 3, mb: 2 }}
+                  style={{ height: '50px' }}
+                  onClick={onRegisterClick}
+                  disabled={!email || !fullName || !passwordOk || !password}
+                >
+                  {loading ? <Spinner size='md' /> : 'Register'}
+                </Button>
+                <Divider textAlign='center' sx={{ marginBottom: '30px' }}>
+                  OR
+                </Divider>
+                <Box width={'100%'}>
+                  <Button
+                    onClick={signupWithGoogle}
+                    variant='outlined'
+                    sx={{
+                      width: '45%',
+                      height: '60px',
+                      borderColor: '#e0e0e0'
+                    }}
+                  >
+                    <GoogleIcon />
+                  </Button>
+                </Box>
+                <Typography textAlign={'center'} marginTop={'20px'}>
+                  Already have an account? <Link href='/auth/login'>Login</Link>
+                </Typography>
+              </Box>
+            </Box>
+            <Box display={'flex'} justifyContent={'center'}>
+              <Typography>@MenuX, All rights Reserved</Typography>
+            </Box>
           </Grid>
+          {!matchDownSM && (
+            <Grid
+              xs={false}
+              md={6}
+              sx={{
+                backgroundColor: '#F3F4F6',
+                borderRadius: '20px',
+                width: '100%'
+              }}
+              display={'flex'}
+              justifyContent={'center'}
+              flexDirection={'column'}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography
+                    fontSize={'30px'}
+                    fontWeight={'bold'}
+                    marginBottom={'30px'}
+                  >
+                    Create an account and get started!
+                  </Typography>
+                  <Typography marginBottom={'30px'}>
+                    Manage your restaurant much better and faster with all the
+                    statistics and information in one place.
+                  </Typography>
+                  <img
+                    src={LoginImage}
+                    className='img-fluid'
+                    alt='Phone image'
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </ThemeProvider>

@@ -7,6 +7,8 @@ import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import { useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import { ThemeMain } from '../../components/common/Theme'
@@ -79,12 +81,15 @@ export default function Login () {
       })
   }
 
+  const theme = useTheme()
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <ThemeProvider theme={ThemeMain}>
       <Box
         display={'flex'}
         margin={'1'}
-        sx={{ height: '95vh', width: '100vw' }}
+        sx={{ height: '95vh', width: '100vw', overflow: 'auto' }}
       >
         <Box
           xs={12}
@@ -172,17 +177,6 @@ export default function Login () {
                 >
                   <GoogleIcon />
                 </Button>
-                {/* <Button
-                  variant='outlined'
-                  sx={{
-                    marginLeft: '20px',
-                    width: '45%',
-                    height: '60px',
-                    borderColor: '#e0e0e0'
-                  }}
-                >
-                  <AppleIcon />
-                </Button> */}
               </Box>
               {active === false ? (
                 <Box
@@ -211,41 +205,43 @@ export default function Login () {
               </Typography>
             </Box>
           </Box>
-          <Box display={'flex'} marginLeft={'40px'}>
+          <Box>
             <Typography>@MenuX, All rights Reserved</Typography>
           </Box>
         </Box>
-        <Box
-          xs={false}
-          sm={4}
-          md={6}
-          sx={{
-            marginRight: '20px',
-            backgroundColor: '#F3F4F6',
-            borderRadius: '20px',
-            width: '100%'
-          }}
-          display={'flex'}
-          justifyContent={'center'}
-          flexDirection={'column'}
-        >
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                fontSize={'30px'}
-                fontWeight={'bold'}
-                marginBottom={'30px'}
-              >
-                Manage Your Restaurants
-              </Typography>
-              <Typography marginBottom={'30px'}>
-                Manage your restaurant much better and faster with all the
-                statistics and information in one place.
-              </Typography>
-              <img src={LoginImage} className='img-fluid' alt='Phone image' />
+        {!matchDownSM && (
+          <Box
+            xs={false}
+            sm={4}
+            md={6}
+            sx={{
+              marginRight: '20px',
+              backgroundColor: '#F3F4F6',
+              borderRadius: '20px',
+              width: '100%'
+            }}
+            display={'flex'}
+            justifyContent={'center'}
+            flexDirection={'column'}
+          >
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography
+                  fontSize={'30px'}
+                  fontWeight={'bold'}
+                  marginBottom={'30px'}
+                >
+                  Manage Your Restaurants
+                </Typography>
+                <Typography marginBottom={'30px'}>
+                  Manage your restaurant much better and faster with all the
+                  statistics and information in one place.
+                </Typography>
+                <img src={LoginImage} className='img-fluid' alt='Phone image' />
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        )}
       </Box>
     </ThemeProvider>
   )
