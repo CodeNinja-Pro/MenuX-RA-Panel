@@ -298,7 +298,7 @@ export const getAllFeedbacks = id => async dispatch => {
   }
 }
 
-export const sendRespond = (id, obj) => async dispatch => {
+export const sendRespond = (id, obj, onSuccess) => async dispatch => {
   try {
     dispatch({
       type: 'LOADER',
@@ -321,11 +321,8 @@ export const sendRespond = (id, obj) => async dispatch => {
           snapShot.update({
             respond: updateDoc
           })
-          toast.success('You sent new respond successfully.', {
-            style: {
-              fontFamily: 'Poppins'
-            }
-          })
+          onSuccess(updateDoc)
+
           dispatch({
             type: 'LOADER',
             payload: false
@@ -375,11 +372,7 @@ export const deleteFeedback = (uid, onSuccess) => async dispatch => {
       .delete()
       .then(() => {
         onSuccess()
-        toast.success('You deleted current feedback successfully.', {
-          style: {
-            fontFamily: 'Poppins'
-          }
-        })
+
         dispatch({
           type: 'LOADER',
           payload: false

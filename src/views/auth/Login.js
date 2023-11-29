@@ -17,7 +17,7 @@ import GoogleIcon from '@mui/icons-material/Google'
 
 import firebase from '../../config/firebase'
 
-import { checkUserActive, login } from '../../store/actions/authActions'
+import { checkUserActive } from '../../store/actions/authActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { provider } from '../../config/firebase'
 import { useHistory } from 'react-router-dom'

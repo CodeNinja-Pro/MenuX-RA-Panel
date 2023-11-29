@@ -277,10 +277,13 @@ const AdminNavbar = props => {
                         Clear All
                       </button> */}
                     </div>
-                    {/* Add your notification menu items here */}
-                    {/* <Notfications data={unreadNotifications} /> */}
                     {unreadNotifications?.map((item, index) => (
-                      <DropdownItem onClick={notificationShowModal}>
+                      <DropdownItem
+                        key={index}
+                        onClick={() => {
+                          history.push('/admin/notifications')
+                        }}
+                      >
                         <Row className='d-flex'>
                           <Col md={2}>
                             <span>
@@ -294,18 +297,30 @@ const AdminNavbar = props => {
                             </span>
                           </Col>
 
-                          <Col>
-                            <span className='text-wrap mb-2 fs-14'>
-                              <b>Super Admin</b>
-                              <br /> {item.text}
-                            </span>
+                          <Col md={10}>
+                            <div className='text-wrap mb-2 fs-14'>
+                              <Box
+                                display={'flex'}
+                                justifyContent={'space-between'}
+                                alignItems={'center'}
+                              >
+                                <Typography fontSize={15} fontWeight={'bold'}>
+                                  {item.title}
+                                </Typography>
+                                <Typography fontSize={15} fontWeight={'bold'}>
+                                  {'Super Admin'}
+                                </Typography>
+                              </Box>
+                              <Typography fontSize={15}>
+                                {item.text.length > 26
+                                  ? item.text.slice(0, 25) + '...'
+                                  : item.text}
+                              </Typography>
+                            </div>
                             <div className='d-flex justify-content-between fs-12 mt-2'>
                               <small>
                                 {item.createdAt.toDate().toLocaleString()}
                               </small>
-                              {/* <small className='text-primary'>
-                                Mark as Read
-                              </small> */}
                             </div>
                           </Col>
                         </Row>

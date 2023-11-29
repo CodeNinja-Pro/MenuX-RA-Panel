@@ -10,6 +10,7 @@ import {
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import {
   Divider,
   Box,
@@ -257,7 +258,21 @@ export default function SuperStaffTable () {
   }, [searchValue])
 
   const handleNotification = () => {
-    dispatch(sendRespond(selectedItem, respond))
+    dispatch(
+      sendRespond(selectedItem, respond, updatedData => {
+        visibleRows.map(item => {
+          if (item.id === selectedItem) {
+            item.respond.push(updatedData)
+          }
+        })
+
+        toast.success('You sent new respond successfully.', {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        })
+      })
+    )
 
     setRespond('')
   }
@@ -267,6 +282,11 @@ export default function SuperStaffTable () {
       deleteFeedback(selectedItem, () => {
         const newArray = visibleRows.filter(obj => obj.id !== selectedItem)
         setVisibleRows(newArray)
+        toast.success('You deleted current feedback successfully.', {
+          style: {
+            fontFamily: 'Poppins'
+          }
+        })
       })
     )
   }
@@ -291,7 +311,7 @@ export default function SuperStaffTable () {
     setVisibleRows(stableSort(rows, getComparator(order, orderBy)))
   }, [order, orderBy, page, rowsPerPage])
 
-  const filteredTableItems = applyFilters(rows, filters)
+  const filteredTableItems = applyFilters(visibleRows, filters)
   const paginatedTableData = applyPagination(
     filteredTableItems,
     page,

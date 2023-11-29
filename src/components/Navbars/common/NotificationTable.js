@@ -357,10 +357,6 @@ export default function NotificationTable () {
                                   ? row.text.slice(0, 30) + '...'
                                   : row.text}
                               </TableCell>
-                              {/* <TableCell align='center'>{row.sender}</TableCell>
-                              <TableCell align='center'>
-                                {row.destination}
-                              </TableCell> */}
                               <TableCell align='center' width={'10%'}>
                                 {row.check === true ? (
                                   <Typography
